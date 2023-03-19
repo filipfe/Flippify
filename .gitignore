@@ -1,7 +1,14 @@
-venv
-*.log
-*.pot
-*.pyc
-*/*/*/__pycache__/
-*/*/__pycache__/
-*/__pycache__/
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
