@@ -28,6 +28,7 @@ import {
   Dosis_700Bold as Bold,
   Dosis_800ExtraBold as ExtraBold,
 } from "@expo-google-fonts/dosis";
+import EntryScreen from "./src/components/entry/EntryScreen";
 
 export type RootTabParams = {
   Home: undefined;
@@ -104,7 +105,7 @@ export default function App() {
   }, [refresh]);
 
   if (loading || !isFontLoaded) return <Loader />;
-  // if(!logged) return <EntryScreen />
+  if (!logged) return <EntryScreen />;
 
   return (
     <NavigationContainer>
