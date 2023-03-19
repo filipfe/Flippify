@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import OwnFlashCards from "../components/profile/OwnFlashCards";
 import axios from "axios";
-import { BASE_URL } from "../constants/baseUrl";
+import { API_URL } from "@env";
 import FlashLists from "../components/profile/FlashLists";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -65,7 +65,7 @@ const Profile = ({ navigation }: { navigation: ProfileNavigation }) => {
   const { refresh } = user.tokens;
 
   const handleLogout = async () => {
-    const response = await axios.post(`${BASE_URL}/api/logout`, refresh, {
+    const response = await axios.post(`${API_URL}/api/logout`, refresh, {
       headers: { "Content-Type": "application/json" },
     });
     if (response.status === 200) await AsyncStorage.removeItem("user");

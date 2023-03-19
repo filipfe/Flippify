@@ -14,7 +14,7 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { BASE_URL } from "../../constants/baseUrl";
+import { API_URL } from "@env";
 import { CategoryStackParams } from "../../screens/FlashCardsScreen";
 
 type CategoryNavigationProps = NavigationProp<
@@ -51,7 +51,7 @@ export default function CategoryList({
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${BASE_URL}/api/flashcards/categories`)
+      .get(`${API_URL}/api/flashcards/categories`)
       .then((res) => res.data)
       .then((data) => setCategories(data))
       .catch((err) => alert(err))

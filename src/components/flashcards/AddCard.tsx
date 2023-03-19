@@ -4,7 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AnswerType, FlashCardProps } from "./FlashCard";
 import SelectDropdown from "react-native-select-dropdown";
-import { BASE_URL } from "../../constants/baseUrl";
+import { API_URL } from "@env";
 import { CategoryProps } from "./CategoryList";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import Loader from "../Loader";
@@ -68,7 +68,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/flashcards/categories`)
+      .get(`${API_URL}/api/flashcards/categories`)
       .then((res) => res.data)
       .then((data) => setCategories(data))
       .catch((err) => alert(err));
@@ -78,7 +78,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
     setTopics([]);
     if (newCard.category)
       axios
-        .get(`${BASE_URL}/api/flashcards/topics/search?c=${newCard.category}`)
+        .get(`${API_URL}/api/flashcards/topics/search?c=${newCard.category}`)
         .then((res) => res.data)
         .then((data) => setTopics(data))
         .catch(() => setStatus("Error"));
@@ -87,7 +87,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
   const handleAdd = () => {
     setStatus("loading");
     axios
-      .post(`${BASE_URL}/api/flashcards/create`, JSON.stringify(newCard), {
+      .post(`${API_URL}/api/flashcards/create`, JSON.stringify(newCard), {
         headers: { Authorization: "Bearer " + access },
       })
       .then(() => setStatus("Twoja fiszka została wysłana do weryfikacji!"))

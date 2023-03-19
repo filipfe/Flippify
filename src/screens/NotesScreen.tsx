@@ -21,7 +21,7 @@ import AddNote from "../components/notes/AddNote";
 import Note, { NoteProps } from "../components/notes/Note";
 import usePopularNotes from "../components/notes/PopularNotes";
 import useRecentNotes from "../components/notes/RecentNotes";
-import { BASE_URL } from "../constants/baseUrl";
+import { API_URL } from "@env";
 import { useAppSelector } from "../hooks/useAppSelector";
 
 export type NoteStackParams = {
@@ -88,7 +88,7 @@ const NoteList = ({ navigation }: { navigation: NoteRefNavigationProp }) => {
     let categoryStr: string =
       filter.category !== "Wszystkie" ? "&c=" + filter.category : "";
     axios
-      .get(`${BASE_URL}/api/notes?u=${id + categoryStr}`, {
+      .get(`${API_URL}/api/notes?u=${id + categoryStr}`, {
         headers: {
           Authorization: "Bearer " + access,
         },
@@ -145,7 +145,7 @@ const NoteFilter = ({
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/notes/categories`)
+      .get(`${API_URL}/api/notes/categories`)
       .then((res) => res.data)
       .then((data) => setCategories(data));
   }, []);

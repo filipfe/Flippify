@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FlashCardsScreen from "./src/screens/FlashCardsScreen";
 import NotesScreen from "./src/screens/NotesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import EntryScreen from "./src/components/entry/EntryScreen";
 import { useAppSelector } from "./src/hooks/useAppSelector";
 import { useTailwind } from "tailwind-rn/dist";
 import {
@@ -20,7 +19,7 @@ import { useDispatch } from "react-redux";
 import Loader from "./src/components/Loader";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { BASE_URL } from "./src/constants/baseUrl";
+import { API_URL } from "@env";
 import {
   useFonts,
   Dosis_400Regular as Regular,
@@ -69,7 +68,7 @@ export default function App() {
   const updateToken = async (token: string) => {
     axios
       .post(
-        `${BASE_URL}/api/token/refresh`,
+        `${API_URL}/api/token/refresh`,
         JSON.stringify({ refresh: token }),
         {
           headers: {
