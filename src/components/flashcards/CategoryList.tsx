@@ -52,7 +52,7 @@ export default function CategoryList({
     axios
       .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
-      .then((data) => setCategories(data.flashcards))
+      .then((data) => setCategories(data))
       .catch((err) => alert(err))
       .finally(() => setLoading(false));
   }, [route]);

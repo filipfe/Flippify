@@ -42,7 +42,7 @@ export default function AddNote() {
     axios
       .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
-      .then((data) => setCategories(data.notes));
+      .then((data) => setCategories(data));
   }, []);
 
   const pickImage = async () => {
@@ -79,10 +79,7 @@ export default function AddNote() {
     form.append("category", String(newNote.category.name));
 
     try {
-      const response = await axios.postForm(
-        `${API_URL}/api/notes/create`,
-        form
-      );
+      const response = await axios.postForm(`${API_URL}/api/notes/add`, form);
       if (response.status === (201 || 200)) return setStatus(true);
     } catch (err: any) {
       setStatus("Nie ma takiej kategorii!");

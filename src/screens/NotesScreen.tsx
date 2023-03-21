@@ -87,7 +87,7 @@ const NoteList = ({ navigation }: { navigation: NoteRefNavigationProp }) => {
     let categoryStr: string =
       filter.category !== "Wszystkie" ? "&c=" + filter.category : "";
     axios
-      .get(`${API_URL}/api/notes?u=${id + categoryStr}`, {
+      .get(`${API_URL}/api/notes${categoryStr}`, {
         headers: {
           Authorization: "Bearer " + access,
         },
@@ -144,7 +144,7 @@ const NoteFilter = ({
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/notes/categories`)
+      .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
       .then((data) => setCategories(data));
   }, []);
