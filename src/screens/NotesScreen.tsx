@@ -19,10 +19,9 @@ import { CategoryProps } from "../components/flashcards/CategoryList";
 import Loader from "../components/Loader";
 import AddNote from "../components/notes/AddNote";
 import Note, { NoteProps } from "../components/notes/Note";
-import usePopularNotes from "../components/notes/PopularNotes";
-import useRecentNotes from "../components/notes/RecentNotes";
 import { API_URL } from "@env";
 import { useAppSelector } from "../hooks/useAppSelector";
+import useNotes from "../hooks/useNotes";
 
 export type NoteStackParams = {
   NoteList: undefined;
@@ -75,8 +74,8 @@ const NoteList = ({ navigation }: { navigation: NoteRefNavigationProp }) => {
   const auth = useAppSelector((state) => state.login);
   const { access } = auth.tokens;
   const { id } = auth.user;
-  const { didRecentLoad, PopularNotes } = usePopularNotes();
-  const { RecentNotes } = useRecentNotes();
+  const { didRecentLoad, didPopularLoad, PopularNotes, RecentNotes } =
+    useNotes();
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState<NoteProps[]>([]);
   const [filter, setFilter] = useState<Filter>({

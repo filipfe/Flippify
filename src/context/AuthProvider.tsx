@@ -5,7 +5,8 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../../reducers/login";
-import EntryScreen from "../components/entry/EntryScreen";
+import EntryScreen from "../screens/EntryScreen";
+import Loader from "../components/Loader";
 import { useAppSelector } from "../hooks/useAppSelector";
 
 export default function AuthProvider({ children }: { children: JSX.Element }) {
@@ -65,5 +66,6 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
     return () => clearTimeout(timer.current);
   }, [refresh]);
 
+  if (loading) return <Loader />;
   return logged ? children : <EntryScreen />;
 }

@@ -24,8 +24,8 @@ export default function FlashCardsGenerator() {
     if (!isCancelled)
       axios
         .get(
-          `${API_URL}/api/flashcards/filter?c=${category.name}${
-            topic.name && "&t=" + topic.name
+          `${API_URL}/api/flashcards/random?category_name=${category.name}${
+            topic.name && "&topic_name=" + topic.name
           }`
         )
         .then((res) => res.data)

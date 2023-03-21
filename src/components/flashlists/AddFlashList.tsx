@@ -23,7 +23,7 @@ export default function AddFlashList() {
   const handleAdd = async () => {
     axios
       .post(
-        `${API_URL}/api/flashlists/create`,
+        `${API_URL}/api/flashlists/add`,
         JSON.stringify({ user: id, name: newFlashList.name }),
         {
           headers: {

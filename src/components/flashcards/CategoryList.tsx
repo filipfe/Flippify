@@ -23,7 +23,6 @@ type CategoryNavigationProps = NavigationProp<
 >;
 
 export interface CategoryProps {
-  id: number;
   name: string;
   image: string;
 }
@@ -51,9 +50,9 @@ export default function CategoryList({
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/api/flashcards/categories`)
+      .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
-      .then((data) => setCategories(data))
+      .then((data) => setCategories(data.flashcards))
       .catch((err) => alert(err))
       .finally(() => setLoading(false));
   }, [route]);

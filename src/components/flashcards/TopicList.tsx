@@ -43,7 +43,7 @@ export default function TopicList({
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/flashcards/topics?c=${category.name}`)
+      .get(`${API_URL}/api/topics/${category.name}`)
       .then((res) => res.data)
       .then((data) => setTopics(data))
       .catch((err) => alert(err));

@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import useMultiStepForm from "../../hooks/useMultiStepForm";
-import Info from "./Info";
+import useMultiStepForm from "../hooks/useMultiStepForm";
+import Info from "../components/entry/Info";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTailwind } from "tailwind-rn/dist";
-import Auth from "./Auth";
-import PrimaryButton from "../PrimaryButton";
+import Auth from "../components/entry/Auth";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function EntryScreen() {
   const tw = useTailwind();

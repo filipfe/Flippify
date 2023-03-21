@@ -32,9 +32,16 @@ export default function Login() {
   const handleSubmit = () => {
     setStatus("loading");
     axios
-      .post(`${API_URL}/api/login`, JSON.stringify(userData), {
-        headers: { "Content-Type": "application/json" },
-      })
+      .post(
+        `${API_URL}/api/login`,
+        JSON.stringify({
+          login: userData.email,
+          password: userData.password,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
       .then((res) => res.data)
       .then((tokens) => {
         let user = jwtDecode(tokens.access);

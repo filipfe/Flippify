@@ -40,9 +40,9 @@ export default function AddNote() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/notes/categories`)
+      .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
-      .then((data) => setCategories(data));
+      .then((data) => setCategories(data.notes));
   }, []);
 
   const pickImage = async () => {
@@ -76,7 +76,7 @@ export default function AddNote() {
     form.append("desc", newNote.desc);
     // @ts-ignore
     form.append("image", newNote.image);
-    form.append("category", String(newNote.category.id));
+    form.append("category", String(newNote.category.name));
 
     try {
       const response = await axios.postForm(
@@ -232,7 +232,6 @@ const initialNote: AddedNoteProps = {
     type: "",
   },
   category: {
-    id: -1,
     name: "",
   },
 };

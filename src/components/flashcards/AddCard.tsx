@@ -68,9 +68,9 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/flashcards/categories`)
+      .get(`${API_URL}/api/categories`)
       .then((res) => res.data)
-      .then((data) => setCategories(data))
+      .then((data) => setCategories(data.flashcards))
       .catch((err) => alert(err));
   }, []);
 
@@ -78,7 +78,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
     setTopics([]);
     if (newCard.category)
       axios
-        .get(`${API_URL}/api/flashcards/topics/search?c=${newCard.category}`)
+        .get(`${API_URL}/api/topics/${newCard.category}`)
         .then((res) => res.data)
         .then((data) => setTopics(data))
         .catch(() => setStatus("Error"));
@@ -87,7 +87,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
   const handleAdd = () => {
     setStatus("loading");
     axios
-      .post(`${API_URL}/api/flashcards/create`, JSON.stringify(newCard), {
+      .post(`${API_URL}/api/flashcards/add`, JSON.stringify(newCard), {
         headers: { Authorization: "Bearer " + access },
       })
       .then(() => setStatus("Twoja fiszka została wysłana do weryfikacji!"))

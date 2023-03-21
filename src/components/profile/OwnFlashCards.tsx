@@ -17,7 +17,7 @@ export default function OwnFlashCards() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/flashcards/user/${id}`, {
+      .get(`${API_URL}/api/profile`, {
         headers: {
           Authorization: "Bearer " + access,
         },

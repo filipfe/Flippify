@@ -28,17 +28,16 @@ export default function ListOfLists({
   const [flashLists, setFlashLists] = useState<FlashListProps[]>([]);
   const location = useNavigationState((state) => state);
   const auth = useAppSelector((state) => state.login);
-  const { id } = auth.user;
   const { access } = auth.tokens;
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/api/flashlists/user/${id}`, {
+      .get(`${API_URL}/api/profile`, {
         headers: { Authorization: "Bearer " + access },
       })
       .then((res) => res.data)
-      .then((data) => setFlashLists(data))
+      .then((data) => setFlashLists(data.flashlists || []))
       .finally(() => setLoading(false));
   }, [location, removed]);
 
