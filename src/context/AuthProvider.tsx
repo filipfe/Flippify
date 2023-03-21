@@ -30,15 +30,11 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
 
   const updateToken = async (token: string) => {
     axios
-      .post(
-        `${API_URL}/api/token/refresh`,
-        JSON.stringify({ refresh: token }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get(`${API_URL}/api/refresh`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((response) => {
         let tokens = response.data;
         let user = jwtDecode(tokens.access);

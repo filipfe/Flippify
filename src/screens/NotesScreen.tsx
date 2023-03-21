@@ -93,15 +93,15 @@ const NoteList = ({ navigation }: { navigation: NoteRefNavigationProp }) => {
         },
       })
       .then((res) => res.data)
-      .then((data) => setNotes(data))
+      .then((data) => setNotes([...data.popular, ...data.recent]))
       .finally(() => setLoading(false));
   }, [filter, location]);
 
   return (
     <>
       <ScrollView style={tw("pt-6 px-6 flex-1 bg-white")}>
-        <PopularNotes />
-        <RecentNotes />
+        {didPopularLoad && <PopularNotes />}
+        {didRecentLoad && <RecentNotes />}
         <NoteFilter filter={filter} setFilter={setFilter} />
         {!loading ? (
           notes.map((note) => <NoteRef {...note} key={note.id} />)
