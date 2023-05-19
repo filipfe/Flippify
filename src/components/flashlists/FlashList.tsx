@@ -33,7 +33,7 @@ export default function FlashList({
     <View style={tw("flex-1 bg-white p-6")}>
       <CardChooser />
       <View style={tw("justify-between flex-row my-6")}>
-        <Text style={{ fontFamily: "ExtraBold", ...tw("text-xl") }}>
+        <Text style={{ fontFamily: "Bold", ...tw("text-xl") }}>
           Fiszki w tej FiszkoLiście
         </Text>
         <TouchableOpacity onPress={removeCards}>
@@ -93,11 +93,11 @@ const FlashCardRef = ({
         <Text style={{ fontFamily: "Bold", ...tw("text-lg") }}>
           {question.split("[input]").join(" . . . . ")}
         </Text>
-        <Text style={{ fontFamily: "Medium", ...tw("text-fontLight") }}>
+        <Text style={{ fontFamily: "Medium", ...tw("text-p") }}>
           Typ fiszki:{" "}
           {type === "radio" ? "Wybór odpowiedzi" : "Wprowadzanie odpowiedzi"}
         </Text>
-        <Text style={{ fontFamily: "Medium", ...tw("text-fontLight") }}>
+        <Text style={{ fontFamily: "Medium", ...tw("text-p") }}>
           Temat fiszki: {topic}
         </Text>
         {/* {answers.length > 0 && answers.map(answ => <Text style={{fontFamily: 'Medium', ...tw(answ.correct ? 'text-primary' : 'text-red-400')}}>{answ.content}</Text>)}       */}

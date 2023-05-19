@@ -1,15 +1,15 @@
 import { useTailwind } from "tailwind-rn/dist";
-import { useAppSelector } from "../../hooks/useAppSelector";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 import { FlashListCard, FlashListStackParams } from "../profile/FlashLists";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function CardChooser() {
   const tw = useTailwind();
-  const auth = useAppSelector((state) => state.login);
+  const auth = useContext(AuthContext);
   const { access } = auth.tokens;
   const { id } = auth.user;
   const [cardChooseActive, setCardChooseActive] = useState(false);
@@ -28,10 +28,6 @@ export default function CardChooser() {
       .then((data) => setUserCards(data))
       .catch((err) => alert(err));
   };
-
-  useEffect(() => {
-    console.log(userCards);
-  }, [userCards]);
 
   return (
     <View>

@@ -2,7 +2,6 @@ import {
   Pressable,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -11,26 +10,25 @@ import axios from "axios";
 import Loader from "../Loader";
 import { API_URL } from "@env";
 import { useTailwind } from "tailwind-rn/dist";
-import { AuthFormContext } from "../../context/AuthFormProvider";
-import jwtDecode from "jwt-decode";
-import { useDispatch } from "react-redux";
-import { login } from "../../../reducers/login";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
+import { AuthFormContext } from "../../providers/AuthFormProvider";
+import { AuthContext } from "../../context/AuthContext";
+import SecondaryButton from "../SecondaryButton";
 
 export default function Login() {
   const tw = useTailwind();
-  const dispatch = useDispatch();
+  const { login } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
-  const [status, setStatus] = useState<string | boolean>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
 
   const handleSubmit = () => {
-    setStatus("loading");
+    setIsLoading(true);
     axios
       .post(
         `${API_URL}/api/login`,
@@ -39,32 +37,29 @@ export default function Login() {
           password: userData.password,
         }),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       )
-      .then((res) => res.data)
-      .then((tokens) => {
-        let user = jwtDecode(tokens.access);
-        AsyncStorage.setItem("user", JSON.stringify(tokens));
-        dispatch(
-          login({
-            user,
-            tokens,
-          })
-        );
-      })
-      .catch((err) => console.log(err));
+      .then((res) => login(res.data))
+      .catch((err) => setError(err.response.data.detail))
+      .finally(() => setIsLoading(false));
   };
 
-  if (status === "Logged") return <Text>Zarejestrowano</Text>;
-  if (status === "loading") return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
-    <View style={tw("flex-1 mt-8 items-stretch w-full px-12")}>
-      <Text style={{ fontFamily: "Bold", ...tw("text-4xl text-center my-5") }}>
+    <View style={{ flex: 1, justifyContent: "space-between" }}>
+      <Text
+        style={{
+          fontFamily: "Bold",
+          ...tw("text-center text-font text-2xl mb-8"),
+        }}
+      >
         Zaloguj się
       </Text>
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         <PrimaryInput field="email" setState={setUserData} label="Email" />
         <PrimaryInput
           field="password"
@@ -72,26 +67,22 @@ export default function Login() {
           label="Hasło"
           secured={true}
         />
-        <Text style={{ fontFamily: "SemiBold" }}>
-          Zapomniałeś hasła?{" "}
-          <TouchableOpacity>
-            <Text style={{ fontFamily: "Bold" }}>Zresetuj hasło</Text>
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+          <TouchableOpacity style={{ marginTop: 2, marginLeft: 2 }}>
+            <Text style={{ ...tw("text-font"), fontFamily: "Bold" }}>
+              Odzyskaj hasło
+            </Text>
           </TouchableOpacity>
-        </Text>
+        </View>
       </ScrollView>
-      {status && <Text style={tw("text-red-400")}>{status}</Text>}
-      <View style={tw("my-10")}>
-        <PrimaryButton text="Zaloguj" onPress={handleSubmit} />
-        <Pressable
-          style={tw("w-full items-center py-4")}
+      <View>
+        <SecondaryButton
+          text="Chcę założyć konto"
           onPress={() => setAuthFormIndex(0)}
-        >
-          <Text
-            style={{ fontFamily: "ExtraBold", ...tw("text-[1.1rem] mt-2") }}
-          >
-            Zarejestruj się
-          </Text>
-        </Pressable>
+        />
+        <View style={{ marginTop: 20 }}>
+          <PrimaryButton text="Zaloguj się" onPress={handleSubmit} />
+        </View>
       </View>
     </View>
   );

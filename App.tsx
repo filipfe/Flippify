@@ -10,17 +10,10 @@ import {
   HomeIcon,
   NotesIcon,
   ProfileIcon,
-} from "./assets/home";
-import Loader from "./src/components/Loader";
-import {
-  useFonts,
-  Dosis_400Regular as Regular,
-  Dosis_500Medium as Medium,
-  Dosis_600SemiBold as SemiBold,
-  Dosis_700Bold as Bold,
-  Dosis_800ExtraBold as ExtraBold,
-} from "@expo-google-fonts/dosis";
-import AuthProvider from "./src/context/AuthProvider";
+} from "./src/assets/home";
+import { useContext } from "react";
+import { AuthContext } from "./src/context/AuthContext";
+import EntryScreen from "./src/screens/EntryScreen";
 
 export type RootTabParams = {
   Home: undefined;
@@ -33,94 +26,86 @@ const RootTab = createBottomTabNavigator<RootTabParams>();
 
 export default function App() {
   const tw = useTailwind();
-  const [isFontLoaded] = useFonts({
-    Regular,
-    Medium,
-    SemiBold,
-    Bold,
-    ExtraBold,
-  });
+  const { isLogged } = useContext(AuthContext);
 
-  if (!isFontLoaded) return <Loader />;
+  if (!isLogged) return <EntryScreen />;
 
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <RootTab.Navigator
-          sceneContainerStyle={tw("bg-white")}
-          screenOptions={{
-            headerTitleStyle: { fontFamily: "Bold" },
-            tabBarActiveTintColor: "#10DC49",
-            tabBarInactiveTintColor: "#3A234E",
-            tabBarLabelStyle: { ...tw("text-[.9rem]"), fontFamily: "Bold" },
-            tabBarStyle: tw("h-20 px-4 py-[0.9rem]"),
+    <NavigationContainer>
+      <RootTab.Navigator
+        sceneContainerStyle={tw("bg-white")}
+        screenOptions={{
+          headerTitleStyle: { fontFamily: "Bold" },
+          tabBarActiveTintColor: "#2386F1",
+          tabBarInactiveTintColor: "#3A234E",
+          tabBarLabelStyle: { ...tw("text-[.9rem]"), fontFamily: "Bold" },
+          tabBarStyle: tw("h-20 px-4 py-[0.9rem]"),
+        }}
+      >
+        <RootTab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: "Eksploruj",
+            tabBarIcon: ({ focused }) => (
+              <HomeIcon
+                stroke={focused ? "#2386F1" : "#3A234E"}
+                strokeWidth="2"
+                height={27}
+                width={25}
+              />
+            ),
           }}
-        >
-          <RootTab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              title: "Eksploruj",
-              tabBarIcon: ({ focused }) => (
-                <HomeIcon
-                  stroke={focused ? "#10DC49" : "#3A234E"}
-                  strokeWidth="2"
-                  height={27}
-                  width={25}
-                />
-              ),
-            }}
-          />
-          <RootTab.Screen
-            name="FlashCards"
-            component={FlashCardsScreen}
-            options={{
-              title: "Fiszki",
-              headerShown: false,
-              tabBarIcon: ({ focused }) => (
-                <FlashCardsIcon
-                  stroke={focused ? "#10DC49" : "#3A234E"}
-                  strokeWidth="2"
-                  height={25}
-                  width={22}
-                />
-              ),
-            }}
-          />
-          <RootTab.Screen
-            name="Notes"
-            component={NotesScreen}
-            options={{
-              title: "Notatki",
-              headerShown: false,
-              tabBarIcon: ({ focused }) => (
-                <NotesIcon
-                  stroke={focused ? "#10DC49" : "#3A234E"}
-                  strokeWidth="2"
-                  height={26}
-                  width={23}
-                />
-              ),
-            }}
-          />
-          <RootTab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              title: "Profil",
-              headerShown: false,
-              tabBarIcon: ({ focused }) => (
-                <ProfileIcon
-                  stroke={focused ? "#10DC49" : "#3A234E"}
-                  strokeWidth="2"
-                  height={26}
-                  width={24}
-                />
-              ),
-            }}
-          />
-        </RootTab.Navigator>
-      </NavigationContainer>
-    </AuthProvider>
+        />
+        <RootTab.Screen
+          name="FlashCards"
+          component={FlashCardsScreen}
+          options={{
+            title: "Fiszki",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <FlashCardsIcon
+                stroke={focused ? "#2386F1" : "#3A234E"}
+                strokeWidth="2"
+                height={25}
+                width={22}
+              />
+            ),
+          }}
+        />
+        <RootTab.Screen
+          name="Notes"
+          component={NotesScreen}
+          options={{
+            title: "Notatki",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <NotesIcon
+                stroke={focused ? "#2386F1" : "#3A234E"}
+                strokeWidth="2"
+                height={26}
+                width={23}
+              />
+            ),
+          }}
+        />
+        <RootTab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            title: "Profil",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <ProfileIcon
+                stroke={focused ? "#2386F1" : "#3A234E"}
+                strokeWidth="2"
+                height={26}
+                width={24}
+              />
+            ),
+          }}
+        />
+      </RootTab.Navigator>
+    </NavigationContainer>
   );
 }

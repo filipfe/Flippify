@@ -1,25 +1,40 @@
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import loginReducer from "./reducers/login";
 import App from "./App";
+import AuthProvider from "./src/providers/AuthProvider";
+import AxiosProvider from "./src/providers/AxiosProvider";
 import utilities from "./tailwind.json";
 import { TailwindProvider } from "tailwind-rn";
+import {
+  useFonts,
+  PlusJakartaSans_400Regular as Regular,
+  PlusJakartaSans_500Medium as Medium,
+  PlusJakartaSans_600SemiBold as SemiBold,
+  PlusJakartaSans_700Bold as Bold,
+  PlusJakartaSans_800ExtraBold as ExtraBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
+import Loader from "./src/components/Loader";
+import * as SplashScreen from "expo-splash-screen";
 
-const store = configureStore({
-  reducer: {
-    login: loginReducer,
-  },
-});
-
-export type RootState = ReturnType<typeof store.getState>;
+SplashScreen.preventAutoHideAsync();
 
 export default function AppWrapper() {
+  const [isFontLoaded] = useFonts({
+    Regular,
+    Medium,
+    SemiBold,
+    Bold,
+    ExtraBold,
+  });
+
+  if (!isFontLoaded) return <Loader />;
+
   return (
-    <Provider store={store}>
-      {/* @ts-ignore */}
-      <TailwindProvider utilities={utilities}>
-        <App />
-      </TailwindProvider>
-    </Provider>
+    // @ts-ignore
+    <TailwindProvider utilities={utilities}>
+      <AuthProvider>
+        <AxiosProvider>
+          <App />
+        </AxiosProvider>
+      </AuthProvider>
+    </TailwindProvider>
   );
 }

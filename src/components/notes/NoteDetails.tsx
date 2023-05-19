@@ -1,30 +1,20 @@
 import { RouteProp } from "@react-navigation/native";
 import axios from "axios";
 import { Image, Pressable, Text, View } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
+import { useTailwind } from "tailwind-rn";
 import { API_URL } from "@env";
-import { useAppSelector } from "../../hooks/useAppSelector";
-import { NoteStackParams } from "../../screens/NotesScreen";
-import { useState, useEffect } from "react";
+import { NoteStackParams } from "../../types/notes";
+import { useState, useEffect, useContext } from "react";
 import Loader from "../Loader";
-import LikeIcon from "../../../assets/icons/note_like.svg";
-
-export interface NoteProps {
-  id: number;
-  title: string;
-  desc: string;
-  image: string;
-  category?: string;
-  likes?: number;
-  is_liked?: boolean;
-}
+import LikeIcon from "../../assets/icons/note_like.svg";
+import { AuthContext } from "../../context/AuthContext";
 
 type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
 
-export default function Note({ route }: { route: NoteRouteProp }) {
+export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   const tw = useTailwind();
   const { title, desc, image, is_liked, likes, category } = route.params;
-  const auth = useAppSelector((state) => state.login);
+  const auth = useContext(AuthContext);
   const { access } = auth.tokens;
   const { id } = auth.user;
   const note = route.params.id;

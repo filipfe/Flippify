@@ -2,32 +2,29 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import { useTailwind } from "tailwind-rn/dist";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { AnswerType, FlashCardProps } from "./FlashCard";
 import SelectDropdown from "react-native-select-dropdown";
 import { API_URL } from "@env";
-import { CategoryProps } from "./CategoryList";
-import { useAppSelector } from "../../hooks/useAppSelector";
 import Loader from "../Loader";
-import { TopicProps } from "./TopicList";
 import PrimaryButton from "../PrimaryButton";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { initialNewCard, NewCardContext } from "../../context/NewCardProvider";
+import {
+  initialNewCard,
+  NewCardContext,
+} from "../../providers/NewCardProvider";
 import { NavigationProp } from "@react-navigation/native";
-
-export interface AddedFlashCardProps extends FlashCardProps {
-  category: string;
-  topic: string;
-}
-
-type AddCardStackParams = {
-  CardForm: undefined;
-  QuestionsForm: undefined;
-};
+import { Category } from "../../types/general";
+import {
+  AddedFlashCard,
+  Answer,
+  FlashCard,
+  Topic,
+} from "../../types/flashcards";
+import { AddCardStackParams } from "../../types/navigation";
 
 const AddCardStack = createNativeStackNavigator<AddCardStackParams>();
 
 export default function AddCard() {
-  const [newCard, setNewCard] = useState<AddedFlashCardProps>(initialNewCard);
+  const [newCard, setNewCard] = useState<AddedFlashCard>(initialNewCard);
 
   return (
     <NewCardContext.Provider value={{ newCard, setNewCard }}>
@@ -60,10 +57,9 @@ type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardForm">;
 
 const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
   const tw = useTailwind();
-  const { access } = useAppSelector((state) => state.login.tokens);
   const [status, setStatus] = useState("");
-  const [categories, setCategories] = useState<CategoryProps[]>([]);
-  const [topics, setTopics] = useState<TopicProps[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const { newCard, setNewCard } = useContext(NewCardContext);
 
   useEffect(() => {
@@ -87,9 +83,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
   const handleAdd = () => {
     setStatus("loading");
     axios
-      .post(`${API_URL}/api/flashcards/add`, JSON.stringify(newCard), {
-        headers: { Authorization: "Bearer " + access },
-      })
+      .post(`${API_URL}/api/flashcards/add`, JSON.stringify(newCard))
       .then(() => setStatus("Twoja fiszka została wysłana do weryfikacji!"))
       .catch((err) => setStatus(err));
   };
@@ -127,7 +121,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
         )}
         dropdownStyle={tw("rounded-2xl bg-white")}
         onSelect={(item) =>
-          setNewCard((prev: AddedFlashCardProps) => ({
+          setNewCard((prev: AddedFlashCard) => ({
             ...prev,
             category: item,
           }))
@@ -166,7 +160,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
         dropdownStyle={tw("rounded-2xl bg-white")}
         disabled={!newCard.category}
         onSelect={(item) =>
-          setNewCard((prev: AddedFlashCardProps) => ({ ...prev, topic: item }))
+          setNewCard((prev: AddedFlashCard) => ({ ...prev, topic: item }))
         }
         buttonTextAfterSelection={(text) => text}
         rowTextForSelection={(text) => text}
@@ -193,7 +187,7 @@ const CardForm = ({ navigation }: { navigation: CardFormNavigationProp }) => {
         )}
         dropdownStyle={tw("rounded-2xl bg-white")}
         onSelect={(item) =>
-          setNewCard((prev: AddedFlashCardProps) => ({
+          setNewCard((prev: AddedFlashCard) => ({
             ...prev,
             type: item === "Zamknięte odpowiedzi" ? "radio" : "input",
           }))
@@ -249,8 +243,8 @@ const QuestionsForm = ({
   const tw = useTailwind();
   const { newCard, setNewCard } = useContext(NewCardContext);
   const [question, setQuestion] = useState(newCard.question);
-  const [wrongAnswers, setWrongAnswers] = useState<AnswerType[]>([]);
-  const [correctAnswer, setCorrectAnswer] = useState<AnswerType>(
+  const [wrongAnswers, setWrongAnswers] = useState<Answer[]>([]);
+  const [correctAnswer, setCorrectAnswer] = useState<Answer>(
     newCard.answers.find((ans) => ans.correct) || {
       content: "",
       correct: true,
@@ -258,7 +252,7 @@ const QuestionsForm = ({
   );
 
   const handleSave = () => {
-    setNewCard((prev: AddedFlashCardProps) => {
+    setNewCard((prev: AddedFlashCard) => {
       return {
         ...prev,
         question,
@@ -331,7 +325,7 @@ const QuestionsForm = ({
         <View style={tw("relative mb-4")}>
           <Pressable
             onPress={() =>
-              setWrongAnswers((prev: AnswerType[]) => [
+              setWrongAnswers((prev: Answer[]) => [
                 ...prev,
                 { content: "", correct: false },
               ])

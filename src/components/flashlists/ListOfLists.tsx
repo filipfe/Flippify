@@ -1,6 +1,5 @@
 import { useTailwind } from "tailwind-rn/dist";
-import { useState, useEffect } from "react";
-import { useAppSelector } from "../../hooks/useAppSelector";
+import { useState, useEffect, useContext } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import Loader from "../Loader";
 import { FlashListProps, FlashListStackParams } from "../profile/FlashLists";
@@ -11,6 +10,7 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 type ListOfFlashCardListsNavigation = NavigationProp<
   FlashListStackParams,
@@ -27,7 +27,7 @@ export default function ListOfLists({
   const [removed, setRemoved] = useState<number[]>([]);
   const [flashLists, setFlashLists] = useState<FlashListProps[]>([]);
   const location = useNavigationState((state) => state);
-  const auth = useAppSelector((state) => state.login);
+  const auth = useContext(AuthContext);
   const { access } = auth.tokens;
 
   useEffect(() => {

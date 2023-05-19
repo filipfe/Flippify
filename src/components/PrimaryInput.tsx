@@ -1,35 +1,63 @@
-import { Text, TextInput, View } from "react-native"
-import { useState, useEffect } from 'react'
-import { useTailwind } from "tailwind-rn/dist"
+import { Text, TextInput, View } from "react-native";
+import { useState, useEffect } from "react";
+import { useTailwind } from "tailwind-rn/dist";
 
 type Input = {
-    field: string,
-    label?: string,
-    secured?: boolean,
-    value?: string,
-    setState: any
-}
+  field: string;
+  label?: string;
+  secured?: boolean;
+  value?: string;
+  setState: any;
+};
 
-export default function PrimaryInput({ field, label, secured, value, setState }: Input) {
-    const tw = useTailwind()
-    const [input, setInput] = useState('')
-    const [isFocused, setIsFocused] = useState(false)
+export default function PrimaryInput({
+  field,
+  label,
+  secured,
+  value,
+  setState,
+}: Input) {
+  const tw = useTailwind();
+  const [input, setInput] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
-    useEffect(() => {
-        setState((prev: string | {}) => {
-            if(typeof prev === 'string') return input
-            return {
-                ...prev,
-                [field]: input
-            }
-        })
-    }, [input])
+  useEffect(() => {
+    setState((prev: string | {}) => {
+      if (typeof prev === "string") return input;
+      return {
+        ...prev,
+        [field]: input,
+      };
+    });
+  }, [input]);
 
-    return (
-        <View style={tw('relative mb-4')}>
-            {label && <Text style={{ fontFamily: 'SemiBold', ...tw('text-[1rem]')}}>{label}</Text>}
-            <TextInput secureTextEntry={secured} value={typeof value === 'string' ? value : input} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} style={{fontFamily: 'SemiBold', ...tw(`py-3 px-6 border-[3px] mt-3 rounded-2xl relative z-10 w-full ${isFocused ? 'bg-[#C2FAD2] border-primary' : 'bg-white border-[#E3E8E4]'}`)}} onChangeText={text => setInput(text)} />
-            <View style={tw(`absolute left-0 right-0 h-[2rem] bg-darkPrimary -bottom-[0.4rem] rounded-b-2xl ${isFocused ? 'bg-primary' : 'bg-[#E3E8E4]'}`)} />
-        </View>
-    )
+  return (
+    <View style={tw("relative mb-4")}>
+      {label && (
+        <Text
+          style={{
+            fontFamily: "SemiBold",
+            transform: [{ translateY: 8 }],
+            zIndex: 10,
+            position: "relative",
+            fontSize: 12,
+            ...tw("text-p px-6"),
+          }}
+        >
+          {label}
+        </Text>
+      )}
+      <TextInput
+        secureTextEntry={secured}
+        value={typeof value === "string" ? value : input}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        style={{
+          fontFamily: "SemiBold",
+          ...tw(`py-3 px-6 rounded-2xl w-full bg-light`),
+        }}
+        onChangeText={(text) => setInput(text)}
+      />
+    </View>
+  );
 }

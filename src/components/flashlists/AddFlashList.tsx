@@ -1,17 +1,17 @@
 import { Text, View } from "react-native";
 import { FlashListProps } from "../profile/FlashLists";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useTailwind } from "tailwind-rn/dist";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
 import axios from "axios";
 import { API_URL } from "@env";
-import { useAppSelector } from "../../hooks/useAppSelector";
 import Loader from "../Loader";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function AddFlashList() {
   const tw = useTailwind();
-  const { id } = useAppSelector((state) => state.login.user);
+  const { user } = useContext(AuthContext);
   const [status, setStatus] = useState<boolean | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [newFlashList, setNewFlashList] = useState<FlashListProps>({
@@ -24,7 +24,7 @@ export default function AddFlashList() {
     axios
       .post(
         `${API_URL}/api/flashlists/add`,
-        JSON.stringify({ user: id, name: newFlashList.name }),
+        JSON.stringify({ user: user.id, name: newFlashList.name }),
         {
           headers: {
             "Content-Type": "application/json",

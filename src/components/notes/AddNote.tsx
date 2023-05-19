@@ -6,37 +6,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { NoteProps } from "./Note";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTailwind } from "tailwind-rn/dist";
 import PrimaryInput from "../PrimaryInput";
 import * as ImagePicker from "expo-image-picker";
-import styles from "../../constants/styles";
 import PrimaryButton from "../PrimaryButton";
 import axios from "axios";
 import { API_URL } from "@env";
-import { useAppSelector } from "../../hooks/useAppSelector";
 import Loader from "../Loader";
-import { CategoryProps } from "../flashcards/CategoryList";
 import SelectDropdown from "react-native-select-dropdown";
-
-type N = Omit<NoteProps, "image" | "likes" | "id" | "category" | "is_liked">;
-
-type AddedNoteProps = N & {
-  image: {
-    uri: string;
-    name: string;
-    type: string;
-  };
-  category: Omit<CategoryProps, "image">;
-};
+import { AuthContext } from "../../context/AuthContext";
+import { AddedNoteProps, Note } from "../../types/notes";
+import { Category } from "../../types/general";
 
 export default function AddNote() {
   const tw = useTailwind();
-  const { id } = useAppSelector((state) => state.login.user);
+  const { user } = useContext(AuthContext);
   const [status, setStatus] = useState<string | boolean>("");
   const [newNote, setNewNote] = useState<AddedNoteProps>(initialNote);
-  const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     axios
@@ -71,7 +59,7 @@ export default function AddNote() {
     setStatus("loading");
     const form = new FormData();
 
-    form.append("user", String(id));
+    form.append("user", String(user.id));
     form.append("title", newNote.title);
     form.append("desc", newNote.desc);
     // @ts-ignore
@@ -83,7 +71,6 @@ export default function AddNote() {
       if (response.status === (201 || 200)) return setStatus(true);
     } catch (err: any) {
       setStatus("Nie ma takiej kategorii!");
-      return console.log(err.response);
     }
   };
 
@@ -108,7 +95,7 @@ export default function AddNote() {
       </TouchableOpacity>
       {newNote.image.uri && (
         <Image
-          style={{ ...styles.imageContain, ...tw("w-full h-[10rem]") }}
+          style={{ resizeMode: "contain", height: 160, width: "100%" }}
           source={{
             uri: newNote.image.uri,
           }}
@@ -134,11 +121,7 @@ export default function AddNote() {
       <Text
         style={{
           fontFamily: "SemiBold",
-          ...tw(
-            `${
-              newNote.desc.length < 50 ? "text-fontLight" : "text-red-400"
-            } mb-4`
-          ),
+          ...tw(`${newNote.desc.length < 50 ? "text-p" : "text-red-400"} mb-4`),
         }}
       >
         {newNote.desc.length} / 50
@@ -188,8 +171,8 @@ export default function AddNote() {
           )}
         >
           <Image
-            style={{ ...styles.imageContain, height: 160 }}
-            source={require("../../../assets/card_created.png")}
+            style={{ resizeMode: "contain", height: 160 }}
+            source={require("../../assets/card_created.png")}
           />
           <Text style={{ fontFamily: "Bold", ...tw("text-2xl mt-6 mb-4") }}>
             Notatka została utworzona

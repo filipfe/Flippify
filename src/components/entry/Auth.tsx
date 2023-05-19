@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { AuthFormContext } from "../../context/AuthFormProvider";
 import Login from "./Login";
 import Register from "./Register";
+import { AuthFormContext } from "../../providers/AuthFormProvider";
 
 const forms = [<Register />, <Login />];
 

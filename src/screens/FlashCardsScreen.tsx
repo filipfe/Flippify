@@ -1,20 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddCard from "../components/flashcards/AddCard";
-import CategoryList, {
-  CategoryProps,
-} from "../components/flashcards/CategoryList";
+import CategoryList from "../components/flashcards/categories/CategoryList";
 import FlashCardsGenerator from "../components/flashcards/FlashCardsGenerator";
-import TopicList, { TopicProps } from "../components/flashcards/TopicList";
-
-export type CategoryStackParams = {
-  CategoryList: undefined;
-  AddCard: undefined;
-  TopicList: { category: CategoryProps };
-  FlashCardsGenerator: {
-    category: CategoryProps;
-    topic: TopicProps;
-  };
-};
+import TopicList from "../components/flashcards/topics/TopicList";
+import { CategoryStackParams } from "../types/navigation";
 
 const CategoryStack = createNativeStackNavigator<CategoryStackParams>();
 

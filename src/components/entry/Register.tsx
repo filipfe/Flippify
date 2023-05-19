@@ -11,9 +11,10 @@ import axios from "axios";
 import Loader from "../Loader";
 import { API_URL } from "@env";
 import { useTailwind } from "tailwind-rn/dist";
-import { AuthFormContext } from "../../context/AuthFormProvider";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
+import { AuthFormContext } from "../../providers/AuthFormProvider";
+import SecondaryButton from "../SecondaryButton";
 
 export default function Register() {
   const tw = useTailwind();
@@ -33,9 +34,7 @@ export default function Register() {
     if (userData.password !== confPassword)
       return setStatus("Hasła się nie zgadzają!");
     axios
-      .post(`${API_URL}/api/signup`, JSON.stringify(userData), {
-        headers: { "Content-Type": "application/json" },
-      })
+      .post(`${API_URL}/api/signup`, JSON.stringify(userData))
       .then(() => setModal(true))
       .catch(() => setStatus("Error"));
   };
@@ -59,8 +58,8 @@ export default function Register() {
   if (status === "Registered") return <Text>Zarejestrowano</Text>;
 
   return (
-    <View style={tw("flex-1 mt-8 items-stretch w-full px-12")}>
-      <Text style={{ fontFamily: "Bold", ...tw("text-4xl text-center my-5") }}>
+    <View style={{ flex: 1, justifyContent: "space-between" }}>
+      <Text style={{ fontFamily: "Bold", ...tw("text-center text-2xl mb-8") }}>
         Załóż <Text style={tw("text-primary")}>bezpłatne</Text> konto
       </Text>
       <ScrollView style={tw("flex-1")}>
@@ -83,22 +82,14 @@ export default function Register() {
           setState={setConfPassword}
         />
       </ScrollView>
-      {status && status !== "loading" && (
-        <Text style={tw("text-red-400")}>{status}</Text>
-      )}
-      {status === "loading" && <Loader />}
-      <View style={tw("my-10")}>
-        <PrimaryButton text="Zarejestruj" onPress={handleSubmit} />
-        <Pressable
-          style={tw("w-full items-center py-4")}
+      <View>
+        <SecondaryButton
+          text="Mam już konto"
           onPress={() => setAuthFormIndex(1)}
-        >
-          <Text
-            style={{ fontFamily: "ExtraBold", ...tw("text-[1.1rem] mt-2") }}
-          >
-            Zaloguj się
-          </Text>
-        </Pressable>
+        />
+        <View style={{ marginTop: 20 }}>
+          <PrimaryButton text="Zarejestruj" onPress={handleSubmit} />
+        </View>
       </View>
       <Modal visible={modal} animationType="slide">
         <Text>Na podany email wysłaliśmy kod weryfikacyjny.</Text>

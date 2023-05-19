@@ -1,23 +1,11 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useTailwind } from "tailwind-rn/dist";
-import { AnswerContext } from "../../context/AnswerProvider";
 import PrimaryButton from "../PrimaryButton";
+import { AnswerContext } from "../../providers/AnswerProvider";
+import { Answer, FlashCard } from "../../types/flashcards";
 
-export interface AnswerType {
-  id?: number;
-  content: string;
-  correct: boolean | undefined;
-}
-
-export interface FlashCardProps {
-  id: number;
-  question: string;
-  type: "radio" | "input" | null;
-  answers: AnswerType[];
-}
-
-export default function FlashCard(props: FlashCardProps) {
+export default function FlashCardRef(props: FlashCard) {
   const tw = useTailwind();
   const [status, setStatus] = useState<"correct" | "wrong" | undefined>(
     undefined
@@ -57,7 +45,7 @@ export default function FlashCard(props: FlashCardProps) {
   );
 }
 
-const RadioAnswer = (props: AnswerType) => {
+const RadioAnswer = (props: Answer) => {
   const { correct, content } = props;
   const { answer, setAnswer } = useContext(AnswerContext);
   const tw = useTailwind();

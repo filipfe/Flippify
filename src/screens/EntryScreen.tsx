@@ -5,22 +5,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTailwind } from "tailwind-rn/dist";
 import Auth from "../components/entry/Auth";
 import PrimaryButton from "../components/PrimaryButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { linearGradient } from "../const/styles";
 
 export default function EntryScreen() {
   const tw = useTailwind();
   const { step, setStep, form } = useMultiStepForm([<Info />, <Auth />]);
-
   return (
-    <SafeAreaView style={tw("flex-1 items-center justify-start")}>
+    <SafeAreaView style={tw("flex-1 items-center justify-between")}>
       <StepDisplayer step={step} />
-      {step !== 1 ? (
-        form
-      ) : (
-        <View style={tw("px-4 w-full mb-8 items-center justify-center")}>
-          {form}
+      <View style={tw("px-8 w-full flex-1 justify-between my-8")}>
+        {form}
+        {step === 1 && (
           <PrimaryButton text="Zaczynajmy!" onPress={() => setStep(2)} />
-        </View>
-      )}
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -30,15 +29,25 @@ const StepDisplayer = ({ step }: { step: number }) => {
   return (
     <View
       style={tw(
-        "bg-[#E0E4E1] mt-8 rounded-xl h-[0.4rem] overflow-hidden w-[40%] flex-row"
+        "bg-light mt-8 rounded-xl h-[0.4rem] overflow-hidden w-[40%] flex-row"
       )}
     >
-      <View
-        style={step === 1 ? tw("bg-primary rounded-xl w-[50%]") : tw("w-[50%]")}
-      />
-      <View
-        style={step === 2 ? tw("bg-primary rounded-xl w-[50%]") : tw("w-[50%]")}
-      />
+      <View style={tw("w-[50%] relative h-full")}>
+        {step === 1 && (
+          <LinearGradient
+            colors={linearGradient}
+            style={tw("rounded-xl w-full h-full")}
+          />
+        )}
+      </View>
+      <View style={tw("w-[50%] relative h-full")}>
+        {step === 2 && (
+          <LinearGradient
+            colors={linearGradient}
+            style={tw("rounded-xl w-full h-full")}
+          />
+        )}
+      </View>
     </View>
   );
 };

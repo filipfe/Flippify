@@ -6,15 +6,14 @@ import {
 import { ScrollView, View, Text } from "react-native";
 import { useState, useEffect } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
-import { NoteStackParams } from "../screens/NotesScreen";
-import { NoteProps } from "../components/notes/Note";
 import { useTailwind } from "tailwind-rn/dist";
 import axios from "axios";
 import { API_URL } from "@env";
+import { Note, NoteStackParams } from "../types/notes";
 
 export default function useNotes() {
-  const [popularNotes, setPopularNotes] = useState<NoteProps[]>([]);
-  const [recentNotes, setRecentNotes] = useState<NoteProps[]>([]);
+  const [popularNotes, setPopularNotes] = useState<Note[]>([]);
+  const [recentNotes, setRecentNotes] = useState<Note[]>([]);
   const tw = useTailwind();
   const navigation =
     useNavigation<NavigationProp<NoteStackParams, "NoteList">>();
@@ -69,6 +68,7 @@ export default function useNotes() {
       </View>
     );
   };
+
   return {
     didPopularLoad: popularNotes.length > 0,
     didRecentLoad: recentNotes.length > 0,
