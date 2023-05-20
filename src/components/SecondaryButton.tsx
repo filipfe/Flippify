@@ -1,27 +1,23 @@
-import { TouchableOpacity } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Button } from "../types/general";
 import GradientText from "./GradientText";
+import { THEME } from "../const/theme";
 
 export default function SecondaryButton({
   onPress,
   text,
   active = true,
 }: Button) {
-  const tw = useTailwind();
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={active ? onPress : () => {}}
-      style={{
-        borderRadius: 20,
-        ...tw(`relative bg-light z-10 w-full mx-auto py-4 px-12`),
-      }}
+      style={styles.button}
     >
       <GradientText
         style={{
-          fontFamily: "Bold",
-          ...tw(`mx-auto text-base ${active ? "text-white" : "text-font"}`),
+          ...styles.text,
+          ...(active ? styles.textActive : styles.textInActive),
         }}
       >
         {text}
@@ -29,3 +25,25 @@ export default function SecondaryButton({
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    backgroundColor: THEME.light,
+    position: "relative",
+    zIndex: 10,
+    width: "100%",
+    paddingVertical: 16,
+    paddingHorizontal: 48,
+  },
+  text: {
+    marginHorizontal: "auto",
+    fontFamily: "Bold",
+  },
+  textActive: {
+    color: "white",
+  },
+  textInActive: {
+    color: THEME.font,
+  },
+});

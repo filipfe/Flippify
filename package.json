@@ -11,9 +11,9 @@
     "dev:tailwind": "concurrently \"tailwindcss --input input.css --output tailwind.css --no-autoprefixer --watch\" \"tailwind-rn --watch\""
   },
   "dependencies": {
-    "@expo-google-fonts/dosis": "^0.2.3",
     "@expo-google-fonts/plus-jakarta-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "~1.17.3",
+    "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
@@ -33,8 +33,7 @@
     "react-native-select-dropdown": "^3.0.3",
     "react-native-svg": "13.4.0",
     "react-native-web": "~0.18.9",
-    "tailwind-rn": "^4.2.0",
-    "@react-native-masked-view/masked-view": "0.2.8"
+    "tailwind-rn": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

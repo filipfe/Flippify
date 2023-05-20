@@ -3,10 +3,9 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
-import { useTailwind } from "tailwind-rn/dist";
 import axios from "axios";
 import { API_URL } from "@env";
 import { Note, NoteStackParams } from "../types/notes";
@@ -14,7 +13,6 @@ import { Note, NoteStackParams } from "../types/notes";
 export default function useNotes() {
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
-  const tw = useTailwind();
   const navigation =
     useNavigation<NavigationProp<NoteStackParams, "NoteList">>();
   const location = useNavigationState((state) => state);
@@ -31,10 +29,8 @@ export default function useNotes() {
 
   const PopularNotes = () => {
     return (
-      <View style={tw("mb-6")}>
-        <Text style={{ fontFamily: "Bold", ...tw("mb-4 text-lg") }}>
-          Popularne notatki
-        </Text>
+      <View style={styles.wrapper}>
+        <Text style={styles.title}>Popularne notatki</Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {popularNotes.map((note) => (
             <SmallNoteRef
@@ -51,10 +47,8 @@ export default function useNotes() {
 
   const RecentNotes = () => {
     return (
-      <View style={tw("mb-6")}>
-        <Text style={{ fontFamily: "Bold", ...tw("mb-4 text-lg") }}>
-          Ostatnio dodane notatki
-        </Text>
+      <View style={styles.wrapper}>
+        <Text style={styles.title}>Ostatnio dodane notatki</Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {recentNotes.map((note) => (
             <SmallNoteRef
@@ -76,3 +70,14 @@ export default function useNotes() {
     PopularNotes,
   };
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    marginBottom: 24,
+  },
+  title: {
+    fontFamily: "Bold",
+    marginBottom: 16,
+    fontSize: 18,
+  },
+});

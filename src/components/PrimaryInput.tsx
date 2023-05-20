@@ -1,6 +1,6 @@
-import { Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { useState, useEffect } from "react";
-import { useTailwind } from "tailwind-rn/dist";
+import { THEME } from "../const/theme";
 
 type Input = {
   field: string;
@@ -17,7 +17,6 @@ export default function PrimaryInput({
   value,
   setState,
 }: Input) {
-  const tw = useTailwind();
   const [input, setInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -32,32 +31,40 @@ export default function PrimaryInput({
   }, [input]);
 
   return (
-    <View style={tw("relative mb-4")}>
-      {label && (
-        <Text
-          style={{
-            fontFamily: "SemiBold",
-            transform: [{ translateY: 8 }],
-            zIndex: 10,
-            position: "relative",
-            fontSize: 12,
-            ...tw("text-p px-6"),
-          }}
-        >
-          {label}
-        </Text>
-      )}
+    <View style={styles.wrapper}>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         secureTextEntry={secured}
         value={typeof value === "string" ? value : input}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={{
-          fontFamily: "SemiBold",
-          ...tw(`py-3 px-6 rounded-2xl w-full bg-light`),
-        }}
+        style={styles.input}
         onChangeText={(text) => setInput(text)}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    position: "relative",
+    marginBottom: 16,
+  },
+  label: {
+    fontFamily: "SemiBold",
+    transform: [{ translateY: 8 }],
+    zIndex: 10,
+    position: "relative",
+    fontSize: 12,
+    color: THEME.p,
+    paddingHorizontal: 24,
+  },
+  input: {
+    fontFamily: "SemiBold",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    width: "100%",
+    backgroundColor: THEME.light,
+  },
+});

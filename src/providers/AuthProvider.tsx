@@ -6,7 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 export default function AuthProvider({ children }: { children: JSX.Element }) {
   const auth = useAuth();
-  const { isLogged, tokens, logout, updateToken } = auth;
+  const { isLogged, tokens, updateToken } = auth;
   const { refresh } = tokens;
   const timer = useRef<any>(null);
 
