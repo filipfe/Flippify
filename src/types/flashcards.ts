@@ -1,16 +1,19 @@
+import { User } from "./auth";
+
 export type Topic = string
 
 export type Answer = {
   id?: number;
-  content: string;
-  correct: boolean | undefined;
+  text: string;
+  is_correct: boolean;
 }
 
 export type FlashCard = {
   id: number;
   question: string;
-  type: "radio" | "input" | null;
+  type: "radio" | "input"
   answers: Answer[];
+  user?: User
 }
 
 export type AddedFlashCard = FlashCard & {

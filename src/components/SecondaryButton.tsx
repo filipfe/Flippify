@@ -7,17 +7,29 @@ export default function SecondaryButton({
   onPress,
   text,
   active = true,
+  style,
+  fontSize = 12,
+  width = "auto",
+  paddingHorizontal = 48,
+  paddingVertical = 14,
 }: Button) {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={active ? onPress : () => {}}
-      style={styles.button}
+      style={{
+        ...styles.button,
+        ...style,
+        paddingHorizontal,
+        paddingVertical,
+        width,
+      }}
     >
       <GradientText
         style={{
           ...styles.text,
           ...(active ? styles.textActive : styles.textInActive),
+          fontSize,
         }}
       >
         {text}
@@ -33,8 +45,6 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 10,
     width: "100%",
-    paddingVertical: 14,
-    paddingHorizontal: 48,
     alignItems: "center",
     justifyContent: "center",
   },

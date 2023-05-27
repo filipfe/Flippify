@@ -1,14 +1,18 @@
-import { StyleSheet, Text } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import { THEME } from "../const/theme";
 
 export default function Loader() {
-  return <Text style={styles.loader}>Ładowanie...</Text>;
+  return (
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFF",
+        width: "100%",
+      }}
+    >
+      <ActivityIndicator size="large" color={THEME.primary} />
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-  loader: {
-    fontFamily: "Bold",
-    marginHorizontal: "auto",
-    fontSize: 20,
-    marginVertical: 24,
-  },
-});

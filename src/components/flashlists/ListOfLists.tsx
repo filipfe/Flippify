@@ -1,33 +1,25 @@
 import { useState, useEffect, useContext } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Loader from "../Loader";
-import { FlashListStackParams } from "../profile/FlashLists";
 import axios from "axios";
 import { API_URL } from "@env";
-import {
-  NavigationProp,
-  useNavigation,
-  useNavigationState,
-} from "@react-navigation/native";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import PrimaryButton from "../PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
-import RangeSlider from "../RangeSlider";
 import { THEME } from "../../const/theme";
 import { shadowPrimary } from "../../styles/general";
 import GradientText from "../GradientText";
 import { FlashList } from "../../types/flashcards";
-
-type ListOfFlashCardListsNavigation = NavigationProp<
-  FlashListStackParams,
-  "ListOfLists"
->;
+import { ListOfFlashCardListsNavigation } from "../../types/navigation";
+import NoContent from "./NoContent";
 
 export default function ListOfLists({
   navigation,
 }: {
   navigation: ListOfFlashCardListsNavigation;
 }) {
+  const { navigate } = navigation;
   const [loading, setLoading] = useState(true);
   const [removed, setRemoved] = useState<number[]>([]);
   const [flashLists, setFlashLists] = useState<FlashList[]>([]);
@@ -44,11 +36,16 @@ export default function ListOfLists({
 
   if (loading) return <Loader />;
 
+  if (flashLists.length < 1) return <NoContent />;
+
   return (
     <ScrollView>
       <View style={styles.wrapper}>
         <View style={{ marginBottom: 8 }}>
-          <PrimaryButton text="+ Dodaj nową" />
+          <PrimaryButton
+            onPress={() => navigate("AddFlashList")}
+            text="+ Dodaj nową"
+          />
         </View>
         {flashLists.length > 0 &&
           flashLists.map((list) => (

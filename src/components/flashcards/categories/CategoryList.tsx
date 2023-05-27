@@ -8,6 +8,7 @@ import { CategoryNavigationProps } from "../../../types/navigation";
 import CategoryRef from "./CategoryRef";
 import { THEME } from "../../../const/theme";
 import { DEFAULT_STYLES } from "../../../const/styles";
+import Loader from "../../Loader";
 
 export default function CategoryList() {
   const route = useRoute();
@@ -24,40 +25,24 @@ export default function CategoryList() {
       .finally(() => setIsLoading(false));
   }, [route]);
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.wrapper}>
-        {!isLoading ? (
-          categories.length > 0 ? (
-            categories.map((category) => (
-              <CategoryRef {...category} key={category.name} />
-            ))
-          ) : (
-            <Text style={DEFAULT_STYLES.error}>
-              Wystąpił błąd, spróbuj ponownie później!
-            </Text>
-          )
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryRef {...category} key={category.name} />
+          ))
         ) : (
-          <>
-            <CategoryLoader />
-            <CategoryLoader />
-            <CategoryLoader />
-            <CategoryLoader />
-          </>
+          <Text style={DEFAULT_STYLES.error}>
+            Wystąpił błąd, spróbuj ponownie później!
+          </Text>
         )}
       </View>
     </ScrollView>
   );
 }
-
-const CategoryLoader = () => {
-  return (
-    <View style={styles.loaderWrapper}>
-      <View style={styles.loaderBox} />
-      <View style={styles.loaderText} />
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   wrapper: {

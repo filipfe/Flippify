@@ -5,6 +5,8 @@ import Note from "../components/notes/NoteDetails";
 import NoteList from "../components/notes/NoteList";
 import { NoteStackParams } from "../types/notes";
 import { THEME } from "../const/theme";
+import NoteSearch from "../components/notes/search/NoteSearch";
+import HeaderMenu from "../components/notes/HeaderMenu";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
@@ -22,6 +24,7 @@ export default function NotesScreen() {
         options={{
           title: "Notatki",
           headerShadowVisible: false,
+          headerRight: HeaderMenu,
         }}
       />
       <NoteStack.Screen
@@ -39,9 +42,17 @@ export default function NotesScreen() {
         }}
       />
       <NoteStack.Screen
+        name="NoteSearch"
+        component={NoteSearch}
+        options={{
+          title: "Wyszukaj notatkę",
+          headerShadowVisible: false,
+        }}
+      />
+      <NoteStack.Screen
         name="AddNote"
         component={AddNote}
-        options={{ title: "Dodaj notatkę" }}
+        options={{ title: "Dodaj notatkę", headerTransparent: true }}
       />
     </NoteStack.Navigator>
   );

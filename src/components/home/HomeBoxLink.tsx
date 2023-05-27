@@ -2,19 +2,21 @@ import { Pressable, View } from "react-native";
 import { ProfileBoxLinkProps } from "../../types/profile";
 import { Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { ProfileNavigation } from "../../types/navigation";
-import { shadowPrimary } from "../../styles/general";
+import useShadow from "../../hooks/useShadow";
+import { RootTabParams } from "../../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function HomeBoxLink({
-  to,
   title,
   subtitle,
   icon,
 }: ProfileBoxLinkProps) {
-  const { navigate } = useNavigation<ProfileNavigation>();
+  const shadow = useShadow(24);
+  const { navigate } =
+    useNavigation<NativeStackNavigationProp<RootTabParams, "Profile">>();
   return (
     <Pressable
-      onPress={() => navigate(to)}
+      onPress={() => navigate("Profile")}
       style={{
         backgroundColor: "#F2F8FD",
         borderRadius: 32,
@@ -22,7 +24,7 @@ export default function HomeBoxLink({
         paddingHorizontal: 36,
         marginBottom: 24,
         width: "100%",
-        ...shadowPrimary,
+        ...shadow,
       }}
     >
       <View

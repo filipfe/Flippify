@@ -16,12 +16,9 @@ import { THEME } from "../../const/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { initialNote } from "../../const/notes";
-import {
-  DefaultProfileIcon,
-  LikeIcon,
-  ResizeIcon,
-} from "../../assets/icons/icons";
+import { ResizeIcon } from "../../assets/icons/icons";
 import { shadowPrimary } from "../../styles/general";
+import UserCredentials from "../UserCredentials";
 
 type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
 
@@ -30,8 +27,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
   const [isLiked, setIsLiked] = useState(false);
-  const { title, created_at, user, image } = details;
-  const { profile_picture, username } = user;
+  const { title, created_at, user, images, image } = details;
 
   const handleLike = async () => {
     setIsLiked((prev) => !prev);
@@ -106,30 +102,12 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
               asperiores quisquam ad, rerum totam aut corporis neque. Voluptate
               nesciunt obcaecati natus? Deleniti, numquam!
             </Text>
-            <View style={styles.bottomWrapper}>
-              <View style={styles.userWrapper}>
-                <View style={styles.userPicture}>
-                  {profile_picture ? (
-                    <Image
-                      style={{ width: 52, height: 52 }}
-                      source={{ uri: profile_picture }}
-                    />
-                  ) : (
-                    <DefaultProfileIcon width={52} height={52} />
-                  )}
-                </View>
-                <View style={{ marginLeft: 16 }}>
-                  <Text style={styles.addedBy}>Dodane przez</Text>
-                  <Text style={styles.username}>{username}</Text>
-                </View>
-              </View>
-              <Pressable onPress={handleLike} style={styles.likeButton}>
-                <LikeIcon
-                  stroke={isLiked ? THEME.primary : THEME.font}
-                  strokeWidth={2}
-                  fill={isLiked ? THEME.primary : "none"}
-                />
-              </Pressable>
+            <View style={{ marginTop: 32 }}>
+              <UserCredentials
+                user={user}
+                isLiked={isLiked}
+                handleLike={handleLike}
+              />
             </View>
           </View>
         </View>
@@ -138,7 +116,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     justifyContent: "flex-end",
@@ -156,6 +134,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "#FFFFFF",
     overflow: "hidden",
+    position: "relative",
+    alignItems: "center",
     ...shadowPrimary,
   },
   noteDescWrapper: {
@@ -178,46 +158,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: "Medium",
     marginTop: 8,
-  },
-  bottomWrapper: {
-    marginTop: 32,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  userWrapper: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  userPicture: {
-    height: 52,
-    width: 52,
-    borderRadius: 52,
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    ...shadowPrimary,
-  },
-  likeButton: {
-    height: 56,
-    width: 56,
-    backgroundColor: THEME.light,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  addedBy: {
-    fontFamily: "SemiBold",
-    fontSize: 12,
-    color: THEME.secondary,
-    lineHeight: 20,
-  },
-  username: {
-    color: THEME.font,
-    fontFamily: "Bold",
-    lineHeight: 24,
   },
   resize: {
     height: 48,

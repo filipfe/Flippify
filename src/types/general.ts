@@ -2,7 +2,11 @@ export type Button = {
   onPress?: () => void;
   text: string;
   active?: boolean;
-  style?: any
+  style?: any,
+  width?: string | number,
+  fontSize?: number,
+  paddingVertical?: number,
+    paddingHorizontal?: number,
 };    
   
 export type Category = {

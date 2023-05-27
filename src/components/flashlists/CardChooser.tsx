@@ -2,10 +2,10 @@ import { useState, useContext } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
-import { FlashListStackParams } from "../profile/FlashLists";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
 import { FlashListCard } from "../../types/flashcards";
+import { FlashListStackParams } from "../../types/navigation";
 
 export default function CardChooser() {
   const auth = useContext(AuthContext);

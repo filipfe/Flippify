@@ -7,6 +7,7 @@ type Input = {
   label?: string;
   secured?: boolean;
   value?: string;
+  style?: any;
   setState: any;
 };
 
@@ -15,6 +16,7 @@ export default function PrimaryInput({
   label,
   secured,
   value,
+  style,
   setState,
 }: Input) {
   const [input, setInput] = useState("");
@@ -38,7 +40,7 @@ export default function PrimaryInput({
         value={typeof value === "string" ? value : input}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={styles.input}
+        style={{ ...styles.input, ...(style && style) }}
         onChangeText={(text) => setInput(text)}
       />
     </View>
@@ -48,7 +50,6 @@ export default function PrimaryInput({
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    marginBottom: 16,
   },
   label: {
     fontFamily: "SemiBold",

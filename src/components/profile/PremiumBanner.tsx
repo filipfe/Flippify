@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
+    paddingVertical: 24,
     paddingHorizontal: 24,
   },
   logoWrapper: {

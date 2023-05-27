@@ -1,5 +1,5 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { Topic } from "./flashcards";
+import { FlashList, Topic } from "./flashcards";
 import { Category } from "./general";
 
 // FLASHCARDS
@@ -39,6 +39,17 @@ export type QuestionsFormNavigationProp = NavigationProp<
 >;
 
 export type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardForm">;
+
+export type FlashListStackParams = {
+  ListOfLists: undefined;
+  AddFlashList: undefined;
+  FlashList: FlashList;
+};
+
+export type ListOfFlashCardListsNavigation = NavigationProp<
+FlashListStackParams,
+"ListOfLists"
+>;
 
 // PROFILE
 

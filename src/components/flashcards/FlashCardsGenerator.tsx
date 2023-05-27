@@ -1,45 +1,40 @@
 import { useRoute } from "@react-navigation/native";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { API_URL } from "@env";
 import FlashCardRef from "./FlashCardRef";
 import Loader from "../Loader";
-import { AnswerContext } from "../../providers/AnswerProvider";
 import { GeneratorRouteProps } from "../../types/navigation";
-import { FlashCard } from "../../types/flashcards";
+import { View, StyleSheet } from "react-native";
+import UserCredentials from "../UserCredentials";
+import { initialUserState } from "../../const/auth";
+import useFlashCard from "../../hooks/useFlashCard";
+import { FlashCardContext } from "../../context/FlashCardContext";
 
 export default function FlashCardsGenerator() {
   const { params } = useRoute<GeneratorRouteProps>();
-  const { category, topic } = params;
-  const [activeCard, setActiveCard] = useState<FlashCard | null>(null);
-  const [answer, setAnswer] = useState<string>("");
+  const flashCard = useFlashCard(params);
+  const { isLoading, activeCard } = flashCard;
 
-  useEffect(() => {
-    if (answer === "") return;
-    let isCancelled = false;
-    if (!isCancelled)
-      axios
-        .get(
-          `${API_URL}/api/flashcards/random?category_name=${category.name}${
-            topic && "&topic_name=" + topic
-          }`
-        )
-        .then((res) => res.data)
-        .then((data) => setActiveCard(data[0]))
-        .catch((err) => alert(err));
-    return () => {
-      isCancelled = true;
-    };
-  }, [answer]);
-
-  useEffect(() => {
-    setAnswer("");
-  }, [activeCard]);
-
-  if (!activeCard) return <Loader />;
+  if (!isLoading) return <Loader />;
   return (
-    <AnswerContext.Provider value={{ answer, setAnswer }}>
-      <FlashCardRef {...activeCard} />
-    </AnswerContext.Provider>
+    <FlashCardContext.Provider value={flashCard}>
+      <View style={styles.wrapper}>
+        <FlashCardRef />
+        <View style={{ marginTop: 24 }}>
+          <UserCredentials
+            user={activeCard.user || initialUserState}
+            isLiked={false}
+            handleLike={() => {}}
+          />
+        </View>
+      </View>
+    </FlashCardContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    flex: 1,
+    backgroundColor: "#FFF",
+  },
+});

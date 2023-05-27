@@ -6,7 +6,7 @@ export const initialNewCard: AddedFlashCard = {
   category: "",
   topic: "",
   question: "",
-  type: null,
+  type: "radio",
   answers: [],
 };
 

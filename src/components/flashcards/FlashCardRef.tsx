@@ -1,78 +1,104 @@
-import { Pressable, Text, TextInput, View } from "react-native";
-import { useState, useEffect, useContext } from "react";
-import PrimaryButton from "../PrimaryButton";
-import { AnswerContext } from "../../providers/AnswerProvider";
-import { Answer, FlashCard } from "../../types/flashcards";
+import { Text, View, StyleSheet } from "react-native";
+import { useContext } from "react";
+import { FlashCardContext } from "../../context/FlashCardContext";
+import { shadowPrimary } from "../../styles/general";
+import { THEME } from "../../const/theme";
+import RadioAnswer from "./answers/RadioAnswer";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+import Result from "./Result";
 
-export default function FlashCardRef(props: FlashCard) {
-  const [status, setStatus] = useState<"correct" | "wrong" | undefined>(
-    undefined
-  );
-  const { answers, type, question } = props;
-  const { answer } = useContext(AnswerContext);
+export default function FlashCardRef() {
+  const { activeCard, rotateY } = useContext(FlashCardContext);
+  const { question, type, answers } = activeCard;
 
-  useEffect(() => {
-    if (!answer) return;
-    let correct = props.answers.find((ans) => ans.correct);
-    if (correct?.content === answer) setStatus("correct");
-    else setStatus("wrong");
-  }, [answer]);
+  const frontCardTransform = useAnimatedStyle(() => ({
+    transform: [{ rotateX: withTiming(`${rotateY}deg`, { duration: 400 }) }],
+  }));
 
-  useEffect(() => {
-    return () => setStatus(undefined);
-  }, [props]);
+  const backCardTransform = useAnimatedStyle(() => ({
+    transform: [
+      { rotateX: withTiming(`${180 + rotateY}deg`, { duration: 400 }) },
+    ],
+    zIndex: rotateY === 180 ? 1 : -1,
+  }));
 
   return (
-    <View>
-      <Text>{question.split("[input]").join(".....")}</Text>
-      {type === "radio" &&
-        answers.map((answer) => <RadioAnswer {...answer} key={answer.id} />)}
-      {type === "input" && <InputAnswer />}
-      {status && <Text>{status}</Text>}
+    <View style={styles.wrapper}>
+      <Animated.View style={[styles.card, frontCardTransform]}>
+        <Text style={styles.question}>
+          {question.split("[input]").join(".....")}
+        </Text>
+        <View style={styles.answersWrapper}>
+          {type === "radio" &&
+            answers.map((answer, i) => (
+              <RadioAnswer {...answer} index={i} key={answer.text} />
+            ))}
+        </View>
+        {/* {type === "input" && <InputAnswer />} */}
+      </Animated.View>
+      <Animated.View style={[styles.card, styles.backCard, backCardTransform]}>
+        <Result />
+      </Animated.View>
     </View>
   );
 }
 
-const RadioAnswer = (props: Answer) => {
-  const { correct, content } = props;
-  const { answer, setAnswer } = useContext(AnswerContext);
-  const [isCorrect, setIsCorrect] = useState<boolean | undefined>(undefined);
+const styles = StyleSheet.create({
+  wrapper: {
+    backgroundColor: "#FFF",
+    flex: 1,
+    position: "relative",
+  },
+  card: {
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    backgroundColor: "#FFF",
+    borderRadius: 24,
+    alignItems: "center",
+    backfaceVisibility: "hidden",
+    flex: 1,
+    zIndex: 1,
+    ...shadowPrimary,
+  },
+  backCard: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: -1,
+  },
+  question: {
+    color: THEME.font,
+    fontSize: 20,
+    fontFamily: "ExtraBold",
+  },
+  answersWrapper: {
+    marginTop: 24,
+    width: "100%",
+  },
+});
 
-  useEffect(() => {
-    if (!answer || (content !== answer && !correct)) return;
-    setIsCorrect(correct);
-    return () => {
-      setIsCorrect(undefined);
-    };
-  }, [answer]);
+// const InputAnswer = () => {
+//   const [input, setInput] = useState("");
+//   const { answer, setAnswer } = useContext(AnswerContext);
 
-  return (
-    <View>
-      <Pressable onPress={() => setAnswer(content)}>
-        <Text>{content}</Text>
-      </Pressable>
-      <View />
-    </View>
-  );
-};
+//   useEffect(() => {
+//     if (answer) setInput(answer);
+//     else setInput("");
+//   }, [answer]);
 
-const InputAnswer = () => {
-  const [input, setInput] = useState("");
-  const { answer, setAnswer } = useContext(AnswerContext);
-
-  useEffect(() => {
-    if (answer) setInput(answer);
-    else setInput("");
-  }, [answer]);
-
-  return (
-    <>
-      <TextInput
-        placeholder="Odpowiedź"
-        value={input}
-        onChangeText={(text) => setInput(text.toLowerCase())}
-      />
-      <PrimaryButton onPress={() => setAnswer(input)} text="Zatwierdź" />
-    </>
-  );
-};
+//   return (
+//     <>
+//       <TextInput
+//         placeholder="Odpowiedź"
+//         value={input}
+//         onChangeText={(text) => setInput(text.toLowerCase())}
+//       />
+//       <PrimaryButton onPress={() => setAnswer(input)} text="Zatwierdź" />
+//     </>
+//   );
+// };

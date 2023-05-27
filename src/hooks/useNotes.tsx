@@ -1,21 +1,16 @@
-import {
-  NavigationProp,
-  useNavigation,
-  useNavigationState,
-} from "@react-navigation/native";
+import { useNavigationState } from "@react-navigation/native";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
 import axios from "axios";
 import { API_URL } from "@env";
-import { Note, NoteStackParams } from "../types/notes";
+import { Note } from "../types/notes";
 import { THEME } from "../const/theme";
 
 export default function useNotes() {
+  const [didLoad, setDidLoad] = useState(false);
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
-  const navigation =
-    useNavigation<NavigationProp<NoteStackParams, "NoteList">>();
   const location = useNavigationState((state) => state);
 
   useEffect(() => {
@@ -25,7 +20,8 @@ export default function useNotes() {
       .then((data) => {
         setRecentNotes(data.recent);
         setPopularNotes(data.popular);
-      });
+      })
+      .finally(() => setDidLoad(true));
   }, [location]);
 
   const PopularNotes = () => {
@@ -59,10 +55,9 @@ export default function useNotes() {
   };
 
   return {
-    didPopularLoad: popularNotes.length > 0,
-    didRecentLoad: recentNotes.length > 0,
     RecentNotes,
     PopularNotes,
+    didLoad,
   };
 }
 

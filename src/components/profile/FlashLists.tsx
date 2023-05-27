@@ -2,14 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ListOfLists from "../flashlists/ListOfLists";
 import AddFlashList from "../flashlists/AddFlashList";
 import FlashListDetails from "../flashlists/FlashListDetails";
-import { FlashList } from "../../types/flashcards";
 import { THEME } from "../../const/theme";
-
-export type FlashListStackParams = {
-  ListOfLists: undefined;
-  AddFlashList: undefined;
-  FlashList: FlashList;
-};
+import { FlashListStackParams } from "../../types/navigation";
 
 const FlashListStack = createNativeStackNavigator<FlashListStackParams>();
 
@@ -32,7 +26,7 @@ export default function FlashLists() {
         name="AddFlashList"
         component={AddFlashList}
         options={{
-          title: "Dodaj fiszkolistę",
+          title: "Dodaj FiszkoListę",
         }}
       />
       <FlashListStack.Screen
