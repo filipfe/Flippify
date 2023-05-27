@@ -1,9 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddCard from "../components/flashcards/AddCard";
+import AddCard from "../components/flashcards/add-card/AddCard";
 import CategoryList from "../components/flashcards/categories/CategoryList";
 import FlashCardsGenerator from "../components/flashcards/FlashCardsGenerator";
 import TopicList from "../components/flashcards/topics/TopicList";
 import { CategoryStackParams } from "../types/navigation";
+import { THEME } from "../const/theme";
 
 const CategoryStack = createNativeStackNavigator<CategoryStackParams>();
 
@@ -12,7 +13,8 @@ export default function FlashCardsScreen() {
     <CategoryStack.Navigator
       initialRouteName="CategoryList"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Bold" },
+        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
+        headerShadowVisible: false,
       }}
     >
       <CategoryStack.Screen
@@ -36,7 +38,7 @@ export default function FlashCardsScreen() {
         name="FlashCardsGenerator"
         component={FlashCardsGenerator}
         options={({ route }) => {
-          return { title: "Fiszki " + route.params.topic.name };
+          return { title: "Fiszki " + route.params.topic };
         }}
       />
     </CategoryStack.Navigator>

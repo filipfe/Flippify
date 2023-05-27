@@ -4,16 +4,50 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FlashCardsScreen from "./src/screens/FlashCardsScreen";
 import NotesScreen from "./src/screens/NotesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import { useTailwind } from "tailwind-rn/dist";
 import {
   FlashCardsIcon,
   HomeIcon,
   NotesIcon,
   ProfileIcon,
-} from "./src/assets/home";
+} from "./src/assets/general";
 import { useContext } from "react";
 import { AuthContext } from "./src/context/AuthContext";
 import EntryScreen from "./src/screens/EntryScreen";
+import { StyleSheet } from "react-native";
+import AuthProvider from "./src/providers/AuthProvider";
+import AxiosProvider from "./src/providers/AxiosProvider";
+import {
+  useFonts,
+  PlusJakartaSans_400Regular as Regular,
+  PlusJakartaSans_500Medium as Medium,
+  PlusJakartaSans_600SemiBold as SemiBold,
+  PlusJakartaSans_700Bold as Bold,
+  PlusJakartaSans_800ExtraBold as ExtraBold,
+} from "@expo-google-fonts/plus-jakarta-sans";
+import Loader from "./src/components/Loader";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
+
+export default function AppProvider() {
+  const [isFontLoaded] = useFonts({
+    Regular,
+    Medium,
+    SemiBold,
+    Bold,
+    ExtraBold,
+  });
+
+  if (!isFontLoaded) return <Loader />;
+
+  return (
+    <AuthProvider>
+      <AxiosProvider>
+        <App />
+      </AxiosProvider>
+    </AuthProvider>
+  );
+}
 
 export type RootTabParams = {
   Home: undefined;
@@ -24,8 +58,7 @@ export type RootTabParams = {
 
 const RootTab = createBottomTabNavigator<RootTabParams>();
 
-export default function App() {
-  const tw = useTailwind();
+function App() {
   const { isLogged } = useContext(AuthContext);
 
   if (!isLogged) return <EntryScreen />;
@@ -33,13 +66,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <RootTab.Navigator
-        sceneContainerStyle={tw("bg-white")}
+        sceneContainerStyle={styles.sceneContainer}
         screenOptions={{
-          headerTitleStyle: { fontFamily: "Bold" },
+          headerTitleStyle: styles.headerTitle,
           tabBarActiveTintColor: "#2386F1",
           tabBarInactiveTintColor: "#3A234E",
-          tabBarLabelStyle: { ...tw("text-[.9rem]"), fontFamily: "Bold" },
-          tabBarStyle: tw("h-20 px-4 py-[0.9rem]"),
+          tabBarLabelStyle: styles.tabBarLabel,
+          tabBarStyle: styles.tabBar,
         }}
       >
         <RootTab.Screen
@@ -47,6 +80,7 @@ export default function App() {
           component={HomeScreen}
           options={{
             title: "Eksploruj",
+            headerShown: false,
             tabBarIcon: ({ focused }) => (
               <HomeIcon
                 stroke={focused ? "#2386F1" : "#3A234E"}
@@ -109,3 +143,22 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    height: 80,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  tabBarLabel: {
+    fontSize: 14,
+    fontFamily: "Bold",
+    paddingBottom: 16,
+  },
+  sceneContainer: {
+    backgroundColor: "#FFFFFF",
+  },
+  headerTitle: {
+    fontFamily: "Bold",
+  },
+});

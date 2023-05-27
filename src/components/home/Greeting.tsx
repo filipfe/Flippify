@@ -18,7 +18,7 @@ export default function Greeting() {
         width: "100%",
         paddingTop: 64,
         paddingBottom: 112,
-        paddingHorizontal: 32,
+        paddingHorizontal: 24,
       }}
     >
       <View style={{ alignItems: "center", flexDirection: "row" }}>
@@ -41,12 +41,9 @@ export default function Greeting() {
             <DefaultProfileIcon width={48} height={48} />
           )}
         </View>
-        <View>
-          <Text style={{ fontFamily: "Medium", color: "#FFF" }}>Cześć</Text>
-          <Text style={{ fontFamily: "Bold", color: "#FFF", fontSize: 20 }}>
-            {username}
-          </Text>
-        </View>
+        <Text style={{ fontFamily: "Bold", color: "#FFF", fontSize: 20 }}>
+          {username}
+        </Text>
       </View>
       <Pressable
         style={{

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "divideknowledge",
+    "slug": "divideknowledge",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -29,6 +29,12 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "aaa55ce1-f1ac-4f2c-8bd3-aa3f8a0f0418"
+      }
+    },
+    "owner": "enriquefellatio"
   }
 }

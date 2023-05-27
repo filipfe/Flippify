@@ -1,16 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import OwnFlashCards from "../components/profile/OwnFlashCards";
-import axios from "axios";
-import { API_URL } from "@env";
 import FlashLists from "../components/profile/FlashLists";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import Greeting from "../components/profile/Greeting";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
-import ProfileBoxLink from "../components/profile/ProfileBoxLink";
+import UserInfo from "../components/profile/UserInfo";
+import { NotificationsIcon } from "../assets/icons/icons";
+import PremiumBanner from "../components/profile/PremiumBanner";
+import LogoutButton from "../components/profile/LogoutButton";
+import Stats from "../components/profile/Stats";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
@@ -50,46 +49,53 @@ export default function ProfileScreen() {
 }
 
 const Profile = () => {
-  const { tokens, logout } = useContext(AuthContext);
-  const { refresh } = tokens;
-
-  const handleLogout = async () => {
-    const response = await axios.post(`${API_URL}/api/logout`, refresh);
-    if (response.status === 200) logout();
-  };
-
   return (
-    <LinearGradient
-      colors={linearGradient}
-      start={{ x: 0, y: 0 }}
-      style={{ flex: 1 }}
-    >
-      <Greeting />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#FFF",
-          borderTopRightRadius: 36,
-          borderTopLeftRadius: 36,
-          paddingHorizontal: 32,
-        }}
+    <ScrollView>
+      <LinearGradient
+        colors={linearGradient}
+        start={{ x: 1, y: 1 }}
+        style={{ flex: 1 }}
       >
-        <View style={{ marginTop: -64 }}>
-          <ProfileBoxLink
-            to={"OwnFlashCards"}
-            title="Dodane fiszki"
-            subtitle="12"
-            icon="📖"
-          />
-          <ProfileBoxLink
-            to={"FlashLists"}
-            title="Moje fiszkolisty"
-            subtitle="4"
-            icon="📃"
-            rangeValue={89}
-          />
+        <View style={styles.settingsWrapper}>
+          <Pressable
+            style={{
+              height: 48,
+              width: 48,
+              borderRadius: 12,
+              backgroundColor: "#F2F8FD",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <NotificationsIcon width={20} height={20} />
+          </Pressable>
         </View>
-      </View>
-    </LinearGradient>
+        <View
+          style={{
+            backgroundColor: "#FFF",
+            borderTopRightRadius: 36,
+            borderTopLeftRadius: 36,
+            paddingHorizontal: 24,
+            paddingBottom: 24,
+            flex: 1,
+          }}
+        >
+          <UserInfo />
+          <Stats />
+          <PremiumBanner />
+          <LogoutButton />
+        </View>
+      </LinearGradient>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  settingsWrapper: {
+    paddingTop: 64,
+    paddingBottom: 64,
+    paddingHorizontal: 24,
+    justifyContent: "flex-end",
+    flexDirection: "row",
+  },
+});

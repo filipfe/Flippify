@@ -1,16 +1,15 @@
 import { Pressable, View } from "react-native";
 import { ProfileBoxLinkProps } from "../../types/profile";
 import { Text } from "react-native";
-import RangeSlider from "../RangeSlider";
 import { useNavigation } from "@react-navigation/native";
 import { ProfileNavigation } from "../../types/navigation";
+import { shadowPrimary } from "../../styles/general";
 
-export default function ProfileBoxLink({
+export default function HomeBoxLink({
   to,
   title,
   subtitle,
   icon,
-  rangeValue,
 }: ProfileBoxLinkProps) {
   const { navigate } = useNavigation<ProfileNavigation>();
   return (
@@ -18,15 +17,12 @@ export default function ProfileBoxLink({
       onPress={() => navigate(to)}
       style={{
         backgroundColor: "#F2F8FD",
-        shadowColor: "#3c85c2",
-        shadowOpacity: 0.24,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 64,
         borderRadius: 32,
         paddingVertical: 24,
         paddingHorizontal: 36,
         marginBottom: 24,
         width: "100%",
+        ...shadowPrimary,
       }}
     >
       <View
@@ -74,9 +70,6 @@ export default function ProfileBoxLink({
             {title}
           </Text>
         </View>
-      </View>
-      <View style={{ marginTop: 24 }}>
-        <RangeSlider value={rangeValue} />
       </View>
     </Pressable>
   );

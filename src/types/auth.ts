@@ -2,7 +2,8 @@ export type User = {
     id: number,
     username: string,
     profile_picture: string,
-    is_staff: boolean
+    is_staff: boolean,
+    level: number
 }
 
 export type Tokens = {

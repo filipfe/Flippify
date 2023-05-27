@@ -2,19 +2,17 @@ import { RouteProp } from "@react-navigation/native";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
 import { API_URL } from "@env";
-
 import Loader from "../Loader";
-import { FlashListCard, FlashListStackParams } from "../profile/FlashLists";
+import { FlashListStackParams } from "../profile/FlashLists";
 import CardChooser from "./CardChooser";
+import { FlashListCard } from "../../types/flashcards";
 
-export default function FlashList({
+export default function FlashListDetails({
   route,
 }: {
   route: RouteProp<FlashListStackParams, "FlashList">;
 }) {
-  const tw = useTailwind();
   const { flashcards } = route.params;
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<boolean | undefined>(undefined);
@@ -30,18 +28,12 @@ export default function FlashList({
   };
 
   return (
-    <View style={tw("flex-1 bg-white p-6")}>
+    <View>
       <CardChooser />
-      <View style={tw("justify-between flex-row my-6")}>
-        <Text style={{ fontFamily: "Bold", ...tw("text-xl") }}>
-          Fiszki w tej FiszkoLiście
-        </Text>
+      <View>
+        <Text>Fiszki w tej FiszkoLiście</Text>
         <TouchableOpacity onPress={removeCards}>
-          <Text
-            style={{ fontFamily: "SemiBold", ...tw("text-lg text-red-400") }}
-          >
-            Usuń zaznaczone
-          </Text>
+          <Text>Usuń zaznaczone</Text>
         </TouchableOpacity>
       </View>
       {loading ? (
@@ -56,9 +48,7 @@ export default function FlashList({
           />
         ))
       ) : (
-        <Text style={{ fontFamily: "SemiBold", ...tw("text-xl text-red-400") }}>
-          Brak fiszek w tej liście!
-        </Text>
+        <Text>Brak fiszek w tej liście!</Text>
       )}
     </View>
   );
@@ -72,7 +62,6 @@ const FlashCardRef = ({
   id,
   setSelected,
 }: FlashListCard & { index: number; setSelected: any; topic: string }) => {
-  const tw = useTailwind();
   const [isSelected, setIsSelected] = useState(false);
   useEffect(() => {
     if (isSelected)
@@ -87,28 +76,19 @@ const FlashCardRef = ({
       });
   }, [isSelected]);
   return (
-    <View style={tw("w-full border-stroke flex-row rounded-xl mb-4")}>
-      <Text style={{ fontFamily: "Bold", ...tw("text-lg") }}>{index}. </Text>
+    <View>
+      <Text>{index}. </Text>
       <View>
-        <Text style={{ fontFamily: "Bold", ...tw("text-lg") }}>
-          {question.split("[input]").join(" . . . . ")}
-        </Text>
-        <Text style={{ fontFamily: "Medium", ...tw("text-p") }}>
+        <Text>{question.split("[input]").join(" . . . . ")}</Text>
+        <Text>
           Typ fiszki:{" "}
           {type === "radio" ? "Wybór odpowiedzi" : "Wprowadzanie odpowiedzi"}
         </Text>
-        <Text style={{ fontFamily: "Medium", ...tw("text-p") }}>
-          Temat fiszki: {topic}
-        </Text>
+        <Text>Temat fiszki: {topic}</Text>
         {/* {answers.length > 0 && answers.map(answ => <Text style={{fontFamily: 'Medium', ...tw(answ.correct ? 'text-primary' : 'text-red-400')}}>{answ.content}</Text>)}       */}
       </View>
-      <TouchableOpacity
-        onPress={() => setIsSelected((prev) => !prev)}
-        style={tw("my-auto ml-auto")}
-      >
-        <Text style={{ fontFamily: "Bold", ...tw("text-green-400 text-3xl") }}>
-          {isSelected ? "✔" : "❌"}
-        </Text>
+      <TouchableOpacity onPress={() => setIsSelected((prev) => !prev)}>
+        <Text>{isSelected ? "✔" : "❌"}</Text>
       </TouchableOpacity>
     </View>
   );

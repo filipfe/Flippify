@@ -1,16 +1,14 @@
-import { useTailwind } from "tailwind-rn/dist";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
-import { FlashListCard, FlashListStackParams } from "../profile/FlashLists";
+import { FlashListStackParams } from "../profile/FlashLists";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
+import { FlashListCard } from "../../types/flashcards";
 
 export default function CardChooser() {
-  const tw = useTailwind();
   const auth = useContext(AuthContext);
-  const { access } = auth.tokens;
   const { id } = auth.user;
   const [cardChooseActive, setCardChooseActive] = useState(false);
   const [userCards, setUserCards] = useState<FlashListCard[]>([]);
@@ -19,11 +17,7 @@ export default function CardChooser() {
     setCardChooseActive((prev) => !prev);
     if (cardChooseActive) return;
     axios
-      .get(`${API_URL}/api/flashcards/user/${id}`, {
-        headers: {
-          Authorization: "Bearer " + access,
-        },
-      })
+      .get(`${API_URL}/api/flashcards/user/${id}`)
       .then((res) => res.data)
       .then((data) => setUserCards(data))
       .catch((err) => alert(err));
@@ -32,16 +26,10 @@ export default function CardChooser() {
   return (
     <View>
       <TouchableOpacity onPress={loadCards}>
-        <Text style={{ fontFamily: "Bold", ...tw("text-blue-400 text-lg") }}>
-          Dodaj fiszki do listy
-        </Text>
+        <Text>Dodaj fiszki do listy</Text>
       </TouchableOpacity>
       {cardChooseActive && (
-        <View
-          style={tw(
-            "bg-white z-20 items-center justify-center border-stroke border-[2px] px-6 rounded-xl overflow-hidden min-h-[2rem] absolute w-full top-full"
-          )}
-        >
+        <View>
           {userCards.length > 0 ? (
             userCards.map((card) => <ChosenCard {...card} key={card.id} />)
           ) : (
@@ -54,7 +42,6 @@ export default function CardChooser() {
 }
 
 const ChosenCard = ({ id, question }: FlashListCard) => {
-  const tw = useTailwind();
   const [active, setActive] = useState(false);
   const route = useRoute<RouteProp<FlashListStackParams, "FlashList">>();
 
@@ -70,12 +57,9 @@ const ChosenCard = ({ id, question }: FlashListCard) => {
   };
 
   return (
-    <Pressable
-      onPress={handleAdd}
-      style={tw("py-3 px-6 flex-row justify-between w-full items-center")}
-    >
+    <Pressable onPress={handleAdd}>
       <Text>{question}</Text>
-      <Text style={tw("text-primary")}>{active ? "✔" : "❌"}</Text>
+      <Text>{active ? "✔" : "❌"}</Text>
     </Pressable>
   );
 };

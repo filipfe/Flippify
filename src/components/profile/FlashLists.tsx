@@ -1,23 +1,14 @@
-import { FlashCardProps } from "../flashcards/FlashCardRef";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ListOfLists from "../flashlists/ListOfLists";
 import AddFlashList from "../flashlists/AddFlashList";
-import FlashList from "../flashlists/FlashList";
-
-export type FlashListCard = FlashCardProps & {
-  topic: string;
-};
-
-export interface FlashListProps {
-  id: number;
-  name: string;
-  flashcards: FlashListCard[];
-}
+import FlashListDetails from "../flashlists/FlashListDetails";
+import { FlashList } from "../../types/flashcards";
+import { THEME } from "../../const/theme";
 
 export type FlashListStackParams = {
   ListOfLists: undefined;
   AddFlashList: undefined;
-  FlashList: FlashListProps;
+  FlashList: FlashList;
 };
 
 const FlashListStack = createNativeStackNavigator<FlashListStackParams>();
@@ -27,14 +18,14 @@ export default function FlashLists() {
     <FlashListStack.Navigator
       initialRouteName="ListOfLists"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Bold" },
+        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
       }}
     >
       <FlashListStack.Screen
         name="ListOfLists"
         component={ListOfLists}
         options={{
-          title: "FiszkoListy",
+          title: "Moje FiszkoListy",
         }}
       />
       <FlashListStack.Screen
@@ -46,7 +37,7 @@ export default function FlashLists() {
       />
       <FlashListStack.Screen
         name="FlashList"
-        component={FlashList}
+        component={FlashListDetails}
         options={({ route }) => {
           return { title: route.params.name };
         }}

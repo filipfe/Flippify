@@ -1,16 +1,17 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { API_URL } from "@env";
-import FlashCard, { FlashCardProps } from "./FlashCardRef";
+import FlashCardRef from "./FlashCardRef";
 import Loader from "../Loader";
 import { AnswerContext } from "../../providers/AnswerProvider";
 import { GeneratorRouteProps } from "../../types/navigation";
+import { FlashCard } from "../../types/flashcards";
 
 export default function FlashCardsGenerator() {
   const { params } = useRoute<GeneratorRouteProps>();
   const { category, topic } = params;
-  const [activeCard, setActiveCard] = useState<FlashCardProps | null>(null);
+  const [activeCard, setActiveCard] = useState<FlashCard | null>(null);
   const [answer, setAnswer] = useState<string>("");
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function FlashCardsGenerator() {
       axios
         .get(
           `${API_URL}/api/flashcards/random?category_name=${category.name}${
-            topic.name && "&topic_name=" + topic.name
+            topic && "&topic_name=" + topic
           }`
         )
         .then((res) => res.data)
@@ -38,7 +39,7 @@ export default function FlashCardsGenerator() {
   if (!activeCard) return <Loader />;
   return (
     <AnswerContext.Provider value={{ answer, setAnswer }}>
-      <FlashCard {...activeCard} />
+      <FlashCardRef {...activeCard} />
     </AnswerContext.Provider>
   );
 }

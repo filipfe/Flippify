@@ -28,13 +28,15 @@ export default function SecondaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 20,
+    borderRadius: 48,
     backgroundColor: THEME.light,
     position: "relative",
     zIndex: 10,
     width: "100%",
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     marginHorizontal: "auto",

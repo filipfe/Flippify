@@ -1,7 +1,14 @@
-import { Text } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
+import { StyleSheet, Text } from "react-native";
 
 export default function Loader() {
-  const tw = useTailwind();
-  return <Text style={tw("font-bold mx-auto text-xl my-6")}>Ładowanie...</Text>;
+  return <Text style={styles.loader}>Ładowanie...</Text>;
 }
+
+const styles = StyleSheet.create({
+  loader: {
+    fontFamily: "Bold",
+    marginHorizontal: "auto",
+    fontSize: 20,
+    marginVertical: 24,
+  },
+});

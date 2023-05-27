@@ -4,6 +4,7 @@ import AddNote from "../components/notes/AddNote";
 import Note from "../components/notes/NoteDetails";
 import NoteList from "../components/notes/NoteList";
 import { NoteStackParams } from "../types/notes";
+import { THEME } from "../const/theme";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
@@ -12,7 +13,7 @@ export default function NotesScreen() {
     <NoteStack.Navigator
       initialRouteName="NoteList"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Bold" },
+        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
       }}
     >
       <NoteStack.Screen
@@ -20,13 +21,21 @@ export default function NotesScreen() {
         component={NoteList}
         options={{
           title: "Notatki",
+          headerShadowVisible: false,
         }}
       />
       <NoteStack.Screen
         name="Note"
         component={Note}
         options={({ route }) => {
-          return { title: route.params.title };
+          return {
+            title: "Notatka " + route.params.title,
+            headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
+            headerTransparent: true,
+            headerStyle: {
+              backgroundColor: "#FFFFFF",
+            },
+          };
         }}
       />
       <NoteStack.Screen

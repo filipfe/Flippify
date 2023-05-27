@@ -24,13 +24,21 @@ export type GeneratorRouteProps = RouteProp<
   "FlashCardsGenerator"
 >;
 
+
+export type TopicListNavigationProp = NavigationProp<CategoryStackParams, "TopicList">;
+export type TopicListRouteProp = RouteProp<CategoryStackParams, "TopicList">;
+
 export type AddCardStackParams = {
   CardForm: undefined;
   QuestionsForm: undefined;
 };
 
-export type TopicListNavigationProp = NavigationProp<CategoryStackParams, "TopicList">;
-export type TopicListRouteProp = RouteProp<CategoryStackParams, "TopicList">;
+export type QuestionsFormNavigationProp = NavigationProp<
+  AddCardStackParams,
+  "QuestionsForm"
+>;
+
+export type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardForm">;
 
 // PROFILE
 

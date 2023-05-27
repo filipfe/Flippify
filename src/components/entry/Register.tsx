@@ -8,16 +8,15 @@ import {
 } from "react-native";
 import { useState, useContext } from "react";
 import axios from "axios";
-import Loader from "../Loader";
 import { API_URL } from "@env";
-import { useTailwind } from "tailwind-rn/dist";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
 import SecondaryButton from "../SecondaryButton";
+import { styles } from "./Login";
+import { THEME } from "../../const/theme";
 
 export default function Register() {
-  const tw = useTailwind();
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [status, setStatus] = useState<string | boolean>("");
   const [confPassword, setConfPassword] = useState("");
@@ -58,11 +57,11 @@ export default function Register() {
   if (status === "Registered") return <Text>Zarejestrowano</Text>;
 
   return (
-    <View style={{ flex: 1, justifyContent: "space-between" }}>
-      <Text style={{ fontFamily: "Bold", ...tw("text-center text-2xl mb-8") }}>
-        Załóż <Text style={tw("text-primary")}>bezpłatne</Text> konto
+    <View style={styles.wrapper}>
+      <Text style={styles.title}>
+        Załóż <Text style={{ color: THEME.primary }}>bezpłatne</Text> konto
       </Text>
-      <ScrollView style={tw("flex-1")}>
+      <ScrollView style={styles.form}>
         <PrimaryInput
           field="username"
           label="Nazwa użytkownika"
@@ -87,7 +86,7 @@ export default function Register() {
           text="Mam już konto"
           onPress={() => setAuthFormIndex(1)}
         />
-        <View style={{ marginTop: 20 }}>
+        <View style={styles.submitButton}>
           <PrimaryButton text="Zarejestruj" onPress={handleSubmit} />
         </View>
       </View>
@@ -97,11 +96,8 @@ export default function Register() {
           placeholder="Kod"
           onChangeText={(text) => setVerificationCode(text)}
         />
-        <Pressable
-          onPress={handleCodeSubmit}
-          style={tw("bg-blue-400 py-3 px-6")}
-        >
-          <Text style={tw("text-white font-medium")}>Wyślij</Text>
+        <Pressable onPress={handleCodeSubmit} style={styles.modalButton}>
+          <Text style={styles.modalText}>Wyślij</Text>
         </Pressable>
       </Modal>
     </View>

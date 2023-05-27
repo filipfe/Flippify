@@ -1,12 +1,10 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import { useState, useEffect, useContext } from "react";
-import { useTailwind } from "tailwind-rn/dist";
 import PrimaryButton from "../PrimaryButton";
 import { AnswerContext } from "../../providers/AnswerProvider";
 import { Answer, FlashCard } from "../../types/flashcards";
 
 export default function FlashCardRef(props: FlashCard) {
-  const tw = useTailwind();
   const [status, setStatus] = useState<"correct" | "wrong" | undefined>(
     undefined
   );
@@ -25,22 +23,12 @@ export default function FlashCardRef(props: FlashCard) {
   }, [props]);
 
   return (
-    <View style={tw("flex-1 p-6 justify-center bg-white")}>
-      <Text style={{ fontFamily: "Bold", ...tw("text-3xl text-center") }}>
-        {question.split("[input]").join(".....")}
-      </Text>
+    <View>
+      <Text>{question.split("[input]").join(".....")}</Text>
       {type === "radio" &&
         answers.map((answer) => <RadioAnswer {...answer} key={answer.id} />)}
       {type === "input" && <InputAnswer />}
-      {status && (
-        <Text
-          style={
-            status === "correct" ? tw("text-green-400") : tw("text-red-400")
-          }
-        >
-          {status}
-        </Text>
-      )}
+      {status && <Text>{status}</Text>}
     </View>
   );
 }
@@ -48,7 +36,6 @@ export default function FlashCardRef(props: FlashCard) {
 const RadioAnswer = (props: Answer) => {
   const { correct, content } = props;
   const { answer, setAnswer } = useContext(AnswerContext);
-  const tw = useTailwind();
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
@@ -60,40 +47,16 @@ const RadioAnswer = (props: Answer) => {
   }, [answer]);
 
   return (
-    <View style={tw("relative mb-4")}>
-      <Pressable
-        style={tw(
-          `py-3 px-6 border-[3px] mt-3 rounded-2xl relative z-10 w-full bg-white  ${
-            isCorrect
-              ? "bg-[#C2FAD2] border-primary"
-              : isCorrect === false
-              ? "border-wrong bg-[#FFB1BF]"
-              : "border-[#E3E8E4]"
-          }`
-        )}
-        onPress={() => setAnswer(content)}
-      >
-        <Text style={{ fontFamily: "Medium", ...tw("text-lg") }}>
-          {content}
-        </Text>
+    <View>
+      <Pressable onPress={() => setAnswer(content)}>
+        <Text>{content}</Text>
       </Pressable>
-      <View
-        style={tw(
-          `absolute left-0 right-0 h-[2rem] bg-darkPrimary -bottom-[0.4rem] rounded-b-2xl ${
-            isCorrect
-              ? "bg-primary"
-              : isCorrect === false
-              ? "bg-wrong"
-              : "bg-[#E3E8E4]"
-          }`
-        )}
-      />
+      <View />
     </View>
   );
 };
 
 const InputAnswer = () => {
-  const tw = useTailwind();
   const [input, setInput] = useState("");
   const { answer, setAnswer } = useContext(AnswerContext);
 
@@ -105,7 +68,6 @@ const InputAnswer = () => {
   return (
     <>
       <TextInput
-        style={{ fontFamily: "Medium", ...tw("text-lg my-4") }}
         placeholder="Odpowiedź"
         value={input}
         onChangeText={(text) => setInput(text.toLowerCase())}

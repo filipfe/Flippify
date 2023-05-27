@@ -1,30 +1,41 @@
-import { NavigationProp } from "@react-navigation/native";
-import { Pressable, Text, View } from "react-native";
-import { useTailwind } from "tailwind-rn/dist";
-import { RootTabParams } from "../../App";
+import { View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { linearGradient } from "../const/styles";
+import Greeting from "../components/home/Greeting";
+import ProfileBoxLink from "../components/home/HomeBoxLink";
 
-type HomeNavigationProp = NavigationProp<RootTabParams, "Home">;
-
-export default function HomeScreen({
-  navigation,
-}: {
-  navigation: HomeNavigationProp;
-}) {
-  const tw = useTailwind();
+export default function HomeScreen() {
   return (
-    <View style={tw("p-6 flex-1")}>
-      <View style={tw("mb-8")}>
-        <Text style={tw("font-bold mb-2 text-xl")}>Fiszki</Text>
-        <Pressable onPress={() => navigation.navigate("FlashCards")}>
-          <Text style={tw("font-medium text-primary")}>Sprawdź teraz</Text>
-        </Pressable>
+    <LinearGradient
+      colors={linearGradient}
+      start={{ x: 1, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <Greeting />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#FFF",
+          borderTopRightRadius: 36,
+          borderTopLeftRadius: 36,
+          paddingHorizontal: 24,
+        }}
+      >
+        <View style={{ marginTop: -64 }}>
+          <ProfileBoxLink
+            to={"OwnFlashCards"}
+            title="Dodane fiszki"
+            subtitle="12"
+            icon="📖"
+          />
+          <ProfileBoxLink
+            to={"FlashLists"}
+            title="Moje fiszkolisty"
+            subtitle="4"
+            icon="📃"
+          />
+        </View>
       </View>
-      <View style={tw("mb-8")}>
-        <Text style={tw("font-bold mb-2 text-xl")}>Notatki</Text>
-        <Pressable onPress={() => navigation.navigate("Notes")}>
-          <Text style={tw("font-medium text-primary")}>Sprawdź teraz</Text>
-        </Pressable>
-      </View>
-    </View>
+    </LinearGradient>
   );
 }

@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { useTailwind } from "tailwind-rn";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Loader from "../Loader";
 import { API_URL } from "@env";
 import { Category } from "../../types/general";
 import { Filter } from "../../types/notes";
+import { THEME } from "../../const/theme";
 
 const NoteFilter = ({
   filter,
@@ -15,7 +15,6 @@ const NoteFilter = ({
   setFilter: any;
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const tw = useTailwind();
 
   useEffect(() => {
     axios
@@ -28,66 +27,72 @@ const NoteFilter = ({
 
   const CategoryButton = ({ category }: { category: Category }) => (
     <Pressable
-      style={tw(
-        `py-1 px-4 rounded-xl mr-1 ${
-          category.name === filter.category ? "bg-primary" : "bg-white"
-        }`
-      )}
+      style={{
+        ...styles.categoryButton,
+        ...(category.name === filter.category
+          ? { backgroundColor: THEME.primary }
+          : { backgroundColor: "white" }),
+      }}
       onPress={() =>
         setFilter((prev: Filter) => ({ ...prev, category: category.name }))
       }
     >
-      <Text
-        style={{
-          fontFamily: "Bold",
-          ...tw(
-            `text-lg ${
-              category.name === filter.category ? "text-white" : "text-p"
-            }`
-          ),
-        }}
-      >
-        {category.name}
-      </Text>
+      <Text style={styles.categoryButtonText}>{category.name}</Text>
     </Pressable>
   );
 
   return (
-    <View style={tw("mb-6")}>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={tw("flex-row")}
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      style={styles.filterWrapper}
+    >
+      <Pressable
+        style={styles.categoryButton}
+        onPress={() =>
+          setFilter((prev: Filter) => ({ ...prev, category: "Wszystkie" }))
+        }
       >
-        <Pressable
-          style={tw(
-            `py-1 px-4 rounded-xl ${
-              filter.category === "Wszystkie" ? "bg-primary" : "bg-white"
-            }`
-          )}
-          onPress={() =>
-            setFilter((prev: Filter) => ({ ...prev, category: "Wszystkie" }))
-          }
+        <Text
+          style={{
+            ...styles.categoryButtonText,
+            color: filter.category === "Wszystkie" ? THEME.p : "white",
+          }}
         >
-          <Text
-            style={{
-              fontFamily: "Bold",
-              ...tw(
-                `text-lg ${
-                  filter.category === "Wszystkie" ? "text-white" : "text-p"
-                }`
-              ),
-            }}
-          >
-            Wszystkie
-          </Text>
-        </Pressable>
-        {categories.map((category) => (
-          <CategoryButton category={category} key={category.name} />
-        ))}
-      </ScrollView>
-    </View>
+          Wszystkie
+        </Text>
+      </Pressable>
+      {categories.map((category) => (
+        <CategoryButton category={category} key={category.name} />
+      ))}
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  categoryButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginRight: 4,
+  },
+  categoryButtonText: {
+    fontFamily: "Bold",
+    fontSize: 18,
+  },
+  filterWrapper: {
+    marginBottom: 24,
+    flexDirection: "row",
+  },
+  allButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+  allButtonText: {
+    fontFamily: "Bold",
+    fontSize: 18,
+  },
+});
 
 export default NoteFilter;

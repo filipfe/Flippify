@@ -1,6 +1,6 @@
 import {
-  Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -9,15 +9,14 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import Loader from "../Loader";
 import { API_URL } from "@env";
-import { useTailwind } from "tailwind-rn/dist";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
 import { AuthContext } from "../../context/AuthContext";
 import SecondaryButton from "../SecondaryButton";
+import { THEME } from "../../const/theme";
 
 export default function Login() {
-  const tw = useTailwind();
   const { login } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,15 +49,8 @@ export default function Login() {
   if (isLoading) return <Loader />;
 
   return (
-    <View style={{ flex: 1, justifyContent: "space-between" }}>
-      <Text
-        style={{
-          fontFamily: "Bold",
-          ...tw("text-center text-font text-2xl mb-8"),
-        }}
-      >
-        Zaloguj się
-      </Text>
+    <View style={styles.wrapper}>
+      <Text style={styles.title}>Zaloguj się</Text>
       <ScrollView style={{ flex: 1 }}>
         <PrimaryInput field="email" setState={setUserData} label="Email" />
         <PrimaryInput
@@ -67,11 +59,9 @@ export default function Login() {
           label="Hasło"
           secured={true}
         />
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <TouchableOpacity style={{ marginTop: 2, marginLeft: 2 }}>
-            <Text style={{ ...tw("text-font"), fontFamily: "Bold" }}>
-              Odzyskaj hasło
-            </Text>
+        <View style={styles.recoverWrapper}>
+          <TouchableOpacity style={styles.recoverButton}>
+            <Text style={styles.recoverText}>Odzyskaj hasło</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -80,10 +70,40 @@ export default function Login() {
           text="Chcę założyć konto"
           onPress={() => setAuthFormIndex(0)}
         />
-        <View style={{ marginTop: 20 }}>
+        <View style={styles.submitButton}>
           <PrimaryButton text="Zaloguj się" onPress={handleSubmit} />
         </View>
       </View>
     </View>
   );
 }
+
+export const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  title: {
+    fontFamily: "Bold",
+    textAlign: "center",
+    color: THEME.font,
+    fontSize: 24,
+    marginBottom: 32,
+  },
+  form: {
+    flex: 1,
+  },
+  recoverWrapper: { flexDirection: "row", justifyContent: "flex-end" },
+  recoverButton: { marginTop: 2, marginLeft: 2 },
+  recoverText: { color: THEME.font, fontFamily: "Bold" },
+  submitButton: { marginTop: 20 },
+  modalButton: {
+    backgroundColor: "#0000FF",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  modalText: {
+    color: "#FFFFFF",
+    fontFamily: "Medium",
+  },
+});

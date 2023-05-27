@@ -1,8 +1,7 @@
-import { useTailwind } from "tailwind-rn/dist";
 import { useState, useEffect, useContext } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Loader from "../Loader";
-import { FlashListProps, FlashListStackParams } from "../profile/FlashLists";
+import { FlashListStackParams } from "../profile/FlashLists";
 import axios from "axios";
 import { API_URL } from "@env";
 import {
@@ -10,7 +9,14 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
-import { AuthContext } from "../../context/AuthContext";
+import PrimaryButton from "../PrimaryButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { linearGradient } from "../../const/styles";
+import RangeSlider from "../RangeSlider";
+import { THEME } from "../../const/theme";
+import { shadowPrimary } from "../../styles/general";
+import GradientText from "../GradientText";
+import { FlashList } from "../../types/flashcards";
 
 type ListOfFlashCardListsNavigation = NavigationProp<
   FlashListStackParams,
@@ -22,67 +28,41 @@ export default function ListOfLists({
 }: {
   navigation: ListOfFlashCardListsNavigation;
 }) {
-  const tw = useTailwind();
   const [loading, setLoading] = useState(true);
   const [removed, setRemoved] = useState<number[]>([]);
-  const [flashLists, setFlashLists] = useState<FlashListProps[]>([]);
+  const [flashLists, setFlashLists] = useState<FlashList[]>([]);
   const location = useNavigationState((state) => state);
-  const auth = useContext(AuthContext);
-  const { access } = auth.tokens;
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/api/profile`, {
-        headers: { Authorization: "Bearer " + access },
-      })
+      .get(`${API_URL}/api/profile`)
       .then((res) => res.data)
       .then((data) => setFlashLists(data.flashlists || []))
       .finally(() => setLoading(false));
   }, [location, removed]);
 
   if (loading) return <Loader />;
-  if (flashLists.length === 0)
-    return (
-      <View style={tw("p-6 flex-1 bg-white justify-center items-center")}>
-        <TouchableOpacity onPress={() => navigation.navigate("AddFlashList")}>
-          <Text style={{ fontFamily: "Bold" }}>Dodaj FiszkoListę</Text>
-        </TouchableOpacity>
-      </View>
-    );
 
   return (
-    <View style={tw("p-6 flex-1 bg-white")}>
-      {flashLists.map((list) => (
-        <FlashListRef setRemoved={setRemoved} {...list} key={list.name} />
-      ))}
-      <Pressable
-        style={tw("absolute right-6 bottom-6")}
-        onPress={() => navigation.navigate("AddFlashList")}
-      >
-        <View
-          style={tw(
-            "rounded-full w-16 h-16 bg-primary items-center justify-center z-10"
-          )}
-        >
-          <Text style={{ fontFamily: "Bold", ...tw("text-4xl text-white") }}>
-            +
-          </Text>
+    <ScrollView>
+      <View style={styles.wrapper}>
+        <View style={{ marginBottom: 8 }}>
+          <PrimaryButton text="+ Dodaj nową" />
         </View>
-        <View
-          style={tw(
-            `absolute left-0 right-0 h-[2.5rem] bg-darkPrimary -bottom-[0.4rem] rounded-b-full`
-          )}
-        />
-      </Pressable>
-    </View>
+        {flashLists.length > 0 &&
+          flashLists.map((list) => (
+            <FlashListRef setRemoved={setRemoved} {...list} key={list.name} />
+          ))}
+      </View>
+    </ScrollView>
   );
 }
 
-const FlashListRef = (props: FlashListProps & { setRemoved: any }) => {
-  const tw = useTailwind();
-  const navigation = useNavigation<ListOfFlashCardListsNavigation>();
+const FlashListRef = (props: FlashList & { setRemoved: any }) => {
+  const { navigate } = useNavigation<ListOfFlashCardListsNavigation>();
   const { setRemoved, ...rest } = props;
+  const { name, created_at, count } = rest;
 
   const handleRemove = async () => {
     const resp = await axios.delete(
@@ -93,17 +73,84 @@ const FlashListRef = (props: FlashListProps & { setRemoved: any }) => {
   };
 
   return (
-    <View style={tw("mb-4 flex-row justify-between items-center")}>
-      <TouchableOpacity onPress={() => navigation.navigate("FlashList", rest)}>
-        <Text style={{ fontFamily: "Bold", ...tw("text-lg") }}>
-          {props.name}
+    <View style={styles.refWrapper}>
+      <View style={styles.topWrapper}>
+        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.points}>{count} fiszki</Text>
+      </View>
+      <View style={{ ...styles.topWrapper, marginTop: 8 }}>
+        <Text style={styles.points}>
+          {new Date(created_at).toLocaleDateString("default")}
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleRemove} style={tw("my-auto ml-auto")}>
-        <Text style={{ fontFamily: "Bold", ...tw("text-green-400 text-xl") }}>
-          ❌
-        </Text>
-      </TouchableOpacity>
+        <View style={styles.buttonsWrapper}>
+          <Pressable
+            onPress={() => navigate("FlashList", rest)}
+            style={styles.modifyButton}
+          >
+            <GradientText style={styles.buttonText}>Modyfikuj</GradientText>
+          </Pressable>
+          <Pressable onPress={() => navigate("FlashList", rest)}>
+            <LinearGradient
+              start={{ x: 0, y: 0 }}
+              style={styles.button}
+              colors={linearGradient}
+            >
+              <Text style={styles.buttonText}>Wybierz</Text>
+            </LinearGradient>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+  },
+  refWrapper: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 16,
+    backgroundColor: "#FFF",
+    marginTop: 16,
+    ...shadowPrimary,
+  },
+  title: {
+    fontFamily: "SemiBold",
+    fontSize: 18,
+    color: THEME.font,
+  },
+  topWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  points: {
+    color: THEME.secondary,
+    fontFamily: "SemiBold",
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 24,
+    marginLeft: 8,
+  },
+  buttonText: {
+    fontFamily: "ExtraBold",
+    color: "#FFFFFF",
+    fontSize: 12,
+  },
+  buttonsWrapper: {
+    flexDirection: "row",
+  },
+  modifyButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 24,
+    backgroundColor: THEME.light,
+  },
+});

@@ -1,14 +1,17 @@
 import { NavigationProp } from "@react-navigation/native";
 import { Category } from "./general";
+import { User } from "./auth";
 
 export type Note = {
     id: number;
     title: string;
     desc: string;
     image: string;
+    created_at: string;
     category?: string;
     likes?: number;
     is_liked?: boolean;
+    user: User
 }
   
 
@@ -18,7 +21,7 @@ export type Filter = {
 
 export type NoteStackParams = {
     NoteList: undefined;
-    Note: Note;
+    Note: { id: number, title: string };
     AddNote: undefined;
   };
 

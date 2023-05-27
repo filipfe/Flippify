@@ -3,12 +3,13 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
 import axios from "axios";
 import { API_URL } from "@env";
 import { Note, NoteStackParams } from "../types/notes";
+import { THEME } from "../const/theme";
 
 export default function useNotes() {
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
@@ -30,16 +31,13 @@ export default function useNotes() {
   const PopularNotes = () => {
     return (
       <View style={styles.wrapper}>
-        <Text style={styles.title}>Popularne notatki</Text>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {popularNotes.map((note) => (
-            <SmallNoteRef
-              onPress={() => navigation.navigate("Note", { ...note })}
-              style="mr-6"
-              {...note}
-              key={note.id + note.title}
-            />
-          ))}
+        <Text style={styles.title}>Popularne teraz</Text>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+          <View style={styles.list}>
+            {popularNotes.map((note) => (
+              <SmallNoteRef {...note} key={`Popular:${note.id + note.title}`} />
+            ))}
+          </View>
         </ScrollView>
       </View>
     );
@@ -48,16 +46,13 @@ export default function useNotes() {
   const RecentNotes = () => {
     return (
       <View style={styles.wrapper}>
-        <Text style={styles.title}>Ostatnio dodane notatki</Text>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {recentNotes.map((note) => (
-            <SmallNoteRef
-              onPress={() => navigation.navigate("Note", { ...note })}
-              style="mr-6"
-              {...note}
-              key={note.id + note.title}
-            />
-          ))}
+        <Text style={styles.title}>Ostatnio dodane</Text>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+          <View style={styles.list}>
+            {recentNotes.map((note) => (
+              <SmallNoteRef {...note} key={`Recent:${note.id + note.title}`} />
+            ))}
+          </View>
         </ScrollView>
       </View>
     );
@@ -76,8 +71,17 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontFamily: "Bold",
-    marginBottom: 16,
-    fontSize: 18,
+    fontFamily: "ExtraBold",
+    marginBottom: 24,
+    fontSize: 22,
+    color: THEME.font,
+    paddingHorizontal: 24,
+  },
+  list: {
+    flexDirection: "row",
+    position: "relative",
+    zIndex: 9999,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
 });

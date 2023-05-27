@@ -1,13 +1,12 @@
-import { Style } from "tailwind-rn/dist";
-
 export type Button = {
-  onPress: () => void;
+  onPress?: () => void;
   text: string;
   active?: boolean;
-  style?: string | Style;
+  style?: any
 };    
   
 export type Category = {
+  id: number,
   name: string;
-  image: string;
+  icon: string;
 }

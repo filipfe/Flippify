@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { useTailwind } from "tailwind-rn/dist";
 import PrimaryInput from "../PrimaryInput";
 import * as ImagePicker from "expo-image-picker";
 import PrimaryButton from "../PrimaryButton";
@@ -16,14 +15,13 @@ import { API_URL } from "@env";
 import Loader from "../Loader";
 import SelectDropdown from "react-native-select-dropdown";
 import { AuthContext } from "../../context/AuthContext";
-import { AddedNoteProps, Note } from "../../types/notes";
+import { AddedNoteProps } from "../../types/notes";
 import { Category } from "../../types/general";
 
 export default function AddNote() {
-  const tw = useTailwind();
   const { user } = useContext(AuthContext);
   const [status, setStatus] = useState<string | boolean>("");
-  const [newNote, setNewNote] = useState<AddedNoteProps>(initialNote);
+  const [newNote, setNewNote] = useState<AddedNoteProps>(null!);
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -74,24 +72,12 @@ export default function AddNote() {
     }
   };
 
-  const handleReset = () => {
-    setNewNote(initialNote);
-    setStatus("");
-  };
-
   if (status === "loading") return <Loader />;
 
   return (
-    <ScrollView style={tw("p-6 relative bg-white")}>
+    <ScrollView>
       <TouchableOpacity onPress={pickImage}>
-        <Text
-          style={{
-            fontFamily: "SemiBold",
-            ...tw("text-blue-400 text-lg mb-4 mx-auto"),
-          }}
-        >
-          Wybierz zdjęcie
-        </Text>
+        <Text>Wybierz zdjęcie</Text>
       </TouchableOpacity>
       {newNote.image.uri && (
         <Image
@@ -108,9 +94,7 @@ export default function AddNote() {
         label="Tytuł"
       />
       {newNote.title.length > 16 && (
-        <Text style={{ fontFamily: "SemiBold", ...tw("text-red-400 mb-4") }}>
-          Tytuł nie może przekraczać 16 znaków!
-        </Text>
+        <Text>Tytuł nie może przekraczać 16 znaków!</Text>
       )}
       <PrimaryInput
         field="desc"
@@ -118,21 +102,12 @@ export default function AddNote() {
         setState={setNewNote}
         label="Opis"
       />
-      <Text
-        style={{
-          fontFamily: "SemiBold",
-          ...tw(`${newNote.desc.length < 50 ? "text-p" : "text-red-400"} mb-4`),
-        }}
-      >
-        {newNote.desc.length} / 50
-      </Text>
+      <Text>{newNote.desc.length} / 50</Text>
       {categories.length > 0 ? (
         <SelectDropdown
           data={categories.map((item) => item)}
-          buttonStyle={tw(
-            `w-full px-6 items-center mb-6 border-stroke border-[2px] rounded-2xl bg-white`
-          )}
-          dropdownStyle={tw("rounded-2xl bg-white")}
+          buttonStyle={{}}
+          dropdownStyle={{}}
           defaultButtonText="Kategoria"
           onSelect={(item) =>
             setNewNote((prev) => ({ ...prev, category: item }))
@@ -143,11 +118,7 @@ export default function AddNote() {
       ) : (
         <Loader />
       )}
-      {status && typeof status === "string" && (
-        <Text style={{ fontFamily: "SemiBold", ...tw("text-red-400") }}>
-          {status}
-        </Text>
-      )}
+      {status && typeof status === "string" && <Text>{status}</Text>}
       <PrimaryButton
         onPress={handleSubmit}
         active={
@@ -157,61 +128,21 @@ export default function AddNote() {
           newNote.title.length < 16 &&
           newNote.title.length < 50
         }
-        style={"my-8"}
         text="Zatwierdź"
       />
-      <Modal
-        style={tw("mx-auto")}
-        visible={status === true}
-        animationType="fade"
-      >
-        <View
-          style={tw(
-            "px-6 py-4 flex-1 bg-white rounded-xl items-center justify-center "
-          )}
-        >
+      <Modal visible={status === true} animationType="fade">
+        <View>
           <Image
             style={{ resizeMode: "contain", height: 160 }}
             source={require("../../assets/card_created.png")}
           />
-          <Text style={{ fontFamily: "Bold", ...tw("text-2xl mt-6 mb-4") }}>
-            Notatka została utworzona
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Medium",
-              fontSize: 18,
-              ...tw("text-center mb-4"),
-            }}
-          >
+          <Text>Notatka została utworzona</Text>
+          <Text>
             Masz do niej dostęp z panelu swoich notatek, zbieraj polubienia i
-            dodawaj kolejne notatki.{" "}
-            <Text style={{ fontFamily: "SemiBold" }}>
-              Życzymy owocnej nauki!
-            </Text>
+            dodawaj kolejne notatki. <Text>Życzymy owocnej nauki!</Text>
           </Text>
-          <TouchableOpacity onPress={handleReset}>
-            <Text
-              style={{ fontFamily: "Bold", ...tw("text-primary mt-4 text-lg") }}
-            >
-              Dodaj kolejną notatkę
-            </Text>
-          </TouchableOpacity>
         </View>
       </Modal>
     </ScrollView>
   );
 }
-
-const initialNote: AddedNoteProps = {
-  title: "",
-  desc: "",
-  image: {
-    uri: "",
-    name: "",
-    type: "",
-  },
-  category: {
-    name: "",
-  },
-};

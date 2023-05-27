@@ -8,12 +8,13 @@ export default function PrimaryButton({
   onPress,
   text,
   active = true,
+  style,
 }: Button) {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={active ? onPress : () => {}}
-      style={styles.button}
+      style={{ ...styles.button, ...style }}
     >
       <LinearGradient
         start={{ x: 0, y: 0 }}
@@ -39,7 +40,13 @@ const styles = StyleSheet.create({
     zIndex: 10,
     width: "100%",
   },
-  gradient: { borderRadius: 20, paddingVertical: 16, paddingHorizontal: 48 },
+  gradient: {
+    borderRadius: 48,
+    paddingVertical: 14,
+    paddingHorizontal: 48,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   text: {
     marginHorizontal: "auto",
     fontFamily: "Bold",

@@ -1,7 +1,4 @@
-export type Topic = {
-  name: string;
-  image: string;
-}
+export type Topic = string
 
 export type Answer = {
   id?: number;
@@ -19,4 +16,16 @@ export type FlashCard = {
 export type AddedFlashCard = FlashCard & {
   category: string;
   topic: string;
+}
+
+export type FlashListCard = FlashCard & {
+  topic: string;
+};
+
+export type FlashList = {
+  id: number;
+  name: string;
+  created_at: string;
+  count: number;
+  flashcards: FlashListCard[];
 }

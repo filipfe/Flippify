@@ -9,11 +9,7 @@ import CategoryRef from "./CategoryRef";
 import { THEME } from "../../../const/theme";
 import { DEFAULT_STYLES } from "../../../const/styles";
 
-export default function CategoryList({
-  navigation,
-}: {
-  navigation: CategoryNavigationProps;
-}) {
+export default function CategoryList() {
   const route = useRoute();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,28 +25,27 @@ export default function CategoryList({
   }, [route]);
 
   return (
-    <ScrollView style={styles.wrapper}>
-      <Pressable onPress={() => navigation.navigate("AddCard")}>
-        <Text style={styles.addFlashList}>Dodaj fiszkę</Text>
-      </Pressable>
-      {!isLoading ? (
-        categories.length > 0 ? (
-          categories.map((category) => (
-            <CategoryRef {...category} key={category.name} />
-          ))
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.wrapper}>
+        {!isLoading ? (
+          categories.length > 0 ? (
+            categories.map((category) => (
+              <CategoryRef {...category} key={category.name} />
+            ))
+          ) : (
+            <Text style={DEFAULT_STYLES.error}>
+              Wystąpił błąd, spróbuj ponownie później!
+            </Text>
+          )
         ) : (
-          <Text style={DEFAULT_STYLES.error}>
-            Wystąpił błąd, spróbuj ponownie później!
-          </Text>
-        )
-      ) : (
-        <>
-          <CategoryLoader />
-          <CategoryLoader />
-          <CategoryLoader />
-          <CategoryLoader />
-        </>
-      )}
+          <>
+            <CategoryLoader />
+            <CategoryLoader />
+            <CategoryLoader />
+            <CategoryLoader />
+          </>
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -67,8 +62,8 @@ const CategoryLoader = () => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "white",
-    paddingVertical: 36,
-    paddingHorizontal: 32,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
   },
   addFlashList: {
     fontFamily: "Medium",
