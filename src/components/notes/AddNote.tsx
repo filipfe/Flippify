@@ -1,34 +1,47 @@
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
 import { AuthContext } from "../../context/AuthContext";
-import { AddedNoteProps, ImageFile } from "../../types/notes";
+import { AddedNote, ImageFile } from "../../types/notes";
 import UserCredentials from "../UserCredentials";
-import { ResizeIcon } from "../../assets/icons/icons";
 import { styles } from "./NoteDetails";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import AddButton from "./add/AddButton";
 import PrimaryInput from "../PrimaryInput";
+import PrimaryButton from "../PrimaryButton";
+import useNoteImages from "../../hooks/useNoteImages";
+import Loader from "../Loader";
+import NoteImageIndex from "./NoteImageIndex";
+import { THEME } from "../../const/theme";
+import { initialAddedNote } from "../../const/notes";
+import ImageHandler from "./ImageHandler";
+import PrivacySwitch from "./add/PrivacySwitch";
 
 export default function AddNote() {
   const { user } = useContext(AuthContext);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [images, setImages] = useState<ImageFile[]>([]);
-  const [newNote, setNewNote] = useState<AddedNoteProps>(null!);
+  const [isLoading, setIsLoading] = useState(false);
+  const { images, setImages, activeIndex } = useNoteImages<ImageFile>();
+  const [newNote, setNewNote] = useState<AddedNote>(initialAddedNote);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const form = new FormData();
-
-    form.append("user", String(user.id));
     form.append("title", newNote.title);
-    form.append("desc", newNote.desc);
+    form.append("description", newNote.desc);
     // @ts-ignore
-    form.append("image", newNote.image);
-    form.append("category", String(newNote.category.name));
+    form.append("image", images);
+    form.append("category_id", "1");
 
-    await axios.postForm(`${API_URL}/api/notes/add`, form);
+    axios
+      .postForm(`${API_URL}/api/notes/add`, form)
+      .catch((err) => console.log(err.response.data))
+      .finally(() => setIsLoading(false));
+  };
+
+  const addNewImage = (image: ImageFile) => {
+    setImages((prev) => [...prev, image]);
   };
 
   return (
@@ -49,26 +62,11 @@ export default function AddNote() {
         >
           <View style={{ marginTop: -132, marginBottom: 32 }}>
             <View style={styles.imageWrapper}>
-              {images.length > 0 && (
-                <Image
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0,
-                  }}
-                  source={{
-                    uri: images[activeImageIndex].uri,
-                  }}
-                />
+              <ImageHandler images={images} />
+              {images.length < 4 && <AddButton addNewImage={addNewImage} />}
+              {images.length > 1 && (
+                <NoteImageIndex images={images} activeIndex={activeIndex} />
               )}
-              {images.length > 0 && (
-                <Pressable style={styles.resize}>
-                  <ResizeIcon />
-                </Pressable>
-              )}
-              {images.length < 4 && <AddButton setImages={setImages} />}
             </View>
           </View>
           <View style={{ paddingBottom: 32 }}>
@@ -78,19 +76,45 @@ export default function AddNote() {
             <PrimaryInput
               field="title"
               label="Tytuł notatki"
+              maxLength={48}
               setState={setNewNote}
             />
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 16, position: "relative" }}>
               <PrimaryInput
                 field="desc"
                 label="Opis notatki"
-                style={{ minHeight: 128 }}
+                multiline={true}
+                numberOfLines={6}
+                maxLength={200}
+                style={{ minHeight: 160, textAlignVertical: "top" }}
                 setState={setNewNote}
               />
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: THEME.secondary,
+                  fontFamily: "SemiBold",
+                  position: "absolute",
+                  right: 24,
+                  bottom: 12,
+                }}
+              >
+                {newNote.desc?.length || 0} / 200
+              </Text>
             </View>
-            <View style={{ marginTop: 32 }}>
+            <PrivacySwitch />
+            <View style={{ marginVertical: 32 }}>
               <UserCredentials user={user} isLiked={false} />
             </View>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <PrimaryButton
+                width={"100%"}
+                onPress={handleSubmit}
+                text="Dodaj notatkę"
+              />
+            )}
           </View>
         </View>
       </LinearGradient>

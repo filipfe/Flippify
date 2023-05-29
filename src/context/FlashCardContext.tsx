@@ -7,8 +7,8 @@ export type FlashCardContextType = {
   submitAnswer: (answer: string) => void;
   changeCard: () => void;
   isLoading: boolean;
+  rotateValue: number;
   answer: string;
-  rotateY: number;
 };
 
 export const FlashCardContext = createContext<FlashCardContextType>(null!);

@@ -23,7 +23,7 @@ export default function PremiumBanner() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 24,
+    marginTop: 36,
     borderRadius: 24,
     flexDirection: "row",
     alignItems: "center",

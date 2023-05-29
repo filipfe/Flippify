@@ -5,6 +5,7 @@ import FlashCardsGenerator from "../components/flashcards/FlashCardsGenerator";
 import TopicList from "../components/flashcards/topics/TopicList";
 import { CategoryStackParams } from "../types/navigation";
 import { THEME } from "../const/theme";
+import HeaderTitle from "../components/HeaderTitle";
 
 const CategoryStack = createNativeStackNavigator<CategoryStackParams>();
 
@@ -20,7 +21,7 @@ export default function FlashCardsScreen() {
       <CategoryStack.Screen
         name="CategoryList"
         component={CategoryList}
-        options={{ title: "Wybierz kategorię" }}
+        options={{ title: "Wybierz kategorię", headerTitle: HeaderTitle }}
       />
       <CategoryStack.Screen
         name="AddCard"
@@ -38,7 +39,7 @@ export default function FlashCardsScreen() {
         name="FlashCardsGenerator"
         component={FlashCardsGenerator}
         options={({ route }) => {
-          return { title: "Fiszki " + route.params.topic };
+          return { title: route.params.topic };
         }}
       />
     </CategoryStack.Navigator>

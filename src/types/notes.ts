@@ -9,7 +9,6 @@ export type Note = {
     desc: string;
     image: string // deprecated
     images: string[];
-    thumbnail: string;
     created_at: string;
     category?: string;
     likes?: number;
@@ -31,12 +30,8 @@ export type NoteStackParams = {
 
 export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
 
-export type AddedNoteProps = Omit<Note, "image" | "likes" | "id" | "category" | "is_liked"> & {
-  image: {
-    uri: string;
-    name: string;
-    type: string;
-  };
+export type AddedNote = Omit<Note, "image" | "images" | "likes" | "id" | "category" | "is_liked"> & {
+  images: ImageFile[];
   category: Omit<Category, "image">;
 };
 
@@ -47,5 +42,5 @@ export type ImageFile = {
 };
 
 export type NoteAddButtonProps = {
-  setImages: Dispatch<SetStateAction<ImageFile[]>>;
+  addNewImage: (image: ImageFile) => void
 }

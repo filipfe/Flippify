@@ -45,10 +45,7 @@ export default function Register() {
         JSON.stringify({
           email: userData.email,
           code: parseInt(verificationCode),
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        })
       )
       .then(() => setAuthFormIndex(1))
       .catch((err) => alert(err));
@@ -71,13 +68,13 @@ export default function Register() {
         <PrimaryInput
           field="password"
           label="Hasło"
-          secured={true}
+          secureTextEntry={true}
           setState={setUserData}
         />
         <PrimaryInput
           field="confPassword"
           label="Powtórz hasło"
-          secured={true}
+          secureTextEntry={true}
           setState={setConfPassword}
         />
       </ScrollView>

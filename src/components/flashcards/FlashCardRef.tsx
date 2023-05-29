@@ -1,29 +1,38 @@
 import { Text, View, StyleSheet } from "react-native";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import { THEME } from "../../const/theme";
 import RadioAnswer from "./answers/RadioAnswer";
 import Animated, {
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import Result from "./Result";
 
 export default function FlashCardRef() {
-  const { activeCard, rotateY } = useContext(FlashCardContext);
+  const { activeCard, rotateValue } = useContext(FlashCardContext);
   const { question, type, answers } = activeCard;
 
-  const frontCardTransform = useAnimatedStyle(() => ({
-    transform: [{ rotateX: withTiming(`${rotateY}deg`, { duration: 400 }) }],
-  }));
+  const frontCardTransform = useAnimatedStyle(
+    () => ({
+      transform: [
+        { rotateX: withTiming(`${rotateValue}deg`, { duration: 400 }) },
+      ],
+    }),
+    [rotateValue]
+  );
 
-  const backCardTransform = useAnimatedStyle(() => ({
-    transform: [
-      { rotateX: withTiming(`${180 + rotateY}deg`, { duration: 400 }) },
-    ],
-    zIndex: rotateY === 180 ? 1 : -1,
-  }));
+  const backCardTransform = useAnimatedStyle(
+    () => ({
+      transform: [
+        { rotateX: withTiming(`${180 + rotateValue}deg`, { duration: 400 }) },
+      ],
+      zIndex: rotateValue === 180 ? 1 : -1,
+    }),
+    [rotateValue]
+  );
 
   return (
     <View style={styles.wrapper}>
@@ -75,6 +84,7 @@ const styles = StyleSheet.create({
     color: THEME.font,
     fontSize: 20,
     fontFamily: "ExtraBold",
+    textAlign: "center",
   },
   answersWrapper: {
     marginTop: 24,

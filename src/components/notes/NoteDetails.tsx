@@ -16,9 +16,9 @@ import { THEME } from "../../const/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { initialNote } from "../../const/notes";
-import { ResizeIcon } from "../../assets/icons/icons";
 import { shadowPrimary } from "../../styles/general";
 import UserCredentials from "../UserCredentials";
+import ImageHandler from "./ImageHandler";
 
 type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
 
@@ -27,7 +27,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
   const [isLiked, setIsLiked] = useState(false);
-  const { title, created_at, user, images, image } = details;
+  const { title, created_at, user, image } = details;
 
   const handleLike = async () => {
     setIsLiked((prev) => !prev);
@@ -74,21 +74,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
         >
           <View style={{ marginTop: -132, marginBottom: 32 }}>
             <View style={styles.imageWrapper}>
-              <Image
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-                }}
-                source={{
-                  uri: image,
-                }}
-              />
-              <Pressable style={styles.resize}>
-                <ResizeIcon />
-              </Pressable>
+              <ImageHandler images={[{ name: "", type: "", uri: image }]} />
             </View>
           </View>
           <View style={{ paddingBottom: 32 }}>
@@ -120,7 +106,7 @@ export const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     justifyContent: "flex-end",
-    paddingTop: 256,
+    paddingTop: 232,
   },
   loaderWrapper: {
     flex: 1,
@@ -158,16 +144,5 @@ export const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: "Medium",
     marginTop: 8,
-  },
-  resize: {
-    height: 48,
-    width: 48,
-    backgroundColor: THEME.light,
-    position: "absolute",
-    top: 16,
-    right: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

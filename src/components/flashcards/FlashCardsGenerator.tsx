@@ -7,6 +7,7 @@ import UserCredentials from "../UserCredentials";
 import { initialUserState } from "../../const/auth";
 import useFlashCard from "../../hooks/useFlashCard";
 import { FlashCardContext } from "../../context/FlashCardContext";
+import NotFound from "../NotFound";
 
 export default function FlashCardsGenerator() {
   const { params } = useRoute<GeneratorRouteProps>();
@@ -14,6 +15,7 @@ export default function FlashCardsGenerator() {
   const { isLoading, activeCard } = flashCard;
 
   if (!isLoading) return <Loader />;
+  if (!flashCard.activeCard) return <NotFound />;
   return (
     <FlashCardContext.Provider value={flashCard}>
       <View style={styles.wrapper}>

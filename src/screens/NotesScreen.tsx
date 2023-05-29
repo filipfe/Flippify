@@ -7,6 +7,8 @@ import { NoteStackParams } from "../types/notes";
 import { THEME } from "../const/theme";
 import NoteSearch from "../components/notes/search/NoteSearch";
 import HeaderMenu from "../components/notes/HeaderMenu";
+import { Text } from "react-native";
+import HeaderTitle from "../components/HeaderTitle";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
@@ -24,6 +26,7 @@ export default function NotesScreen() {
         options={{
           title: "Notatki",
           headerShadowVisible: false,
+          headerTitle: HeaderTitle,
           headerRight: HeaderMenu,
         }}
       />
@@ -35,9 +38,6 @@ export default function NotesScreen() {
             title: "Notatka " + route.params.title,
             headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
             headerTransparent: true,
-            headerStyle: {
-              backgroundColor: "#FFFFFF",
-            },
           };
         }}
       />

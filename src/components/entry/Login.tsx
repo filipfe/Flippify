@@ -34,12 +34,7 @@ export default function Login() {
         JSON.stringify({
           login: userData.email,
           password: userData.password,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        })
       )
       .then((res) => login(res.data))
       .catch((err) => setError(err.response.data.detail))
@@ -57,7 +52,7 @@ export default function Login() {
           field="password"
           setState={setUserData}
           label="Hasło"
-          secured={true}
+          secureTextEntry={true}
         />
         <View style={styles.recoverWrapper}>
           <TouchableOpacity style={styles.recoverButton}>
@@ -93,9 +88,13 @@ export const styles = StyleSheet.create({
   form: {
     flex: 1,
   },
-  recoverWrapper: { flexDirection: "row", justifyContent: "flex-end" },
+  recoverWrapper: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 16,
+  },
   recoverButton: { marginTop: 2, marginLeft: 2 },
-  recoverText: { color: THEME.font, fontFamily: "Bold" },
+  recoverText: { color: THEME.font, fontFamily: "Bold", fontSize: 12 },
   submitButton: { marginTop: 20 },
   modalButton: {
     backgroundColor: "#0000FF",

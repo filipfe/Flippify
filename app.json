@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "divideknowledge",
-    "slug": "divideknowledge",
+    "name": "Flippify",
+    "slug": "flippify",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2386F1"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,23 +18,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "userInterfaceStyle": "light"
     },
     "android": {
+      "userInterfaceStyle": "light",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.divideproject.flippify"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "aaa55ce1-f1ac-4f2c-8bd3-aa3f8a0f0418"
+        "projectId": "cbca559f-2683-428d-8e49-fda133a04439"
       }
     },
-    "owner": "enriquefellatio"
+    "owner": "divideproject"
   }
 }

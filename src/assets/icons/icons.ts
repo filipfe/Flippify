@@ -4,6 +4,8 @@ import ResizeIcon from './resize.svg'
 import LikeIcon from './like.svg'
 import SearchIcon from './search.svg'
 import BackIcon from './back.svg'
+import LogoutIcon from './logout.svg'
+import LogoIcon from './logo.svg'
 
 export {
     NotificationsIcon,
@@ -11,5 +13,7 @@ export {
     ResizeIcon,
     LikeIcon,
     SearchIcon,
-    BackIcon
+    BackIcon,
+    LogoutIcon,
+    LogoIcon
 }

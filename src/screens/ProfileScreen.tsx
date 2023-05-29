@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
 import UserInfo from "../components/profile/UserInfo";
-import { NotificationsIcon } from "../assets/icons/icons";
+import { LogoIcon, NotificationsIcon } from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
@@ -57,6 +57,7 @@ const Profile = () => {
         style={{ flex: 1 }}
       >
         <View style={styles.settingsWrapper}>
+          <LogoIcon />
           <Pressable
             style={{
               height: 48,
@@ -93,9 +94,9 @@ const Profile = () => {
 const styles = StyleSheet.create({
   settingsWrapper: {
     paddingTop: 64,
-    paddingBottom: 64,
+    paddingBottom: 48,
     paddingHorizontal: 24,
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     flexDirection: "row",
   },
 });

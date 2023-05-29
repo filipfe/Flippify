@@ -29,6 +29,7 @@ export default function Result() {
   };
 
   useEffect(() => {
+    if (!answer) return;
     const isAnswerCorrect = checkIfCorrect(answer);
     setIsCorrect(isAnswerCorrect);
   }, [answer]);
@@ -72,10 +73,10 @@ export default function Result() {
           onPress={flipCard}
         />
         <PrimaryButton
-          onPress={changeCard}
           style={{ marginLeft: 4, flex: 1 }}
           paddingHorizontal={0}
           text="Przejdź dalej"
+          onPress={changeCard}
         />
       </View>
     </View>

@@ -1,38 +1,41 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { linearGradient } from "../../../const/styles";
-import { THEME } from "../../../const/theme";
 import * as ImagePicker from "expo-image-picker";
 import { NoteAddButtonProps } from "../../../types/notes";
+import { shadowPrimary } from "../../../styles/general";
 
-export default function AddButton({ setImages }: NoteAddButtonProps) {
+export default function AddButton({ addNewImage }: NoteAddButtonProps) {
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [3, 4],
       quality: 1,
     });
 
     if (!result.canceled) {
-      let imageUri = result.assets[0].uri;
-      let imageName = imageUri.split("/").pop();
-      let match = /\.(\w+)$/.exec(imageName ? imageName : "");
-      let type: string = match ? `image/${match[1]}` : `image`;
-      let image = {
+      const imageUri = result.assets[0].uri;
+      const imageName = imageUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(imageName ? imageName : "");
+      const type: string = match ? `image/${match[1]}` : `image`;
+      const image = {
         uri: imageUri,
-        name: imageName ? imageName : "",
+        name: imageName || "",
         type,
       };
-      setImages((prev) => [...prev, image]);
+      addNewImage(image);
     }
   };
+
   return (
-    <Pressable
+    <TouchableOpacity
+      onPress={pickImage}
       style={{
-        marginHorizontal: 16,
         position: "absolute",
         top: "50%",
+        width: 48,
+        height: 48,
         transform: [{ translateY: -24 }],
       }}
     >
@@ -45,19 +48,20 @@ export default function AddButton({ setImages }: NoteAddButtonProps) {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 48,
+          ...shadowPrimary,
         }}
       >
         <Text
           style={{
             fontFamily: "Bold",
             color: "#FFF",
-            lineHeight: 18,
-            fontSize: 18,
+            lineHeight: 20,
+            fontSize: 22,
           }}
         >
           +
         </Text>
       </LinearGradient>
-    </Pressable>
+    </TouchableOpacity>
   );
 }

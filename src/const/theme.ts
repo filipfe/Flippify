@@ -6,6 +6,6 @@ export const THEME = {
     font: "#382E6D",
     p: "#8DA5B9",
     desc: "#B6C3B9",
-    wrong: "#EE3354",
+    wrong: "#FA4646",
     stroke: "#E3E8E4",
 }

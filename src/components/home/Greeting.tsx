@@ -24,7 +24,7 @@ export default function Greeting() {
       <View style={{ alignItems: "center", flexDirection: "row" }}>
         <View
           style={{
-            borderWidth: 4,
+            borderWidth: 2,
             borderColor: "#FFFFFF",
             width: 52,
             height: 52,

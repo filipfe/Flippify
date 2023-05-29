@@ -10,27 +10,34 @@ export default function HeaderMenu() {
   const { navigate } = useNavigation<NoteRefNavigationProp>();
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <SearchButton />
       <Pressable
-        style={{ marginHorizontal: 16 }}
+        style={{ marginLeft: 16, marginRight: 8 }}
         onPress={() => navigate("AddNote")}
       >
         <LinearGradient
           start={{ x: 0, y: 0 }}
           colors={linearGradient}
           style={{
-            height: 36,
-            width: 36,
+            height: 32,
+            width: 32,
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: 36,
+            borderRadius: 32,
           }}
         >
-          <Text style={{ fontFamily: "Bold", color: "#FFF", fontSize: 18 }}>
+          <Text
+            style={{
+              fontFamily: "Bold",
+              color: "#FFF",
+              fontSize: 18,
+              lineHeight: 18,
+            }}
+          >
             +
           </Text>
         </LinearGradient>
       </Pressable>
-      <SearchButton />
     </View>
   );
 }

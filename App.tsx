@@ -26,6 +26,7 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import Loader from "./src/components/Loader";
 import * as SplashScreen from "expo-splash-screen";
+import { THEME } from "./src/const/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,9 +71,9 @@ function App() {
         screenOptions={{
           headerTitleStyle: styles.headerTitle,
           tabBarActiveTintColor: "#2386F1",
-          tabBarInactiveTintColor: "#3A234E",
-          tabBarLabelStyle: styles.tabBarLabel,
+          tabBarInactiveTintColor: "#382E6D",
           tabBarStyle: styles.tabBar,
+          tabBarShowLabel: false,
         }}
       >
         <RootTab.Screen
@@ -83,10 +84,10 @@ function App() {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <HomeIcon
-                stroke={focused ? "#2386F1" : "#3A234E"}
+                stroke={focused ? "#2386F1" : "#382E6D"}
                 strokeWidth="2"
-                height={27}
-                width={25}
+                height={28}
+                width={28}
               />
             ),
           }}
@@ -99,10 +100,10 @@ function App() {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <FlashCardsIcon
-                stroke={focused ? "#2386F1" : "#3A234E"}
+                stroke={focused ? "#2386F1" : "#382E6D"}
                 strokeWidth="2"
-                height={25}
-                width={22}
+                height={24}
+                width={24}
               />
             ),
           }}
@@ -115,10 +116,10 @@ function App() {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <NotesIcon
-                stroke={focused ? "#2386F1" : "#3A234E"}
+                stroke={focused ? "#2386F1" : "#382E6D"}
                 strokeWidth="2"
-                height={26}
-                width={23}
+                height={25}
+                width={25}
               />
             ),
           }}
@@ -131,10 +132,10 @@ function App() {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <ProfileIcon
-                stroke={focused ? "#2386F1" : "#3A234E"}
+                stroke={focused ? "#2386F1" : "#382E6D"}
                 strokeWidth="2"
                 height={26}
-                width={24}
+                width={26}
               />
             ),
           }}
@@ -146,9 +147,11 @@ function App() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 80,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: 24,
+    height: 64,
+    alignItems: "center",
+    flexDirection: "row",
+    shadowColor: THEME.primary,
   },
   tabBarLabel: {
     fontSize: 14,

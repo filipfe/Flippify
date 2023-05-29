@@ -26,8 +26,12 @@ export default function Stats() {
         <Text style={styles.stat}>Liczba uznań</Text>
         <Text style={styles.stat}>22</Text>
       </View>
-      <View style={{ ...styles.row, marginTop: 8 }}>
-        <PrimaryButton text="Tablica wyników" />
+      <View style={{ ...styles.row, marginTop: 12 }}>
+        <PrimaryButton
+          width={"100%"}
+          paddingVertical={12}
+          text="Tablica wyników"
+        />
       </View>
     </View>
   );
@@ -35,7 +39,7 @@ export default function Stats() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 24,
+    marginTop: 36,
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderRadius: 16,
@@ -51,10 +55,11 @@ const styles = StyleSheet.create({
   title: {
     color: THEME.font,
     fontFamily: "Bold",
-    fontSize: 18,
+    fontSize: 16,
   },
   stat: {
     color: THEME.secondary,
     fontFamily: "SemiBold",
+    fontSize: 12,
   },
 });

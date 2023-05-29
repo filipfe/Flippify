@@ -1,28 +1,33 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from "react-native";
+import { useState, Dispatch, SetStateAction } from "react";
 import { THEME } from "../const/theme";
 
 type Input = {
   field: string;
   label?: string;
-  secured?: boolean;
-  value?: string;
-  style?: any;
-  setState: any;
+  setState: Dispatch<SetStateAction<any>>;
 };
 
 export default function PrimaryInput({
   field,
   label,
-  secured,
-  value,
+  multiline = false,
+  numberOfLines,
+  maxLength,
   style,
+  secureTextEntry,
+  value,
   setState,
-}: Input) {
-  const [input, setInput] = useState("");
+}: TextInputProps & Input) {
   const [isFocused, setIsFocused] = useState(false);
 
-  useEffect(() => {
+  const handleChange = (input: string) => {
     setState((prev: string | {}) => {
       if (typeof prev === "string") return input;
       return {
@@ -30,18 +35,21 @@ export default function PrimaryInput({
         [field]: input,
       };
     });
-  }, [input]);
+  };
 
   return (
     <View style={styles.wrapper}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        secureTextEntry={secured}
-        value={typeof value === "string" ? value : input}
+        maxLength={maxLength}
+        secureTextEntry={secureTextEntry}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        value={value}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={{ ...styles.input, ...(style && style) }}
-        onChangeText={(text) => setInput(text)}
+        style={{ ...styles.input, ...(style as any) }}
+        onChangeText={handleChange}
       />
     </View>
   );
@@ -67,5 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     width: "100%",
     backgroundColor: THEME.light,
+    color: THEME.font,
+    alignItems: "flex-start",
   },
 });
