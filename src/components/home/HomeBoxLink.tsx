@@ -7,16 +7,17 @@ import { RootTabParams } from "../../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function HomeBoxLink({
+  to,
   title,
   subtitle,
   icon,
 }: ProfileBoxLinkProps) {
   const shadow = useShadow(24);
   const { navigate } =
-    useNavigation<NativeStackNavigationProp<RootTabParams, "Profile">>();
+    useNavigation<NativeStackNavigationProp<RootTabParams>>();
   return (
     <Pressable
-      onPress={() => navigate("Profile")}
+      onPress={() => navigate("Profile", { screen: to })}
       style={{
         backgroundColor: "#F2F8FD",
         borderRadius: 32,

@@ -1,13 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import AddNote from "../components/notes/AddNote";
+import AddNote from "../components/notes/add-note/AddNote";
 import Note from "../components/notes/NoteDetails";
 import NoteList from "../components/notes/NoteList";
 import { NoteStackParams } from "../types/notes";
 import { THEME } from "../const/theme";
-import NoteSearch from "../components/notes/search/NoteSearch";
 import HeaderMenu from "../components/notes/HeaderMenu";
-import { Text } from "react-native";
 import HeaderTitle from "../components/HeaderTitle";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
@@ -39,14 +37,6 @@ export default function NotesScreen() {
             headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
             headerTransparent: true,
           };
-        }}
-      />
-      <NoteStack.Screen
-        name="NoteSearch"
-        component={NoteSearch}
-        options={{
-          title: "Wyszukaj notatkę",
-          headerShadowVisible: false,
         }}
       />
       <NoteStack.Screen

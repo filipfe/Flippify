@@ -47,10 +47,16 @@ export default function Login() {
     <View style={styles.wrapper}>
       <Text style={styles.title}>Zaloguj się</Text>
       <ScrollView style={{ flex: 1 }}>
-        <PrimaryInput field="email" setState={setUserData} label="Email" />
         <PrimaryInput
-          field="password"
-          setState={setUserData}
+          onChangeText={(text) =>
+            setUserData((prev) => ({ ...prev, email: text }))
+          }
+          label="Email"
+        />
+        <PrimaryInput
+          onChangeText={(text) =>
+            setUserData((prev) => ({ ...prev, password: text }))
+          }
           label="Hasło"
           secureTextEntry={true}
         />

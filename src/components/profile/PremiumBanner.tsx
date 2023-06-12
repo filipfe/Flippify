@@ -14,8 +14,8 @@ export default function PremiumBanner() {
         <Text style={{ fontSize: 24 }}>👑</Text>
       </View>
       <View>
-        <Text style={styles.price}>59 zł / miesiąc</Text>
-        <Text style={styles.premiumText}>Kup pakiet premium</Text>
+        <Text style={styles.price}>19 zł / miesiąc</Text>
+        <Text style={styles.premiumText}>Wykup pakiet premium</Text>
       </View>
     </LinearGradient>
   );

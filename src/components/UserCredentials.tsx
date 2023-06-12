@@ -6,7 +6,7 @@ import { DefaultProfileIcon, LikeIcon } from "../assets/icons/icons";
 
 type Props = {
   user: User;
-  isLiked: boolean;
+  isLiked?: boolean;
   handleLike?: () => void;
 };
 

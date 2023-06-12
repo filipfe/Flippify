@@ -28,7 +28,12 @@ export default function AddFlashList() {
   return (
     <View style={styles.wrapper}>
       <View>
-        <PrimaryInput field="name" setState={setNewFlashList} label="Nazwa" />
+        <PrimaryInput
+          label="Nazwa"
+          onChangeText={(name) =>
+            setNewFlashList((prev) => ({ ...prev, name }))
+          }
+        />
         <View style={styles.flashcardsWrapper}>
           <View style={styles.flashcardsTextWrapper}>
             <Text style={styles.flashcardsText}>Fiszki</Text>

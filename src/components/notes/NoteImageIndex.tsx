@@ -40,8 +40,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     alignItems: "center",
-    position: "absolute",
-    bottom: 8,
   },
   dot: {
     height: 16,

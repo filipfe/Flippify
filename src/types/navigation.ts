@@ -4,7 +4,7 @@ import { Category } from "./general";
 
 // FLASHCARDS
 
-export type CategoryStackParams = {
+export type FlashCardsStackParams = {
   CategoryList: undefined;
   AddCard: undefined;
   TopicList: { category: Category };
@@ -15,18 +15,18 @@ export type CategoryStackParams = {
 };
 
 export type CategoryNavigationProps = NavigationProp<
-CategoryStackParams,
-"CategoryList"
+  FlashCardsStackParams,
+  "CategoryList"
 >;
 
 export type GeneratorRouteProps = RouteProp<
-  CategoryStackParams,
+  FlashCardsStackParams,
   "FlashCardsGenerator"
 >;
 
 
-export type TopicListNavigationProp = NavigationProp<CategoryStackParams, "TopicList">;
-export type TopicListRouteProp = RouteProp<CategoryStackParams, "TopicList">;
+export type TopicListNavigationProp = NavigationProp<FlashCardsStackParams, "TopicList">;
+export type TopicListRouteProp = RouteProp<FlashCardsStackParams, "TopicList">;
 
 export type AddCardStackParams = {
   CardForm: undefined;

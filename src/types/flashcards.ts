@@ -1,4 +1,5 @@
 import { User } from "./auth";
+import { Category } from "./general";
 
 export type Topic = string
 
@@ -17,8 +18,8 @@ export type FlashCard = {
 }
 
 export type AddedFlashCard = FlashCard & {
-  category: string;
-  topic: string;
+  category: Category;
+  topic: Topic;
 }
 
 export type FlashListCard = FlashCard & {

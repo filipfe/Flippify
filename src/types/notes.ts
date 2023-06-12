@@ -11,7 +11,7 @@ export type Note = {
     images: string[];
     created_at: string;
     category?: string;
-    likes?: number;
+    like_count?: number;
     is_liked?: boolean;
     user: User
 }
@@ -19,19 +19,20 @@ export type Note = {
 
 export type Filter = {
     category: string
+    search: string
 }
 
 export type NoteStackParams = {
-    NoteList: { category_id?: number, q?: string };
+    NoteList: { category_id?: number, search?: string };
     Note: { id: number, title: string };
     AddNote: undefined;
-    NoteSearch: undefined;
   };
 
 export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
 
 export type AddedNote = Omit<Note, "image" | "images" | "likes" | "id" | "category" | "is_liked"> & {
   images: ImageFile[];
+  privacy: "private" | "public";
   category: Omit<Category, "image">;
 };
 

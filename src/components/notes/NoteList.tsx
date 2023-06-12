@@ -1,18 +1,23 @@
-import { useNavigationState } from "@react-navigation/native";
+import { RouteProp, useNavigationState } from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { API_URL } from "@env";
 import useNotes from "../../hooks/useNotes";
-import { Filter, Note } from "../../types/notes";
+import { Filter, Note, NoteStackParams } from "../../types/notes";
 import Loader from "../Loader";
 
-const NoteList = () => {
+const NoteList = ({
+  route,
+}: {
+  route: RouteProp<NoteStackParams, "NoteList">;
+}) => {
   const location = useNavigationState((state) => state);
-  const { didLoad, PopularNotes, RecentNotes } = useNotes();
+  const { didLoad, PopularNotes, RecentNotes } = useNotes(route.params.search);
   const [notes, setNotes] = useState<Note[]>([]);
   const [filter, setFilter] = useState<Filter>({
     category: "Wszystkie",
+    search: "",
   });
 
   useEffect(() => {

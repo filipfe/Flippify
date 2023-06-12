@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Text, TouchableOpacity } from "react-native";
-import { linearGradient } from "../../../const/styles";
+import { linearGradient } from "../../../../const/styles";
 import * as ImagePicker from "expo-image-picker";
-import { NoteAddButtonProps } from "../../../types/notes";
-import { shadowPrimary } from "../../../styles/general";
+import { NoteAddButtonProps } from "../../../../types/notes";
+import { shadowPrimary } from "../../../../styles/general";
 
 export default function AddButton({ addNewImage }: NoteAddButtonProps) {
   const pickImage = async () => {

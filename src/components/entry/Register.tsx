@@ -60,22 +60,26 @@ export default function Register() {
       </Text>
       <ScrollView style={styles.form}>
         <PrimaryInput
-          field="username"
           label="Nazwa użytkownika"
-          setState={setUserData}
+          onChangeText={(text) =>
+            setUserData((prev) => ({ ...prev, username: text }))
+          }
         />
-        <PrimaryInput field="email" label="Email" setState={setUserData} />
         <PrimaryInput
-          field="password"
+          label="Email"
+          onChangeText={(email) => setUserData((prev) => ({ ...prev, email }))}
+        />
+        <PrimaryInput
           label="Hasło"
           secureTextEntry={true}
-          setState={setUserData}
+          onChangeText={(password) =>
+            setUserData((prev) => ({ ...prev, password }))
+          }
         />
         <PrimaryInput
-          field="confPassword"
           label="Powtórz hasło"
           secureTextEntry={true}
-          setState={setConfPassword}
+          onChangeText={(text) => setConfPassword(text)}
         />
       </ScrollView>
       <View>

@@ -1,13 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import axios from "axios";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { API_URL } from "@env";
 import { Note, NoteStackParams } from "../../types/notes";
 import { useState, useEffect } from "react";
@@ -19,6 +12,8 @@ import { initialNote } from "../../const/notes";
 import { shadowPrimary } from "../../styles/general";
 import UserCredentials from "../UserCredentials";
 import ImageHandler from "./ImageHandler";
+import useNoteImages from "../../hooks/useNoteImages";
+import NoteImageIndex from "./NoteImageIndex";
 
 type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
 
@@ -28,6 +23,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   const [details, setDetails] = useState<Note>(initialNote);
   const [isLiked, setIsLiked] = useState(false);
   const { title, created_at, user, image } = details;
+  const { activeIndex, images, setImages } = useNoteImages<string>();
 
   const handleLike = async () => {
     setIsLiked((prev) => !prev);
@@ -44,6 +40,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
       .then((res) => res.data)
       .then((data) => {
         setDetails(data);
+        setImages(data.images);
         setIsLiked(data.is_liked);
       })
       .finally(() => setLoading(false));
@@ -74,7 +71,21 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
         >
           <View style={{ marginTop: -132, marginBottom: 32 }}>
             <View style={styles.imageWrapper}>
-              <ImageHandler images={[{ name: "", type: "", uri: image }]} />
+              <ImageHandler
+                // images={images.map((image) => ({
+                //   uri: image,
+                //   name: image,
+                //   type: "",
+                // }))}
+                images={[{ uri: image, name: image, type: "" }]}
+              />
+              {[""].length > 1 && (
+                <NoteImageIndex
+                  // images={images}
+                  images={[{ uri: image, name: image, type: "" }]}
+                  activeIndex={activeIndex}
+                />
+              )}
             </View>
           </View>
           <View style={{ paddingBottom: 32 }}>

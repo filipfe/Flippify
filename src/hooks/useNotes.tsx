@@ -7,7 +7,7 @@ import { API_URL } from "@env";
 import { Note } from "../types/notes";
 import { THEME } from "../const/theme";
 
-export default function useNotes() {
+export default function useNotes(search?: string) {
   const [didLoad, setDidLoad] = useState(false);
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
@@ -15,14 +15,14 @@ export default function useNotes() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/notes`)
+      .get(`${API_URL}/api/notes${search ? `?search=${search}` : ""}`)
       .then((res) => res.data)
       .then((data) => {
-        setRecentNotes(data.recent);
-        setPopularNotes(data.popular);
+        setRecentNotes(data.recent || []);
+        setPopularNotes(data.popular || []);
       })
       .finally(() => setDidLoad(true));
-  }, [location]);
+  }, [location, search]);
 
   const PopularNotes = () => {
     return (

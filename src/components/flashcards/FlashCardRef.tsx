@@ -6,7 +6,6 @@ import { THEME } from "../../const/theme";
 import RadioAnswer from "./answers/RadioAnswer";
 import Animated, {
   useAnimatedStyle,
-  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import Result from "./Result";
