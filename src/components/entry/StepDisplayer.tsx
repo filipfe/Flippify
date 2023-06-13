@@ -1,11 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { StyleSheet, View } from "react-native";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
 
 const StepDisplayer = ({ step }: { step: number }) => {
+  const { light } = useContext(ThemeContext);
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: light }}>
       <View style={styles.outerBar}>
         {step === 1 && (
           <LinearGradient colors={linearGradient} style={styles.innerBar} />
@@ -22,7 +24,6 @@ const StepDisplayer = ({ step }: { step: number }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: THEME.light,
     marginTop: 32,
     borderRadius: 24,
     height: 6,

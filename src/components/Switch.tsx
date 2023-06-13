@@ -1,8 +1,9 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
-import { THEME } from "../const/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import GradientText from "./GradientText";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 type OptionProps = {
   label: string;
@@ -20,8 +21,9 @@ export default function Switch({
   onChange,
   activeValue,
 }: SwitchProps) {
+  const { light } = useContext(ThemeContext);
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: light }}>
       {options.map((opt) => (
         <Option
           {...opt}
@@ -53,9 +55,7 @@ const Option = ({
           colors={linearGradient}
           start={{ y: 0, x: 0 }}
         >
-          <Text style={{ ...styles.optionText, color: THEME.light }}>
-            {label}
-          </Text>
+          <Text style={{ ...styles.optionText, color: "#FFF" }}>{label}</Text>
         </LinearGradient>
       ) : (
         <View style={styles.option}>
@@ -71,15 +71,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 255,
-    backgroundColor: THEME.light,
   },
   option: {
     borderRadius: 255,
     justifyContent: "center",
     paddingVertical: 16,
-  },
-  activeOption: {
-    backgroundColor: THEME.primary,
   },
   inActiveOption: {},
   optionText: {

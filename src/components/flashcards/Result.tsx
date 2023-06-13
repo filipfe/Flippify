@@ -2,15 +2,16 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import { useContext, useState, useEffect } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
-import { THEME } from "../../const/theme";
 import { shadowPrimary } from "../../styles/general";
 import { AuthContext } from "../../context/AuthContext";
 import { DefaultProfileIcon } from "../../assets/icons/icons";
 import SecondaryButton from "../SecondaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Result() {
+  const { font, secondary } = useContext(ThemeContext);
   const [isCorrect, setIsCorrect] = useState(false);
   const { flipCard, changeCard, activeCard, answer } =
     useContext(FlashCardContext);
@@ -44,17 +45,17 @@ export default function Result() {
             <DefaultProfileIcon width={96} height={96} />
           )}
         </View>
-        <Text style={styles.title}>Poziom 17</Text>
+        <Text style={{ ...styles.title, color: font }}>Poziom 17</Text>
         <View style={styles.progressWrapper}>
           <LinearGradient
             style={{ width: `20%`, ...styles.progress }}
             start={{ x: 0, y: 0 }}
             colors={linearGradient}
           >
-            <Text style={styles.points}>+24</Text>
+            <Text style={{ ...styles.points, color: secondary }}>+24</Text>
           </LinearGradient>
         </View>
-        <Text style={styles.title}>
+        <Text style={{ ...styles.title, color: font }}>
           {isCorrect ? "To poprawna odpowiedź!" : "Niepoprawna odpowiedź!"}
         </Text>
         <View style={styles.answerWrapper}>
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
   },
   title: {
-    color: THEME.font,
     fontSize: 20,
     fontFamily: "ExtraBold",
     marginVertical: 16,
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
     top: -28,
     right: 0,
     transform: [{ translateX: 8 }],
-    color: THEME.secondary,
     fontFamily: "SemiBold",
     fontSize: 14,
   },

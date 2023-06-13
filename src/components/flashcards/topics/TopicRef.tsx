@@ -2,11 +2,12 @@ import { Topic } from "../../../types/flashcards";
 import { Category } from "../../../types/general";
 import { useNavigation } from "@react-navigation/native";
 import { TopicListNavigationProp } from "../../../types/navigation";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { THEME } from "../../../const/theme";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { linearGradient } from "../../../const/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import RangeSlider from "../../RangeSlider";
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const TopicRef = ({
   topic,
@@ -15,23 +16,26 @@ const TopicRef = ({
   topic: Topic;
   category: Category;
 }) => {
+  const { font, secondary, background } = useContext(ThemeContext);
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
     <TouchableOpacity
-      style={styles.wrapper}
+      style={{ ...styles.wrapper, backgroundColor: background }}
       onPress={() =>
         navigation.navigate("FlashCardsGenerator", { topic, category })
       }
     >
       <View style={styles.topWrapper}>
-        <Text style={styles.title}>{topic}</Text>
-        <Text style={styles.title}>58%</Text>
+        <Text style={{ ...styles.title, color: font }}>{topic}</Text>
+        <Text style={{ ...styles.title, color: font }}>58%</Text>
       </View>
       <View style={{ marginVertical: 16 }}>
         <RangeSlider value={20} />
       </View>
       <View style={{ ...styles.topWrapper }}>
-        <Text style={styles.points}>144 / 255 punkty</Text>
+        <Text style={{ ...styles.points, color: secondary }}>
+          144 / 255 punkty
+        </Text>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           style={styles.button}
@@ -46,7 +50,6 @@ const TopicRef = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
     marginBottom: 16,
     paddingHorizontal: 24,
     paddingVertical: 12,
@@ -57,7 +60,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "SemiBold",
     fontSize: 18,
-    color: THEME.font,
   },
   topWrapper: {
     flexDirection: "row",
@@ -65,7 +67,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   points: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
   },
   button: {

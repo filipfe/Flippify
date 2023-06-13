@@ -1,7 +1,8 @@
 import { StyleSheet, View } from "react-native";
-import { THEME } from "../../const/theme";
 import useShadow from "../../hooks/useShadow";
-import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type WrapperProps = {
   images: any[];
@@ -24,13 +25,16 @@ export default function NoteImageIndex({ images, activeIndex }: WrapperProps) {
 }
 
 const Dot = ({ activeIndex, index }: DotProps) => {
+  const { primary, secondary } = useContext(ThemeContext);
   const shadow = useShadow(4);
   return (
     <Animated.View
       style={{
         ...styles.dot,
         ...shadow,
-        ...(activeIndex === index ? styles.activeDot : styles.inActiveDot),
+        ...(activeIndex === index
+          ? { backgroundColor: primary, ...styles.activeDot }
+          : { ...styles.inActiveDot, backgroundColor: secondary }),
       }}
     />
   );
@@ -50,10 +54,8 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     borderColor: "#FFF",
-    backgroundColor: THEME.primary,
   },
   inActiveDot: {
     borderColor: "#F0F0F0",
-    backgroundColor: THEME.secondary,
   },
 });

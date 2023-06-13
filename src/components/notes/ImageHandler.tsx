@@ -2,13 +2,14 @@ import { Dimensions, Image, Pressable, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { ResizeIcon } from "../../assets/icons/icons";
 import { ImageFile } from "../../types/notes";
-import { THEME } from "../../const/theme";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ResizeModal from "./ResizeModal";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const { width } = Dimensions.get("screen");
 
 export default function ImageHandler({ images }: { images: ImageFile[] }) {
+  const { light, font } = useContext(ThemeContext);
   const [resizeModalActive, setResizeModalActive] = useState(false);
   return (
     <>
@@ -27,9 +28,9 @@ export default function ImageHandler({ images }: { images: ImageFile[] }) {
       {images.length > 0 && (
         <Pressable
           onPress={() => setResizeModalActive((prev) => !prev)}
-          style={styles.resize}
+          style={{ ...styles.resize, backgroundColor: light }}
         >
-          <ResizeIcon />
+          <ResizeIcon stroke={font} />
         </Pressable>
       )}
       {resizeModalActive && (
@@ -46,7 +47,6 @@ const styles = StyleSheet.create({
   resize: {
     height: 48,
     width: 48,
-    backgroundColor: THEME.light,
     position: "absolute",
     top: 16,
     right: 16,

@@ -1,26 +1,31 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useContext } from "react";
 import AddNote from "../components/notes/add-note/AddNote";
 import Note from "../components/notes/NoteDetails";
 import NoteList from "../components/notes/NoteList";
 import { NoteStackParams } from "../types/notes";
-import { THEME } from "../const/theme";
-import HeaderMenu from "../components/notes/HeaderMenu";
+import HeaderMenu from "../components/notes/header/HeaderMenu";
 import HeaderTitle from "../components/HeaderTitle";
+import { ThemeContext } from "../context/ThemeContext";
+import Header from "../components/Header";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
 export default function NotesScreen() {
+  const { font, background } = useContext(ThemeContext);
   return (
     <NoteStack.Navigator
       initialRouteName="NoteList"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
+        headerTitleStyle: { fontFamily: "SemiBold", color: font },
+        headerStyle: { backgroundColor: background },
+        header: (props) => <Header {...props} />,
       }}
     >
       <NoteStack.Screen
         name="NoteList"
         component={NoteList}
+        initialParams={{ search: "", category_id: -1 }}
         options={{
           title: "Notatki",
           headerShadowVisible: false,
@@ -34,8 +39,9 @@ export default function NotesScreen() {
         options={({ route }) => {
           return {
             title: "Notatka " + route.params.title,
-            headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
+            headerTitleStyle: { fontFamily: "SemiBold", color: font },
             headerTransparent: true,
+            header: (props) => <Header {...props} />,
           };
         }}
       />

@@ -3,22 +3,30 @@ import { globalStyles, shadowPrimary } from "../../../../styles/general";
 import { NewNoteContext } from "../../../../context/OpusContext";
 import { useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
-import { THEME } from "../../../../const/theme";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export default function CategoryPicker() {
+  const { secondary, background, font } = useContext(ThemeContext);
   const { categories, changeCategory, activeCategory } =
     useContext(NewNoteContext);
   return (
     <View style={{ marginTop: 32 }}>
-      <Text style={{ ...globalStyles.paramText, marginBottom: 16 }}>
+      <Text
+        style={{
+          ...globalStyles.paramText,
+          marginBottom: 16,
+          color: secondary,
+        }}
+      >
         Kategoria notatki
       </Text>
-      <View style={styles.pickerWrapper}>
+      <View style={{ ...styles.pickerWrapper, backgroundColor: background }}>
         <Picker
           placeholder="Wybierz kategorię"
           style={styles.picker}
           selectedValue={activeCategory.id}
-          itemStyle={styles.pickerItem}
+          itemStyle={{ ...styles.pickerItem, color: font }}
+          dropdownIconColor={font}
           onValueChange={(id) =>
             id !== -1 &&
             changeCategory(categories.find((item) => item.id === id)!)
@@ -27,7 +35,7 @@ export default function CategoryPicker() {
           {categories.map((category) => (
             <Picker.Item
               fontFamily="Bold"
-              color={THEME.font}
+              color={font}
               label={category.name}
               value={category.id}
               key={category.id}
@@ -53,7 +61,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   pickerItem: {
-    color: THEME.font,
     fontFamily: "Bold",
   },
 });

@@ -6,9 +6,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../../../const/styles";
 
 export default function AddAnswerButton() {
-  const { setNewCard } = useContext(NewCardContext);
+  const { setItem } = useContext(NewCardContext);
   const addAnswer = () => {
-    setNewCard((prev) => ({
+    setItem((prev) => ({
       ...prev,
       answers: [...prev.answers, { text: "", is_correct: false }],
     }));

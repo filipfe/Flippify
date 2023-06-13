@@ -14,9 +14,10 @@ import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
 import { AuthContext } from "../../context/AuthContext";
 import SecondaryButton from "../SecondaryButton";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Login() {
+  const { font } = useContext(ThemeContext);
   const { login } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +46,7 @@ export default function Login() {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>Zaloguj się</Text>
+      <Text style={{ ...styles.title, color: font }}>Zaloguj się</Text>
       <ScrollView style={{ flex: 1 }}>
         <PrimaryInput
           onChangeText={(text) =>
@@ -62,7 +63,9 @@ export default function Login() {
         />
         <View style={styles.recoverWrapper}>
           <TouchableOpacity style={styles.recoverButton}>
-            <Text style={styles.recoverText}>Odzyskaj hasło</Text>
+            <Text style={{ ...styles.recoverText, color: font }}>
+              Odzyskaj hasło
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -87,7 +90,6 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: "Bold",
     textAlign: "center",
-    color: THEME.font,
     fontSize: 24,
     marginBottom: 32,
   },
@@ -100,7 +102,7 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
   recoverButton: { marginTop: 2, marginLeft: 2 },
-  recoverText: { color: THEME.font, fontFamily: "Bold", fontSize: 12 },
+  recoverText: { fontFamily: "Bold", fontSize: 12 },
   submitButton: { marginTop: 20 },
   modalButton: {
     backgroundColor: "#0000FF",

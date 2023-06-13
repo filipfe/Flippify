@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { Text, Pressable, ScrollView, View, StyleSheet } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { Text, ScrollView, View, StyleSheet } from "react-native";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import { API_URL } from "@env";
 import { Category } from "../../../types/general";
-import { CategoryNavigationProps } from "../../../types/navigation";
 import CategoryRef from "./CategoryRef";
-import { THEME } from "../../../const/theme";
 import { DEFAULT_STYLES } from "../../../const/styles";
 import Loader from "../../Loader";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function CategoryList() {
   const route = useRoute();
+  const { background } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,7 +29,7 @@ export default function CategoryList() {
     <Loader />
   ) : (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.wrapper}>
+      <View style={{ ...styles.wrapper, backgroundColor: background }}>
         {categories.length > 0 ? (
           categories.map((category) => (
             <CategoryRef {...category} key={category.name} />
@@ -46,7 +46,6 @@ export default function CategoryList() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
     paddingVertical: 16,
     paddingHorizontal: 24,
   },
@@ -59,18 +58,5 @@ const styles = StyleSheet.create({
   loaderWrapper: {
     width: "100%",
     marginBottom: 32,
-  },
-  loaderBox: {
-    marginBottom: 16,
-    width: "100%",
-    borderRadius: 16,
-    backgroundColor: THEME.light,
-    height: 96,
-  },
-  loaderText: {
-    width: "60%",
-    borderRadius: 16,
-    backgroundColor: THEME.light,
-    height: 32,
   },
 });

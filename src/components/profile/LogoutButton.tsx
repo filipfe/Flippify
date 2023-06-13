@@ -1,14 +1,14 @@
 import { API_URL } from "@env";
 import axios from "axios";
-import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
-import { THEME } from "../../const/theme";
 import Loader from "../Loader";
 import { LogoutIcon } from "../../assets/icons/icons";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function LogoutButton() {
+  const { wrong } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(false);
   const { logout } = useContext(AuthContext);
 
@@ -29,7 +29,7 @@ export default function LogoutButton() {
       onPress={handleLogout}
     >
       <LogoutIcon />
-      <Text style={styles.text}>Wyloguj się</Text>
+      <Text style={{ ...styles.text, color: wrong }}>Wyloguj się</Text>
     </Pressable>
   );
 }
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     fontFamily: "Bold",
     textAlign: "right",
-    color: THEME.wrong,
     lineHeight: 18,
     marginLeft: 8,
   },

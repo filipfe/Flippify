@@ -1,8 +1,9 @@
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import { shadowPrimary } from "../styles/general";
-import { THEME } from "../const/theme";
 import { User } from "../types/auth";
 import { DefaultProfileIcon, LikeIcon } from "../assets/icons/icons";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 type Props = {
   user: User;
@@ -12,6 +13,7 @@ type Props = {
 
 export default function UserCredentials({ user, isLiked, handleLike }: Props) {
   const { profile_picture, username } = user;
+  const { primary, secondary, font, light } = useContext(ThemeContext);
   return (
     <View style={styles.bottomWrapper}>
       <View style={styles.userWrapper}>
@@ -26,16 +28,21 @@ export default function UserCredentials({ user, isLiked, handleLike }: Props) {
           )}
         </View>
         <View style={{ marginLeft: 16 }}>
-          <Text style={styles.addedBy}>Dodane przez</Text>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={{ ...styles.addedBy, color: secondary }}>
+            Dodane przez
+          </Text>
+          <Text style={{ ...styles.username, color: font }}>{username}</Text>
         </View>
       </View>
       {handleLike && (
-        <Pressable onPress={handleLike} style={styles.likeButton}>
+        <Pressable
+          onPress={handleLike}
+          style={{ ...styles.likeButton, backgroundColor: light }}
+        >
           <LikeIcon
-            stroke={isLiked ? THEME.primary : THEME.font}
+            stroke={isLiked ? primary : font}
             strokeWidth={2}
-            fill={isLiked ? THEME.primary : "none"}
+            fill={isLiked ? primary : "none"}
           />
         </Pressable>
       )}
@@ -67,7 +74,6 @@ const styles = StyleSheet.create({
   likeButton: {
     height: 56,
     width: 56,
-    backgroundColor: THEME.light,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -75,11 +81,9 @@ const styles = StyleSheet.create({
   addedBy: {
     fontFamily: "SemiBold",
     fontSize: 12,
-    color: THEME.secondary,
     lineHeight: 20,
   },
   username: {
-    color: THEME.font,
     fontFamily: "Bold",
     lineHeight: 24,
   },

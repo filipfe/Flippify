@@ -3,8 +3,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import Greeting from "../components/home/Greeting";
 import ProfileBoxLink from "../components/home/HomeBoxLink";
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext } from "react";
 
 export default function HomeScreen() {
+  const { background } = useContext(ThemeContext);
   return (
     <LinearGradient
       colors={linearGradient}
@@ -15,7 +18,7 @@ export default function HomeScreen() {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#FFF",
+          backgroundColor: background,
           borderTopRightRadius: 36,
           borderTopLeftRadius: 36,
           paddingHorizontal: 24,

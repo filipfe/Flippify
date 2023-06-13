@@ -3,10 +3,11 @@ import { globalStyles } from "../../../../styles/general";
 import Switch from "../../../Switch";
 import { NewNoteContext } from "../../../../context/OpusContext";
 import { useContext } from "react";
-import { THEME } from "../../../../const/theme";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export default function PrivacySwitch() {
   const { item, setItem } = useContext(NewNoteContext);
+  const { secondary } = useContext(ThemeContext);
 
   const changePrivacy = (value: string) => {
     const privacyValue = value as "public" | "private";
@@ -15,7 +16,13 @@ export default function PrivacySwitch() {
 
   return (
     <View style={{ marginTop: 32 }}>
-      <Text style={{ ...globalStyles.paramText, marginBottom: 16 }}>
+      <Text
+        style={{
+          ...globalStyles.paramText,
+          marginBottom: 16,
+          color: secondary,
+        }}
+      >
         Typ notatki
       </Text>
       <Switch
@@ -30,7 +37,7 @@ export default function PrivacySwitch() {
         style={{
           fontFamily: "Medium",
           fontSize: 12,
-          color: THEME.secondary,
+          color: secondary,
           marginTop: 16,
           lineHeight: 20,
         }}

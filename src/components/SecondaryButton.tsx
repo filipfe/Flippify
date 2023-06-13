@@ -1,7 +1,8 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Button } from "../types/general";
 import GradientText from "./GradientText";
-import { THEME } from "../const/theme";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function SecondaryButton({
   onPress,
@@ -13,6 +14,7 @@ export default function SecondaryButton({
   paddingHorizontal = 48,
   paddingVertical = 14,
 }: Button) {
+  const { light, font } = useContext(ThemeContext);
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -23,12 +25,13 @@ export default function SecondaryButton({
         paddingHorizontal,
         paddingVertical,
         width,
+        backgroundColor: light,
       }}
     >
       <GradientText
         style={{
           ...styles.text,
-          ...(active ? styles.textActive : styles.textInActive),
+          ...(active ? { color: "#FFF" } : { color: font }),
           fontSize,
         }}
       >
@@ -41,7 +44,6 @@ export default function SecondaryButton({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 48,
-    backgroundColor: THEME.light,
     position: "relative",
     zIndex: 10,
     width: "100%",
@@ -51,11 +53,5 @@ const styles = StyleSheet.create({
   text: {
     marginHorizontal: "auto",
     fontFamily: "Bold",
-  },
-  textActive: {
-    color: "white",
-  },
-  textInActive: {
-    color: THEME.font,
   },
 });

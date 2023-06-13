@@ -2,9 +2,10 @@ import { View, StyleSheet, Text } from "react-native";
 import { useContext } from "react";
 import PrimaryInput from "../../../PrimaryInput";
 import { NewCardContext } from "../../../../context/OpusContext";
-import { THEME } from "../../../../const/theme";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export default function InputForm() {
+  const { font } = useContext(ThemeContext);
   const { item, setItem } = useContext(NewCardContext);
   const { question, answers } = item;
   const splittedQuestion = question
@@ -19,7 +20,9 @@ export default function InputForm() {
   return (
     <View style={{ alignSelf: "stretch" }}>
       {question.length > 0 && (
-        <Text style={styles.question}>{formattedQuestion}</Text>
+        <Text style={{ ...styles.question, color: font }}>
+          {formattedQuestion}
+        </Text>
       )}
       <PrimaryInput
         maxLength={56}
@@ -45,7 +48,6 @@ export default function InputForm() {
 
 export const styles = StyleSheet.create({
   question: {
-    color: THEME.font,
     fontFamily: "ExtraBold",
     fontSize: 20,
     textAlign: "center",

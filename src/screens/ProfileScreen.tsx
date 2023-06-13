@@ -10,15 +10,19 @@ import { LogoIcon, NotificationsIcon } from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
 export default function ProfileScreen() {
+  const { background } = useContext(ThemeContext);
   return (
     <ProfileStack.Navigator
       initialRouteName="ProfileStack"
       screenOptions={{
         headerTitleStyle: { fontFamily: "Bold" },
+        headerStyle: { backgroundColor: background },
       }}
     >
       <ProfileStack.Screen
@@ -49,6 +53,7 @@ export default function ProfileScreen() {
 }
 
 const Profile = () => {
+  const { background, light, font } = useContext(ThemeContext);
   return (
     <ScrollView>
       <LinearGradient
@@ -63,17 +68,17 @@ const Profile = () => {
               height: 48,
               width: 48,
               borderRadius: 12,
-              backgroundColor: "#F2F8FD",
+              backgroundColor: light,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <NotificationsIcon width={20} height={20} />
+            <NotificationsIcon stroke={font} width={20} height={20} />
           </Pressable>
         </View>
         <View
           style={{
-            backgroundColor: "#FFF",
+            backgroundColor: background,
             borderTopRightRadius: 36,
             borderTopLeftRadius: 36,
             paddingHorizontal: 24,

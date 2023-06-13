@@ -2,10 +2,11 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { DefaultProfileIcon } from "../../assets/icons/icons";
-import { THEME } from "../../const/theme";
 import { shadowPrimary } from "../../styles/general";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function UserInfo() {
+  const { font } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const { username, profile_picture } = user;
   return (
@@ -17,7 +18,7 @@ export default function UserInfo() {
           <DefaultProfileIcon width={96} height={96} style={styles.picture} />
         )}
       </View>
-      <Text style={styles.username}>{username}</Text>
+      <Text style={{ ...styles.username, color: font }}>{username}</Text>
     </View>
   );
 }
@@ -48,6 +49,5 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: "Bold",
     fontSize: 24,
-    color: THEME.font,
   },
 });

@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import Loader from "../Loader";
 import { API_URL } from "@env";
 import { Category } from "../../types/general";
 import { Filter } from "../../types/notes";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const NoteFilter = ({
   filter,
@@ -14,6 +14,7 @@ const NoteFilter = ({
   filter: Filter;
   setFilter: any;
 }) => {
+  const { primary, secondary } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -30,8 +31,8 @@ const NoteFilter = ({
       style={{
         ...styles.categoryButton,
         ...(category.name === filter.category
-          ? { backgroundColor: THEME.primary }
-          : { backgroundColor: "white" }),
+          ? { backgroundColor: primary }
+          : { backgroundColor: "#FFF" }),
       }}
       onPress={() =>
         setFilter((prev: Filter) => ({ ...prev, category: category.name }))
@@ -56,7 +57,7 @@ const NoteFilter = ({
         <Text
           style={{
             ...styles.categoryButtonText,
-            color: filter.category === "Wszystkie" ? THEME.p : "white",
+            color: filter.category === "Wszystkie" ? secondary : "white",
           }}
         >
           Wszystkie

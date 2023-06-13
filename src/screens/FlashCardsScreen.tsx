@@ -4,8 +4,8 @@ import CategoryList from "../components/flashcards/categories/CategoryList";
 import FlashCardsGenerator from "../components/flashcards/FlashCardsGenerator";
 import TopicList from "../components/flashcards/topics/TopicList";
 import { FlashCardsStackParams } from "../types/navigation";
-import { THEME } from "../const/theme";
 import HeaderTitle from "../components/HeaderTitle";
+import Header from "../components/Header";
 
 const FlashCardsStack = createNativeStackNavigator<FlashCardsStackParams>();
 
@@ -14,8 +14,8 @@ export default function FlashCardsScreen() {
     <FlashCardsStack.Navigator
       initialRouteName="CategoryList"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
         headerShadowVisible: false,
+        header: (props) => <Header {...props} />,
       }}
     >
       <FlashCardsStack.Screen

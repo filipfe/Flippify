@@ -3,9 +3,8 @@ import axios from "axios";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { API_URL } from "@env";
 import { Note, NoteStackParams } from "../../types/notes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Loader from "../Loader";
-import { THEME } from "../../const/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { initialNote } from "../../const/notes";
@@ -14,10 +13,12 @@ import UserCredentials from "../UserCredentials";
 import ImageHandler from "./ImageHandler";
 import useNoteImages from "../../hooks/useNoteImages";
 import NoteImageIndex from "./NoteImageIndex";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
 
 export default function NoteDetails({ route }: { route: NoteRouteProp }) {
+  const { font, secondary, background } = useContext(ThemeContext);
   const { id } = route.params;
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
@@ -63,14 +64,16 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
         <View
           style={{
             flex: 1,
-            backgroundColor: "#FFF",
+            backgroundColor: background,
             borderTopRightRadius: 36,
             borderTopLeftRadius: 36,
             paddingHorizontal: 24,
           }}
         >
           <View style={{ marginTop: -132, marginBottom: 32 }}>
-            <View style={styles.imageWrapper}>
+            <View
+              style={{ ...styles.imageWrapper, backgroundColor: background }}
+            >
               <ImageHandler
                 // images={images.map((image) => ({
                 //   uri: image,
@@ -89,11 +92,11 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
             </View>
           </View>
           <View style={{ paddingBottom: 32 }}>
-            <Text style={styles.date}>
+            <Text style={{ ...styles.date, color: secondary }}>
               {new Date(created_at).toLocaleDateString("default")}
             </Text>
-            <Text style={styles.noteTitle}>{title}</Text>
-            <Text style={styles.noteDesc}>
+            <Text style={{ ...styles.noteTitle, color: font }}>{title}</Text>
+            <Text style={{ ...styles.noteDesc, color: secondary }}>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia
               assumenda obcaecati, harum molestiae iusto accusamus facilis
               asperiores quisquam ad, rerum totam aut corporis neque. Voluptate
@@ -129,8 +132,6 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 320,
     borderRadius: 24,
-    backgroundColor: "#FFFFFF",
-    overflow: "hidden",
     position: "relative",
     alignItems: "center",
     ...shadowPrimary,
@@ -140,17 +141,14 @@ export const styles = StyleSheet.create({
   },
   date: {
     fontFamily: "ExtraBold",
-    color: THEME.secondary,
     marginBottom: 4,
   },
   noteTitle: {
     fontFamily: "ExtraBold",
     fontSize: 24,
     marginBottom: 8,
-    color: THEME.font,
   },
   noteDesc: {
-    color: THEME.secondary,
     fontSize: 14,
     lineHeight: 24,
     fontFamily: "Medium",

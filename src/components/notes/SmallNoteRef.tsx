@@ -1,10 +1,12 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Note, NoteRefNavigationProp } from "../../types/notes";
 import { useNavigation } from "@react-navigation/native";
-import { THEME } from "../../const/theme";
 import { LikeIcon } from "../../assets/icons/icons";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SmallNoteRef(props: Note) {
+  const { font, secondary, background } = useContext(ThemeContext);
   const { title, image, like_count } = props;
   const { navigate } = useNavigation<NoteRefNavigationProp>();
   return (
@@ -18,16 +20,13 @@ export default function SmallNoteRef(props: Note) {
           uri: image,
         }}
       />
-      <View style={styles.textWrapper}>
-        <Text style={styles.title}>{title}</Text>
+      <View style={{ ...styles.textWrapper, backgroundColor: background }}>
+        <Text style={{ ...styles.title, color: font }}>{title}</Text>
         <View style={styles.likesWrapper}>
-          <Text style={styles.likesCount}>{like_count || 0}</Text>
-          <LikeIcon
-            strokeWidth={2}
-            height={16}
-            width={16}
-            stroke={THEME.secondary}
-          />
+          <Text style={{ ...styles.likesCount, color: secondary }}>
+            {like_count || 0}
+          </Text>
+          <LikeIcon strokeWidth={2} height={16} width={16} stroke={secondary} />
         </View>
       </View>
     </Pressable>
@@ -36,13 +35,11 @@ export default function SmallNoteRef(props: Note) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: 192,
-    borderRadius: 16,
-    overflow: "hidden",
-    marginRight: 16,
+    width: 216,
     elevation: 16,
     shadowColor: "#3C85C2",
     backgroundColor: "#FFFFFF",
+    marginBottom: 24,
   },
   image: {
     height: 124,
@@ -55,7 +52,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    color: THEME.font,
     fontFamily: "SemiBold",
     fontSize: 18,
     lineHeight: 18,
@@ -65,7 +61,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   likesCount: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
     fontSize: 14,
     lineHeight: 14,

@@ -1,21 +1,27 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { StyleSheet, Text, View } from "react-native";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
 
 export default function PremiumBanner() {
+  const { light } = useContext(ThemeContext);
   return (
     <LinearGradient
       style={styles.wrapper}
       start={{ x: 1, y: 0 }}
       colors={linearGradient}
     >
-      <View style={styles.logoWrapper}>
+      <View style={{ ...styles.logoWrapper, backgroundColor: "#F2F8FD" }}>
         <Text style={{ fontSize: 24 }}>👑</Text>
       </View>
       <View>
-        <Text style={styles.price}>19 zł / miesiąc</Text>
-        <Text style={styles.premiumText}>Wykup pakiet premium</Text>
+        <Text style={{ ...styles.price, color: "#F2F8FD" }}>
+          19 zł / miesiąc
+        </Text>
+        <Text style={{ ...styles.premiumText, color: "#F2F8FD" }}>
+          Wykup pakiet premium
+        </Text>
       </View>
     </LinearGradient>
   );
@@ -33,7 +39,6 @@ const styles = StyleSheet.create({
   logoWrapper: {
     width: 56,
     height: 56,
-    backgroundColor: THEME.light,
     marginRight: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -42,13 +47,11 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     fontFamily: "Medium",
-    color: THEME.light,
     opacity: 0.8,
     lineHeight: 20,
   },
   premiumText: {
     fontFamily: "Bold",
     fontSize: 18,
-    color: THEME.light,
   },
 });

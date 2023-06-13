@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
 import Loader from "../../Loader";
@@ -7,8 +7,10 @@ import { Topic } from "../../../types/flashcards";
 import { TopicListRouteProp } from "../../../types/navigation";
 import TopicRef from "./TopicRef";
 import NotFound from "../../NotFound";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function TopicList({ route }: { route: TopicListRouteProp }) {
+  const { background } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true);
   const [topics, setTopics] = useState<Topic[]>([]);
   const category = route.params.category;
@@ -27,8 +29,8 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
       <Loader />
     </View>
   ) : topics.length > 0 ? (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-      <View style={styles.wrapper}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={{ ...styles.wrapper, backgroundColor: background }}>
         {topics.map((topic) => (
           <TopicRef topic={topic} category={category} key={topic} />
         ))}
@@ -41,7 +43,6 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
     paddingVertical: 16,
     paddingHorizontal: 16,
     flex: 1,

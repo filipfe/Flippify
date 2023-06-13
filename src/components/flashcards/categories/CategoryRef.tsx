@@ -2,21 +2,25 @@ import { useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
 import { CategoryNavigationProps } from "../../../types/navigation";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { THEME } from "../../../const/theme";
 import PrimaryButton from "../../PrimaryButton";
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const CategoryRef = (props: Category) => {
+  const { font, secondary, background } = useContext(ThemeContext);
   const { navigate } = useNavigation<CategoryNavigationProps>();
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <View style={styles.topWrapper}>
         <View style={styles.titleWrapper}>
           <View style={styles.iconWrapper}>
             <Image style={styles.icon} source={{ uri: props.icon }} />
           </View>
-          <Text style={styles.title}>{props.name}</Text>
+          <Text style={{ ...styles.title, color: font }}>{props.name}</Text>
         </View>
-        <Text style={styles.topicCount}>24 tematy</Text>
+        <Text style={{ ...styles.topicCount, color: secondary }}>
+          24 tematy
+        </Text>
       </View>
       <PrimaryButton
         onPress={() => navigate("TopicList", { category: props })}
@@ -33,7 +37,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     elevation: 12,
     shadowColor: "#3C85C2",
-    backgroundColor: "#FFFFFF",
     marginBottom: 24,
     paddingHorizontal: 28,
     paddingTop: 18,
@@ -46,14 +49,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    color: THEME.font,
     fontSize: 18,
     fontFamily: "SemiBold",
     lineHeight: 18,
   },
   topicCount: {
     fontFamily: "SemiBold",
-    color: THEME.secondary,
     fontSize: 12,
   },
   button: {
@@ -74,7 +75,6 @@ const styles = StyleSheet.create({
     height: 44,
     width: 44,
     borderRadius: 44,
-    backgroundColor: THEME.light,
     marginRight: 12,
     alignItems: "center",
     justifyContent: "center",

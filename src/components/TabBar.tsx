@@ -1,6 +1,5 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { THEME } from "../const/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import {
@@ -9,7 +8,7 @@ import {
   useNavigationState,
 } from "@react-navigation/native";
 import { RootTabParams } from "../../App";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { shadowPrimary } from "../styles/general";
 import {
   FlashCardsIcon,
@@ -18,14 +17,18 @@ import {
   ProfileIcon,
 } from "../assets/general";
 import GradientText from "./GradientText";
+import { ThemeContext } from "../context/ThemeContext";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default function TabBar({
   state,
   descriptors,
   navigation,
 }: BottomTabBarProps) {
+  const { navigate } = navigation;
+  const { primary, font, background } = useContext(ThemeContext);
   return (
-    <View style={styles.tabBar}>
+    <View style={{ ...styles.tabBar, backgroundColor: background }}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isCenterButton = index === Math.floor(state.routes.length / 2);
@@ -36,7 +39,7 @@ export default function TabBar({
             {isCenterButton && <CenterButton />}
             <Pressable
               style={styles.tabBarLink}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={() => navigate(route.name, route.params)}
             >
               <LinkIcon
                 route={route.name as keyof RootTabParams}
@@ -45,7 +48,7 @@ export default function TabBar({
               <Text
                 style={{
                   ...styles.tabBarLabel,
-                  color: isFocused ? THEME.primary : THEME.font,
+                  color: isFocused ? primary : font,
                 }}
               >
                 {title}
@@ -65,11 +68,12 @@ const LinkIcon = ({
   route: keyof RootTabParams;
   isFocused: boolean;
 }) => {
+  const { primary, font } = useContext(ThemeContext);
   switch (route) {
     case "Home":
       return (
         <HomeIcon
-          stroke={isFocused ? "#2386F1" : "#382E6D"}
+          stroke={isFocused ? primary : font}
           strokeWidth="2"
           height={23}
           width={23}
@@ -78,7 +82,7 @@ const LinkIcon = ({
     case "FlashCards":
       return (
         <FlashCardsIcon
-          stroke={isFocused ? "#2386F1" : "#382E6D"}
+          stroke={isFocused ? primary : font}
           strokeWidth="2"
           height={20}
           width={20}
@@ -87,7 +91,7 @@ const LinkIcon = ({
     case "Notes":
       return (
         <NotesIcon
-          stroke={isFocused ? "#2386F1" : "#382E6D"}
+          stroke={isFocused ? primary : font}
           strokeWidth="2"
           height={21}
           width={21}
@@ -96,7 +100,7 @@ const LinkIcon = ({
     case "Profile":
       return (
         <ProfileIcon
-          stroke={isFocused ? "#2386F1" : "#382E6D"}
+          stroke={isFocused ? primary : font}
           strokeWidth="2"
           height={22}
           width={22}
@@ -106,6 +110,7 @@ const LinkIcon = ({
 };
 
 const CenterButton = () => {
+  const { font, light, primary, background } = useContext(ThemeContext);
   const [active, setActive] = useState(false);
   const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
   const location = useNavigationState((state) => state);
@@ -118,21 +123,20 @@ const CenterButton = () => {
     <View
       style={{ alignItems: "center", marginTop: -16, alignSelf: "flex-start" }}
     >
-      {active && (
-        <Modal
-          transparent={true}
-          visible={active}
-          onRequestClose={() => setActive(false)}
-          animationType="slide"
-          style={{ position: "relative" }}
-        >
-          <View style={styles.modal}>
+      <Modal
+        transparent
+        visible={active}
+        onRequestClose={() => setActive(false)}
+        animationType="slide"
+      >
+        <Pressable onPress={() => setActive(false)} style={styles.modalWrapper}>
+          <View style={{ ...styles.modal, backgroundColor: background }}>
             <Text
               style={{
-                color: THEME.font,
-                fontFamily: "SemiBold",
+                color: font,
+                fontFamily: "Bold",
                 fontSize: 16,
-                borderBottomColor: THEME.light,
+                borderBottomColor: light,
                 borderBottomWidth: 2,
                 paddingBottom: 12,
                 marginBottom: 6,
@@ -179,8 +183,8 @@ const CenterButton = () => {
               </GradientText>
             </Pressable>
           </View>
-        </Modal>
-      )}
+        </Pressable>
+      </Modal>
       <Pressable onPress={() => setActive((prev) => !prev)}>
         <LinearGradient
           style={styles.centerButton}
@@ -207,7 +211,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
-    backgroundColor: "#FFF",
     ...shadowPrimary,
   },
   tabBarLabel: {
@@ -230,18 +233,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     paddingHorizontal: 24,
     paddingVertical: 12,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    alignItems: "center",
-    position: "absolute",
-    shadowColor: THEME.primary,
-    alignSelf: "center",
     elevation: 32,
     shadowOffset: {
       height: -4,
       width: 0,
     },
+  },
+  modalWrapper: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    height: "100%",
   },
   centerButtonLabel: {
     fontFamily: "SemiBold",

@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 import useShadow from "../../hooks/useShadow";
 import { RootTabParams } from "../../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
 
 export default function HomeBoxLink({
   to,
@@ -12,6 +14,7 @@ export default function HomeBoxLink({
   subtitle,
   icon,
 }: ProfileBoxLinkProps) {
+  const { light, background, font } = useContext(ThemeContext);
   const shadow = useShadow(24);
   const { navigate } =
     useNavigation<NativeStackNavigationProp<RootTabParams>>();
@@ -19,7 +22,7 @@ export default function HomeBoxLink({
     <Pressable
       onPress={() => navigate("Profile", { screen: to })}
       style={{
-        backgroundColor: "#F2F8FD",
+        backgroundColor: background,
         borderRadius: 32,
         paddingVertical: 24,
         paddingHorizontal: 36,
@@ -36,7 +39,7 @@ export default function HomeBoxLink({
       >
         <View
           style={{
-            backgroundColor: "white",
+            backgroundColor: light,
             borderRadius: 12,
             height: 52,
             width: 52,
@@ -57,7 +60,7 @@ export default function HomeBoxLink({
             style={{
               fontSize: 14,
               fontFamily: "Medium",
-              color: "#382E6D",
+              color: font,
               opacity: 0.8,
             }}
           >
@@ -67,7 +70,7 @@ export default function HomeBoxLink({
             style={{
               fontSize: 16,
               fontFamily: "Bold",
-              color: "#382E6D",
+              color: font,
             }}
           >
             {title}

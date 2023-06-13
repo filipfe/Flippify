@@ -14,7 +14,6 @@ import PrimaryButton from "../../PrimaryButton";
 import useNoteImages from "../../../hooks/useNoteImages";
 import Loader from "../../Loader";
 import NoteImageIndex from "../NoteImageIndex";
-import { THEME } from "../../../const/theme";
 import { initialAddedNote } from "../../../const/notes";
 import ImageHandler from "../ImageHandler";
 import { NewNoteContext } from "../../../context/OpusContext";
@@ -22,9 +21,11 @@ import useOpus from "../../../hooks/useOpus";
 import PrivacySwitch from "./components/PrivacySwitch";
 import CategoryPicker from "./components/CategoryPicker";
 import TopicPicker from "./components/TopicPicker";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function AddNote() {
   const { user } = useContext(AuthContext);
+  const { secondary, background } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(false);
   const { images, setImages, activeIndex } = useNoteImages<ImageFile>();
   const opus = useOpus<AddedNote>(initialAddedNote);
@@ -70,14 +71,16 @@ export default function AddNote() {
           <View
             style={{
               flex: 1,
-              backgroundColor: "#FFF",
+              backgroundColor: background,
               borderTopRightRadius: 36,
               borderTopLeftRadius: 36,
               paddingHorizontal: 24,
             }}
           >
             <View style={{ marginTop: -132, marginBottom: 32 }}>
-              <View style={styles.imageWrapper}>
+              <View
+                style={{ ...styles.imageWrapper, backgroundColor: background }}
+              >
                 <ImageHandler images={images} />
                 {images.length < 4 && <AddButton addNewImage={addNewImage} />}
                 {images.length > 1 && (
@@ -88,7 +91,7 @@ export default function AddNote() {
               </View>
             </View>
             <View style={{ paddingBottom: 32 }}>
-              <Text style={styles.date}>
+              <Text style={{ ...styles.date, color: secondary }}>
                 {new Date().toLocaleDateString("default")}
               </Text>
               <PrimaryInput
@@ -112,7 +115,7 @@ export default function AddNote() {
                 <Text
                   style={{
                     fontSize: 10,
-                    color: THEME.secondary,
+                    color: secondary,
                     fontFamily: "SemiBold",
                     position: "absolute",
                     right: 24,

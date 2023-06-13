@@ -2,8 +2,7 @@ import { NewCardContext } from "../../../context/OpusContext";
 import { StyleSheet, Text, View } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
-import { shadowPrimary } from "../../../styles/general";
-import { THEME } from "../../../const/theme";
+import { globalStyles, shadowPrimary } from "../../../styles/general";
 import Switch from "../../Switch";
 import { ScrollView } from "react-native-gesture-handler";
 import UserCredentials from "../../UserCredentials";
@@ -16,8 +15,10 @@ import Loader from "../../Loader";
 import { initialAnswers, initialNewCard } from "../../../const/flashcards";
 import { AddedFlashCard } from "../../../types/flashcards";
 import useOpus from "../../../hooks/useOpus";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function AddCard() {
+  const { secondary, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const opus = useOpus<AddedFlashCard>(initialNewCard);
   const { item, setItem } = opus;
@@ -56,7 +57,7 @@ export default function AddCard() {
 
   return (
     <NewCardContext.Provider value={opus}>
-      <View style={{ flex: 1, backgroundColor: "#FFF" }}>
+      <View style={{ flex: 1, backgroundColor: background }}>
         <ScrollView>
           <View
             style={{
@@ -66,7 +67,15 @@ export default function AddCard() {
             }}
           >
             <View style={styles.section}>
-              <Text style={styles.paramText}>Typ pytania</Text>
+              <Text
+                style={{
+                  ...globalStyles.paramText,
+                  marginBottom: 16,
+                  color: secondary,
+                }}
+              >
+                Typ pytania
+              </Text>
               <Switch
                 activeValue={type}
                 onChange={changeType}
@@ -96,7 +105,7 @@ export default function AddCard() {
           rowTextForSelection={(text) => text}
         /> */}
             <View style={styles.section}>
-              <View style={styles.card}>
+              <View style={{ ...styles.card, backgroundColor: background }}>
                 {type === "radio" && <RadioForm />}
                 {type === "input" && <InputForm />}
               </View>
@@ -141,21 +150,9 @@ const styles = StyleSheet.create({
     height: "100%",
     zIndex: -1,
   },
-  question: {
-    color: THEME.font,
-    fontSize: 20,
-    fontFamily: "ExtraBold",
-    textAlign: "center",
-  },
   answersWrapper: {
     marginTop: 24,
     width: "100%",
-  },
-  paramText: {
-    color: THEME.secondary,
-    fontFamily: "Bold",
-    marginBottom: 16,
-    fontSize: 14,
   },
   section: {
     marginBottom: 24,

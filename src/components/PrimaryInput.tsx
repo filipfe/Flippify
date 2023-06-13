@@ -5,7 +5,8 @@ import {
   TextInputProps,
   View,
 } from "react-native";
-import { THEME } from "../const/theme";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 type Input = {
   label?: string;
@@ -24,9 +25,12 @@ export default function PrimaryInput({
   onSubmitEditing,
   onChangeText,
 }: TextInputProps & Input) {
+  const { secondary, light, font } = useContext(ThemeContext);
   return (
     <View style={styles.wrapper}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text style={{ ...styles.label, color: secondary }}>{label}</Text>
+      )}
       <TextInput
         autoFocus={autoFocus}
         maxLength={maxLength}
@@ -35,12 +39,14 @@ export default function PrimaryInput({
         onSubmitEditing={onSubmitEditing}
         numberOfLines={numberOfLines}
         placeholder={placeholder}
-        placeholderTextColor={THEME.secondary}
+        placeholderTextColor={secondary}
         value={value}
         style={{
           ...styles.input,
           ...(style as any),
           paddingVertical: label ? 12 : 10,
+          color: font,
+          backgroundColor: light,
         }}
         onChangeText={onChangeText}
       />
@@ -58,7 +64,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     position: "relative",
     fontSize: 12,
-    color: THEME.p,
     paddingHorizontal: 24,
   },
   input: {
@@ -66,8 +71,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 16,
     width: "100%",
-    backgroundColor: THEME.light,
-    color: THEME.font,
     alignItems: "flex-start",
   },
 });

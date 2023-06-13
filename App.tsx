@@ -29,6 +29,7 @@ import {
 } from "./src/types/navigation";
 import TabBar from "./src/components/TabBar";
 import { NoteStackParams } from "./src/types/notes";
+import ThemeProvider from "./src/providers/ThemeProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,11 +45,13 @@ export default function AppProvider() {
   if (!isFontLoaded) return <Loader />;
 
   return (
-    <AuthProvider>
-      <AxiosProvider>
-        <App />
-      </AxiosProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AxiosProvider>
+          <App />
+        </AxiosProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
@@ -70,11 +73,11 @@ function App() {
     <NavigationContainer>
       <RootTab.Navigator
         sceneContainerStyle={styles.sceneContainer}
-        tabBar={TabBar}
+        tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
-          headerTitleStyle: styles.headerTitle,
           tabBarActiveTintColor: "#2386F1",
           tabBarInactiveTintColor: "#382E6D",
+          headerShown: false,
         }}
       >
         <RootTab.Screen
@@ -82,15 +85,14 @@ function App() {
           component={HomeScreen}
           options={{
             title: "Eksploruj",
-            headerShown: false,
           }}
         />
         <RootTab.Screen
           name="FlashCards"
           component={FlashCardsScreen}
+          initialParams={{ screen: "CategoryList" }}
           options={{
             title: "Fiszki",
-            headerShown: false,
           }}
         />
         <RootTab.Screen
@@ -98,7 +100,6 @@ function App() {
           component={NotesScreen}
           options={{
             title: "Notatki",
-            headerShown: false,
           }}
         />
         <RootTab.Screen
@@ -106,7 +107,6 @@ function App() {
           component={ProfileScreen}
           options={{
             title: "Profil",
-            headerShown: false,
           }}
         />
       </RootTab.Navigator>

@@ -11,8 +11,9 @@ import { FlatList } from "react-native-gesture-handler";
 import NoteImageIndex from "./NoteImageIndex";
 import useNoteImages from "../../hooks/useNoteImages";
 import { shadowPrimary } from "../../styles/general";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { XIcon } from "../../assets/icons/icons";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -27,10 +28,14 @@ export default function ResizeModal({
   initialIndex,
   setResizeModalActive,
 }: Props) {
+  const { background, light, font } = useContext(ThemeContext);
   const { activeIndex, setActiveIndex } = useNoteImages(initialIndex || 0);
   return (
-    <Modal animationType="fade">
-      <View style={styles.wrapper}>
+    <Modal
+      animationType="fade"
+      onRequestClose={() => setResizeModalActive(false)}
+    >
+      <View style={{ ...styles.wrapper, backgroundColor: background }}>
         <FlatList
           data={images}
           horizontal
@@ -47,15 +52,15 @@ export default function ResizeModal({
         />
         <View style={styles.menu}>
           <Pressable
-            style={styles.button}
+            style={{ ...styles.button, backgroundColor: light }}
             onPress={() => setResizeModalActive(false)}
           ></Pressable>
           <NoteImageIndex images={images} activeIndex={activeIndex} />
           <Pressable
-            style={styles.button}
+            style={{ ...styles.button, backgroundColor: light }}
             onPress={() => setResizeModalActive(false)}
           >
-            <XIcon />
+            <XIcon stroke={font} />
           </Pressable>
         </View>
       </View>
@@ -85,6 +90,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    ...shadowPrimary,
   },
 });

@@ -7,12 +7,12 @@ import { useNavigation, useNavigationState } from "@react-navigation/native";
 import PrimaryButton from "../PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
-import { THEME } from "../../const/theme";
 import { shadowPrimary } from "../../styles/general";
 import GradientText from "../GradientText";
 import { FlashList } from "../../types/flashcards";
 import { ListOfFlashCardListsNavigation } from "../../types/navigation";
 import NoContent from "./NoContent";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function ListOfLists({
   navigation,
@@ -57,6 +57,7 @@ export default function ListOfLists({
 }
 
 const FlashListRef = (props: FlashList & { setRemoved: any }) => {
+  const { font, secondary, light } = useContext(ThemeContext);
   const { navigate } = useNavigation<ListOfFlashCardListsNavigation>();
   const { setRemoved, ...rest } = props;
   const { name, created_at, count } = rest;
@@ -72,17 +73,19 @@ const FlashListRef = (props: FlashList & { setRemoved: any }) => {
   return (
     <View style={styles.refWrapper}>
       <View style={styles.topWrapper}>
-        <Text style={styles.title}>{name}</Text>
-        <Text style={styles.points}>{count} fiszki</Text>
+        <Text style={{ ...styles.title, color: font }}>{name}</Text>
+        <Text style={{ ...styles.points, color: secondary }}>
+          {count} fiszki
+        </Text>
       </View>
       <View style={{ ...styles.topWrapper, marginTop: 8 }}>
-        <Text style={styles.points}>
+        <Text style={{ ...styles.points, color: secondary }}>
           {new Date(created_at).toLocaleDateString("default")}
         </Text>
         <View style={styles.buttonsWrapper}>
           <Pressable
             onPress={() => navigate("FlashList", rest)}
-            style={styles.modifyButton}
+            style={{ ...styles.modifyButton, backgroundColor: light }}
           >
             <GradientText style={styles.buttonText}>Modyfikuj</GradientText>
           </Pressable>
@@ -119,7 +122,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "SemiBold",
     fontSize: 18,
-    color: THEME.font,
   },
   topWrapper: {
     flexDirection: "row",
@@ -127,7 +129,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   points: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
   },
   button: {
@@ -148,6 +149,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 24,
-    backgroundColor: THEME.light,
   },
 });

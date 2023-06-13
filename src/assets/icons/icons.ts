@@ -8,6 +8,7 @@ import LogoutIcon from './logout.svg'
 import LogoIcon from './logo.svg'
 import XIcon from './x.svg'
 import BinIcon from './bin.svg'
+import FilterIcon from './filter.svg'
 
 export {
     NotificationsIcon,
@@ -19,5 +20,6 @@ export {
     LogoutIcon,
     LogoIcon,
     XIcon,
-    BinIcon
+    BinIcon,
+    FilterIcon
 }

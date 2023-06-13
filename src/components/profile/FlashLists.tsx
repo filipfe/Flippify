@@ -2,17 +2,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ListOfLists from "../flashlists/ListOfLists";
 import AddFlashList from "../flashlists/AddFlashList";
 import FlashListDetails from "../flashlists/FlashListDetails";
-import { THEME } from "../../const/theme";
 import { FlashListStackParams } from "../../types/navigation";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const FlashListStack = createNativeStackNavigator<FlashListStackParams>();
 
 export default function FlashLists() {
+  const { font } = useContext(ThemeContext);
   return (
     <FlashListStack.Navigator
       initialRouteName="ListOfLists"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "SemiBold", color: THEME.font },
+        headerTitleStyle: { fontFamily: "SemiBold", color: font },
       }}
     >
       <FlashListStack.Screen
