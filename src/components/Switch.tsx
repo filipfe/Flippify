@@ -5,22 +5,22 @@ import GradientText from "./GradientText";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
-type OptionProps = {
+type OptionProps<T> = {
   label: string;
-  value: string;
+  value: T;
 };
 
-type SwitchProps = {
-  options: OptionProps[];
-  onChange: (value: string) => void;
-  activeValue: string;
+type SwitchProps<T> = {
+  options: OptionProps<T>[];
+  onChange: (value: T) => void;
+  activeValue: T;
 };
 
-export default function Switch({
+export default function Switch<T>({
   options,
   onChange,
   activeValue,
-}: SwitchProps) {
+}: SwitchProps<T>) {
   const { light } = useContext(ThemeContext);
   return (
     <View style={{ ...styles.wrapper, backgroundColor: light }}>
@@ -29,24 +29,24 @@ export default function Switch({
           {...opt}
           onChange={onChange}
           isActive={activeValue === opt.value}
-          key={opt.value}
+          key={opt.label}
         />
       ))}
     </View>
   );
 }
 
-type OptionRefProps = {
+type OptionRefProps<T> = {
   isActive: boolean;
-  onChange: (value: string) => void;
+  onChange: (value: T) => void;
 };
 
-const Option = ({
+function Option<T>({
   label,
   value,
   onChange,
   isActive,
-}: OptionProps & OptionRefProps) => {
+}: OptionProps<T> & OptionRefProps<T>) {
   return (
     <Pressable style={{ flex: 1 }} onPress={() => onChange(value)}>
       {isActive ? (
@@ -64,7 +64,7 @@ const Option = ({
       )}
     </Pressable>
   );
-};
+}
 
 const styles = StyleSheet.create({
   wrapper: {

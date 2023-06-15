@@ -7,7 +7,6 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
-import { RootTabParams } from "../../App";
 import { useState, useEffect, useContext } from "react";
 import { shadowPrimary } from "../styles/general";
 import {
@@ -19,6 +18,7 @@ import {
 import GradientText from "./GradientText";
 import { ThemeContext } from "../context/ThemeContext";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { RootTabParams } from "../types/navigation";
 
 export default function TabBar({
   state,

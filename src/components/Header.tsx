@@ -1,4 +1,10 @@
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
@@ -26,9 +32,15 @@ export default function Header({
     >
       <View style={styles.titleWrapper}>
         {!isInitial && canGoBackBool && (
-          <Pressable style={styles.back} onPress={goBack}>
-            <BackIcon height={16} width={16} fill={font} />
-          </Pressable>
+          <View style={{ marginRight: 24 }}>
+            <TouchableWithoutFeedback style={styles.back} onPress={goBack}>
+              <BackIcon
+                height={16}
+                width={16}
+                fill={headerTransparent ? "#FFF" : font}
+              />
+            </TouchableWithoutFeedback>
+          </View>
         )}
         <Text
           style={{ ...styles.title, color: headerTransparent ? "#FFF" : font }}
@@ -47,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    height: 84,
+    height: 80,
   },
   titleWrapper: {
     flexDirection: "row",
@@ -59,6 +71,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   back: {
-    marginRight: 24,
+    height: 24,
+    width: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 24,
   },
 });

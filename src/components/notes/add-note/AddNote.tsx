@@ -20,7 +20,6 @@ import { NewNoteContext } from "../../../context/OpusContext";
 import useOpus from "../../../hooks/useOpus";
 import PrivacySwitch from "./components/PrivacySwitch";
 import CategoryPicker from "./components/CategoryPicker";
-import TopicPicker from "./components/TopicPicker";
 import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function AddNote() {
@@ -29,7 +28,7 @@ export default function AddNote() {
   const [isLoading, setIsLoading] = useState(false);
   const { images, setImages, activeIndex } = useNoteImages<ImageFile>();
   const opus = useOpus<AddedNote>(initialAddedNote);
-  const { item, setItem, activeCategory } = opus;
+  const { item, setItem, changeCategory, activeCategory } = opus;
   const newNote = item;
   const setNewNote = setItem;
 
@@ -39,7 +38,7 @@ export default function AddNote() {
     const form = new FormData();
     form.append("title", newNote.title);
     form.append("description", newNote.desc);
-    form.append("privacy", newNote.privacy);
+    form.append("is_public", String(newNote.is_public));
     form.append("category_id", activeCategory.id.toString());
     images.forEach((image) => {
       // @ts-ignore
@@ -125,8 +124,10 @@ export default function AddNote() {
                   {newNote.desc?.length || 0} / 200
                 </Text>
               </View>
-              <CategoryPicker />
-              <TopicPicker />
+              <CategoryPicker
+                active={activeCategory}
+                onChange={changeCategory}
+              />
               <PrivacySwitch />
               <View style={{ marginVertical: 32 }}>
                 <UserCredentials user={user} isLiked={false} />

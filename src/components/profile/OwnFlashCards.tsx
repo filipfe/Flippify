@@ -4,8 +4,12 @@ import axios from "axios";
 import { API_URL } from "@env";
 import Loader from "../Loader";
 import { FlashCard } from "../../types/flashcards";
+import NoContent from "../flashlists/NoContent";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootTabParams } from "../../types/navigation";
 
 export default function OwnFlashCards() {
+  const navigation = useNavigation<NavigationProp<RootTabParams>>();
   const [cards, setCards] = useState<FlashCard[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,14 +23,20 @@ export default function OwnFlashCards() {
   }, []);
 
   if (loading) return <Loader />;
+  if (cards.length < 1)
+    return (
+      <NoContent
+        text="Jeszcze nie dodałeś żadnych Fiszek"
+        buttonText="Dodaj fiszkę"
+        onPress={() => navigation.navigate("FlashCards", { screen: "AddCard" })}
+      />
+    );
 
   return (
     <View style={{ padding: 16 }}>
-      {cards.length > 0 ? (
-        cards.map((card) => <CardRef {...card} key={card.question} />)
-      ) : (
-        <Text>Nie dodałeś żadnych fiszek!</Text>
-      )}
+      {cards.map((card) => (
+        <CardRef {...card} key={card.question} />
+      ))}
     </View>
   );
 }

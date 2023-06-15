@@ -19,12 +19,7 @@ const TopicRef = ({
   const { font, secondary, background } = useContext(ThemeContext);
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
-    <TouchableOpacity
-      style={{ ...styles.wrapper, backgroundColor: background }}
-      onPress={() =>
-        navigation.navigate("FlashCardsGenerator", { topic, category })
-      }
-    >
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <View style={styles.topWrapper}>
         <Text style={{ ...styles.title, color: font }}>{topic}</Text>
         <Text style={{ ...styles.title, color: font }}>58%</Text>
@@ -36,15 +31,21 @@ const TopicRef = ({
         <Text style={{ ...styles.points, color: secondary }}>
           144 / 255 punkty
         </Text>
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          style={styles.button}
-          colors={linearGradient}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("FlashCardsGenerator", { topic, category })
+          }
         >
-          <Text style={styles.buttonText}>Wybierz</Text>
-        </LinearGradient>
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            style={styles.button}
+            colors={linearGradient}
+          >
+            <Text style={styles.buttonText}>Wybierz</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

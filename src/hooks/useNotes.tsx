@@ -55,7 +55,7 @@ export default function useNotes(search?: string) {
       <View>
         <Text style={{ ...styles.title, color: font }}>Popularne teraz</Text>
         <FlatList
-          style={{ paddingBottom: 24 }}
+          style={{ paddingBottom: 24, paddingHorizontal: 24 }}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={popularNotes}
@@ -65,14 +65,8 @@ export default function useNotes(search?: string) {
           renderItem={({ item }) => (
             <SmallNoteRef {...item} key={`Popular:${item.id}`} />
           )}
+          keyExtractor={(note) => "Popular:" + note.id}
         />
-        {/* <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-          <View style={styles.list}>
-            {popularNotes.map((note) => (
-              <SmallNoteRef {...note} key={`Popular:${note.id + note.title}`} />
-            ))}
-          </View>
-        </ScrollView> */}
       </View>
     );
   };
@@ -82,7 +76,7 @@ export default function useNotes(search?: string) {
       <View>
         <Text style={{ ...styles.title, color: font }}>Ostatnio dodane</Text>
         <FlatList
-          style={{ paddingBottom: 24 }}
+          style={{ paddingBottom: 24, paddingHorizontal: 24 }}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={recentNotes}
@@ -92,6 +86,7 @@ export default function useNotes(search?: string) {
           renderItem={({ item }) => (
             <SmallNoteRef {...item} key={`Popular:${item.id}`} />
           )}
+          keyExtractor={(note) => "Recent:" + note.id}
         />
       </View>
     );
@@ -101,11 +96,11 @@ export default function useNotes(search?: string) {
     return (
       <View>
         <Text style={{ ...styles.title, color: font }}>Szukane “{search}”</Text>
-        <FlatList
-          data={searchedNotes}
-          renderItem={({ item }) => <NoteRef {...item} key={item.id} />}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        <View>
+          {searchedNotes.map((note) => (
+            <NoteRef {...note} key={"Searched" + note.id} />
+          ))}
+        </View>
       </View>
     );
   };

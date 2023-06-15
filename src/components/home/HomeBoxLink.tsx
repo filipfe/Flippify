@@ -1,12 +1,12 @@
 import { Pressable, View } from "react-native";
 import { ProfileBoxLinkProps } from "../../types/profile";
 import { Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import useShadow from "../../hooks/useShadow";
-import { RootTabParams } from "../../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
+import { RootTabParams } from "../../types/navigation";
 
 export default function HomeBoxLink({
   to,

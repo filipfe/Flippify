@@ -1,10 +1,8 @@
-import { RouteProp, useNavigationState } from "@react-navigation/native";
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import { RouteProp } from "@react-navigation/native";
+import React, { useContext } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { API_URL } from "@env";
 import useNotes from "../../hooks/useNotes";
-import { Filter, Note, NoteStackParams } from "../../types/notes";
+import { NoteStackParams } from "../../types/notes";
 import Loader from "../Loader";
 import { ThemeContext } from "../../context/ThemeContext";
 
@@ -14,7 +12,6 @@ const NoteList = ({
   route: RouteProp<NoteStackParams, "NoteList">;
 }) => {
   const { background } = useContext(ThemeContext);
-  const location = useNavigationState((state) => state);
   const {
     didInitialLoad,
     didSearchedLoad,

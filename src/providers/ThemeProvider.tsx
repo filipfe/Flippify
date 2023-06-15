@@ -21,7 +21,7 @@ export default function ThemeProvider({ children }: { children: JSX.Element }) {
         : {
             primary: "#2386F1",
             secondary: "#8DA5B9",
-            background: "#17132C",
+            background: "#120F23",
             darkPrimary: "#0CA236",
             light: "#211C3F",
             font: "#D9D6E9",

@@ -4,7 +4,6 @@ import { AddedNote } from "../types/notes";
 import { Category } from "../types/general";
 
 export type OpusContext<T> = {
-  categories: Category[];
   topics: Topic[];
   item: T;
   setItem: Dispatch<SetStateAction<T>>;

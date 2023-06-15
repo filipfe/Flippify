@@ -1,7 +1,4 @@
-import {
-  NavigationContainer,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./src/screens/HomeScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FlashCardsScreen from "./src/screens/FlashCardsScreen";
@@ -23,12 +20,8 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import Loader from "./src/components/Loader";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  FlashCardsStackParams,
-  ProfileStackParams,
-} from "./src/types/navigation";
+import { RootTabParams } from "./src/types/navigation";
 import TabBar from "./src/components/TabBar";
-import { NoteStackParams } from "./src/types/notes";
 import ThemeProvider from "./src/providers/ThemeProvider";
 
 SplashScreen.preventAutoHideAsync();
@@ -54,13 +47,6 @@ export default function AppProvider() {
     </ThemeProvider>
   );
 }
-
-export type RootTabParams = {
-  Home: undefined;
-  FlashCards: NavigatorScreenParams<FlashCardsStackParams>;
-  Notes: NavigatorScreenParams<NoteStackParams>;
-  Profile: NavigatorScreenParams<ProfileStackParams>;
-};
 
 const RootTab = createBottomTabNavigator<RootTabParams>();
 
@@ -90,7 +76,6 @@ function App() {
         <RootTab.Screen
           name="FlashCards"
           component={FlashCardsScreen}
-          initialParams={{ screen: "CategoryList" }}
           options={{
             title: "Fiszki",
           }}

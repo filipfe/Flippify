@@ -12,17 +12,16 @@ import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import Header from "../components/Header";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
 export default function ProfileScreen() {
-  const { background } = useContext(ThemeContext);
   return (
     <ProfileStack.Navigator
       initialRouteName="ProfileStack"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Bold" },
-        headerStyle: { backgroundColor: background },
+        header: (props) => <Header {...props} />,
       }}
     >
       <ProfileStack.Screen

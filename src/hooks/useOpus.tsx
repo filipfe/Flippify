@@ -8,19 +8,10 @@ import { OpusContext } from "../context/OpusContext";
 
 export default function useOpus<T>(initialValue: T): OpusContext<T> {
   const [item, setItem] = useState<T>(initialValue);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [areTopicsLoading, setAreTopicsLoading] = useState(false);
   const [activeCategory, setActiveCategory] =
     useState<Category>(initialCategory);
-
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/api/categories`)
-      .then((res) => res.data)
-      .then((data) => setCategories(data))
-      .catch((err) => alert(err));
-  }, []);
 
   useEffect(() => {
     setTopics([]);
@@ -44,7 +35,6 @@ export default function useOpus<T>(initialValue: T): OpusContext<T> {
   };
 
   return {
-    categories,
     topics,
     item,
     setItem,

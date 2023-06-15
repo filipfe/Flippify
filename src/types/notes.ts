@@ -23,7 +23,7 @@ export type Filter = {
 }
 
 export type NoteStackParams = {
-    NoteList: { category_id?: number, search?: string };
+    NoteList: { category: Category, search: string };
     Note: { id: number, title: string };
     AddNote: undefined;
   };
@@ -32,7 +32,7 @@ export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
 
 export type AddedNote = Omit<Note, "image" | "images" | "likes" | "id" | "category" | "is_liked"> & {
   images: ImageFile[];
-  privacy: "private" | "public";
+  is_public: boolean;
   category: Omit<Category, "image">;
 };
 

@@ -60,7 +60,7 @@ export default function ResizeModal({
             style={{ ...styles.button, backgroundColor: light }}
             onPress={() => setResizeModalActive(false)}
           >
-            <XIcon stroke={font} />
+            <XIcon fill={font} />
           </Pressable>
         </View>
       </View>

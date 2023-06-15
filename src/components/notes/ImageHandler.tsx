@@ -30,7 +30,7 @@ export default function ImageHandler({ images }: { images: ImageFile[] }) {
           onPress={() => setResizeModalActive((prev) => !prev)}
           style={{ ...styles.resize, backgroundColor: light }}
         >
-          <ResizeIcon stroke={font} />
+          <ResizeIcon fill={font} />
         </Pressable>
       )}
       {resizeModalActive && (

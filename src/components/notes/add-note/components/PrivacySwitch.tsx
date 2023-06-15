@@ -9,9 +9,8 @@ export default function PrivacySwitch() {
   const { item, setItem } = useContext(NewNoteContext);
   const { secondary } = useContext(ThemeContext);
 
-  const changePrivacy = (value: string) => {
-    const privacyValue = value as "public" | "private";
-    setItem((prev) => ({ ...prev, privacy: privacyValue }));
+  const changePrivacy = (value: boolean) => {
+    setItem((prev) => ({ ...prev, is_public: value }));
   };
 
   return (
@@ -25,12 +24,12 @@ export default function PrivacySwitch() {
       >
         Typ notatki
       </Text>
-      <Switch
-        activeValue={item.privacy}
+      <Switch<boolean>
+        activeValue={item.is_public}
         onChange={changePrivacy}
         options={[
-          { label: "Publiczna", value: "public" },
-          { label: "Prywatna", value: "private" },
+          { label: "Publiczna", value: true },
+          { label: "Prywatna", value: false },
         ]}
       />
       <Text
@@ -42,7 +41,7 @@ export default function PrivacySwitch() {
           lineHeight: 20,
         }}
       >
-        {item.privacy === "public"
+        {item.is_public
           ? "Notatka publiczna możliwa będzie do zobaczenia przez każdego użytkownika aplikacji, będziesz mógł zbierać za nią polubienia."
           : "Notatka prywatna zapisana zostanie do wglądu tylko dla Ciebie, inni użytkownicy aplikacji nie będą mogli jej zobaczyć ani ocenić."}
       </Text>

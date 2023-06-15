@@ -133,6 +133,7 @@ export const styles = StyleSheet.create({
     height: 320,
     borderRadius: 24,
     position: "relative",
+    overflow: "hidden",
     alignItems: "center",
     ...shadowPrimary,
   },

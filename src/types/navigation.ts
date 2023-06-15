@@ -1,6 +1,14 @@
-import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { NavigationProp, NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { FlashList, Topic } from "./flashcards";
 import { Category } from "./general";
+import { NoteStackParams } from "./notes";
+
+export type RootTabParams = {
+  Home: undefined;
+  FlashCards: NavigatorScreenParams<FlashCardsStackParams>;
+  Notes: NavigatorScreenParams<NoteStackParams>;
+  Profile: NavigatorScreenParams<ProfileStackParams>;
+};
 
 // FLASHCARDS
 
@@ -45,11 +53,6 @@ export type FlashListStackParams = {
   AddFlashList: undefined;
   FlashList: FlashList;
 };
-
-export type ListOfFlashCardListsNavigation = NavigationProp<
-FlashListStackParams,
-"ListOfLists"
->;
 
 // PROFILE
 

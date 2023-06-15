@@ -9,7 +9,7 @@ export default function Loader() {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        backgroundColor: colorScheme === "light" ? "#FFF" : "#211C3F",
+        backgroundColor: colorScheme === "light" ? "#FFF" : "#120F23",
       }}
     >
       <ActivityIndicator size="large" color={"#2386F1"} />
