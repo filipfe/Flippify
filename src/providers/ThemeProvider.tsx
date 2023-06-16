@@ -1,36 +1,31 @@
 import { useColorScheme } from "react-native";
 import { Theme, ThemeContext } from "../context/ThemeContext";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { darkTheme, lightTheme } from "../styles/general";
 
 export default function ThemeProvider({ children }: { children: JSX.Element }) {
   const colorScheme = useColorScheme();
-  console.log(colorScheme);
-  const theme = useMemo<Theme>(
-    () =>
-      colorScheme === "light"
-        ? {
-            primary: "#2386F1",
-            secondary: "#8DA5B9",
-            background: "#FFFFFF",
-            darkPrimary: "#0CA236",
-            light: "#F2F8FD",
-            font: "#211C3F",
-            wrong: "#FA4646",
-            stroke: "#E3E8E4",
-          }
-        : {
-            primary: "#2386F1",
-            secondary: "#8DA5B9",
-            background: "#120F23",
-            darkPrimary: "#0CA236",
-            light: "#211C3F",
-            font: "#D9D6E9",
-            wrong: "#FA4646",
-            stroke: "#E3E8E4",
-          },
-    [colorScheme]
-  );
+  const [userPreferredTheme, setUserPreferredTheme] = useState<
+    typeof colorScheme | "system"
+  >("system");
+
+  const theme = useMemo<Theme>(() => {
+    if (userPreferredTheme !== "system") {
+      switch (userPreferredTheme) {
+        case "light":
+          return lightTheme;
+        case "dark":
+          return darkTheme;
+      }
+    }
+    return colorScheme === "light" ? lightTheme : darkTheme;
+  }, [colorScheme, userPreferredTheme]);
+
   return (
-    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider
+      value={{ ...theme, userPreferredTheme, setUserPreferredTheme }}
+    >
+      {children}
+    </ThemeContext.Provider>
   );
 }

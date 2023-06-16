@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SmallNoteRef(props: Note) {
-  const { font, secondary, background, light } = useContext(ThemeContext);
+  const { font, secondary, background } = useContext(ThemeContext);
   const { title, image, like_count } = props;
   const { navigate } = useNavigation<NoteRefNavigationProp>();
   return (
@@ -14,7 +14,7 @@ export default function SmallNoteRef(props: Note) {
       style={{ ...styles.wrapper, backgroundColor: background }}
       onPress={() => navigate("Note", { ...props })}
     >
-      <View style={{ ...styles.image, backgroundColor: secondary }}>
+      <View style={{ ...styles.image, backgroundColor: background }}>
         <Image
           style={styles.image}
           source={{
@@ -28,7 +28,7 @@ export default function SmallNoteRef(props: Note) {
           <Text style={{ ...styles.likesCount, color: secondary }}>
             {like_count || 0}
           </Text>
-          <LikeIcon strokeWidth={2} height={16} width={16} stroke={secondary} />
+          <LikeIcon strokeWidth={2} height={12} width={12} stroke={secondary} />
         </View>
       </View>
     </Pressable>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 124,
-    borderRadius: 16,
+    borderRadius: 8,
     overflow: "hidden",
   },
   textWrapper: {
@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "SemiBold",
+    fontSize: 14,
+    lineHeight: 16,
   },
   likesWrapper: {
     flexDirection: "row",
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   },
   likesCount: {
     fontFamily: "SemiBold",
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 14,
     marginRight: 4,
   },

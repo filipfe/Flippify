@@ -18,11 +18,12 @@ import {
   PlusJakartaSans_700Bold as Bold,
   PlusJakartaSans_800ExtraBold as ExtraBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import Loader from "./src/components/Loader";
 import * as SplashScreen from "expo-splash-screen";
 import { RootTabParams } from "./src/types/navigation";
 import TabBar from "./src/components/TabBar";
 import ThemeProvider from "./src/providers/ThemeProvider";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,12 +36,14 @@ export default function AppProvider() {
     ExtraBold,
   });
 
-  if (!isFontLoaded) return <Loader />;
+  if (!isFontLoaded)
+    return <ActivityIndicator size="large" color={"#2386F1"} />;
 
   return (
     <ThemeProvider>
       <AuthProvider>
         <AxiosProvider>
+          <StatusBar translucent />
           <App />
         </AxiosProvider>
       </AuthProvider>

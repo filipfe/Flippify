@@ -1,16 +1,24 @@
-import { RouteProp } from "@react-navigation/native";
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+} from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import useNotes from "../../hooks/useNotes";
 import { NoteStackParams } from "../../types/notes";
 import Loader from "../Loader";
 import { ThemeContext } from "../../context/ThemeContext";
+import BoxLink from "../BoxLink";
+import Layout from "../Layout";
 
 const NoteList = ({
   route,
 }: {
   route: RouteProp<NoteStackParams, "NoteList">;
 }) => {
+  const { navigate } =
+    useNavigation<NavigationProp<NoteStackParams, "NoteList">>();
   const { background } = useContext(ThemeContext);
   const {
     didInitialLoad,
@@ -35,18 +43,28 @@ const NoteList = ({
   // }, [filter, location]);
 
   return didInitialLoad ? (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ ...styles.wrapper, backgroundColor: background }}>
-        {route.params.search && didSearchedLoad && <SearchedNotes />}
-        <PopularNotes />
-        <RecentNotes />
-        {/* {!loading ? (
-          notes.map((note) => <NoteRef {...note} key={note.id} />)
-        ) : (
-          <Loader />
-        )} */}
-      </View>
-    </ScrollView>
+    <Layout paddingHorizontal={0}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ ...styles.wrapper, backgroundColor: background }}>
+          {route.params.search && didSearchedLoad && <SearchedNotes />}
+          <PopularNotes />
+          <RecentNotes />
+          {/* {!loading ? (
+        notes.map((note) => <NoteRef {...note} key={note.id} />)
+      ) : (
+        <Loader />
+      )} */}
+          <View style={{ paddingHorizontal: 24 }}>
+            <BoxLink
+              navigate={() => navigate("OwnNotes")}
+              title="Moje notatki"
+              subtitle="24"
+              icon="✏"
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </Layout>
   ) : (
     <Loader />
   );

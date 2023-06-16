@@ -1,4 +1,3 @@
-import { useNavigationState } from "@react-navigation/native";
 import { View, Text, StyleSheet } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
@@ -9,6 +8,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import NoteRef from "../components/notes/NoteRef";
 import { AuthContext } from "../context/AuthContext";
+import Loader from "../components/Loader";
 
 export default function useNotes(search?: string) {
   const { font } = useContext(ThemeContext);
@@ -31,7 +31,6 @@ export default function useNotes(search?: string) {
       title: "test2",
     },
   ]);
-  const location = useNavigationState((state) => state);
 
   const load = () => {
     setDidInitialLoad(true);
@@ -48,46 +47,54 @@ export default function useNotes(search?: string) {
         setPopularNotes(data.popular || []);
       })
       .finally(load);
-  }, [location, search]);
+  }, [search]);
 
-  const PopularNotes = () => {
+  const PopularNotes = ({ text = "Popularne teraz" }: { text?: string }) => {
     return (
       <View>
-        <Text style={{ ...styles.title, color: font }}>Popularne teraz</Text>
-        <FlatList
-          style={{ paddingBottom: 24, paddingHorizontal: 24 }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={popularNotes}
-          ItemSeparatorComponent={() => (
-            <View style={{ width: 24, height: "100%" }}></View>
-          )}
-          renderItem={({ item }) => (
-            <SmallNoteRef {...item} key={`Popular:${item.id}`} />
-          )}
-          keyExtractor={(note) => "Popular:" + note.id}
-        />
+        <Text style={{ ...styles.title, color: font }}>{text}</Text>
+        {didInitialLoad ? (
+          <FlatList
+            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={popularNotes}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 24, height: "100%" }}></View>
+            )}
+            renderItem={({ item }) => (
+              <SmallNoteRef {...item} key={`Popular:${item.id}`} />
+            )}
+            keyExtractor={(note) => "Popular:" + note.id}
+          />
+        ) : (
+          <Loader />
+        )}
       </View>
     );
   };
 
-  const RecentNotes = () => {
+  const RecentNotes = ({ text = "Ostatnio dodane" }: { text?: string }) => {
     return (
       <View>
-        <Text style={{ ...styles.title, color: font }}>Ostatnio dodane</Text>
-        <FlatList
-          style={{ paddingBottom: 24, paddingHorizontal: 24 }}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={recentNotes}
-          ItemSeparatorComponent={() => (
-            <View style={{ width: 24, height: "100%" }}></View>
-          )}
-          renderItem={({ item }) => (
-            <SmallNoteRef {...item} key={`Popular:${item.id}`} />
-          )}
-          keyExtractor={(note) => "Recent:" + note.id}
-        />
+        <Text style={{ ...styles.title, color: font }}>{text}</Text>
+        {didInitialLoad ? (
+          <FlatList
+            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={recentNotes}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 24, height: "100%" }}></View>
+            )}
+            renderItem={({ item }) => (
+              <SmallNoteRef {...item} key={`Popular:${item.id}`} />
+            )}
+            keyExtractor={(note) => "Recent:" + note.id}
+          />
+        ) : (
+          <Loader />
+        )}
       </View>
     );
   };

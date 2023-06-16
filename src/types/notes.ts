@@ -25,6 +25,7 @@ export type Filter = {
 export type NoteStackParams = {
     NoteList: { category: Category, search: string };
     Note: { id: number, title: string };
+    OwnNotes: undefined;
     AddNote: undefined;
   };
 

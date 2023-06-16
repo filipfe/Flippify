@@ -1,7 +1,5 @@
-import { ProfileStackParams } from "./navigation"
-
 export type ProfileBoxLinkProps = {
-    to: keyof ProfileStackParams,
+    navigate: () => void,
     icon: string | JSX.Element,
     title: string,
     subtitle: string,

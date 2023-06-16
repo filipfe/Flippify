@@ -3,11 +3,11 @@ import { Category } from "../../../types/general";
 import { useNavigation } from "@react-navigation/native";
 import { TopicListNavigationProp } from "../../../types/navigation";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { linearGradient } from "../../../const/styles";
-import { LinearGradient } from "expo-linear-gradient";
 import RangeSlider from "../../RangeSlider";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
+import useShadow from "../../../hooks/useShadow";
+import GradientText from "../../GradientText";
 
 const TopicRef = ({
   topic,
@@ -17,14 +17,15 @@ const TopicRef = ({
   category: Category;
 }) => {
   const { font, secondary, background } = useContext(ThemeContext);
+  const shadow = useShadow(24);
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
-    <View style={{ ...styles.wrapper, backgroundColor: background }}>
+    <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
       <View style={styles.topWrapper}>
         <Text style={{ ...styles.title, color: font }}>{topic}</Text>
         <Text style={{ ...styles.title, color: font }}>58%</Text>
       </View>
-      <View style={{ marginVertical: 16 }}>
+      <View style={{ marginTop: 16, marginBottom: 24 }}>
         <RangeSlider value={20} />
       </View>
       <View style={{ ...styles.topWrapper }}>
@@ -36,13 +37,11 @@ const TopicRef = ({
             navigation.navigate("FlashCardsGenerator", { topic, category })
           }
         >
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            style={styles.button}
-            colors={linearGradient}
+          <GradientText
+            style={{ fontFamily: "Bold", fontSize: 14, lineHeight: 18 }}
           >
-            <Text style={styles.buttonText}>Wybierz</Text>
-          </LinearGradient>
+            Wybierz
+          </GradientText>
         </TouchableOpacity>
       </View>
     </View>
@@ -51,11 +50,10 @@ const TopicRef = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginBottom: 16,
+    marginVertical: 8,
     paddingHorizontal: 24,
-    paddingVertical: 12,
-    elevation: 16,
-    shadowColor: "#3C85C2",
+    marginHorizontal: 24,
+    paddingVertical: 16,
     borderRadius: 24,
   },
   title: {
@@ -69,6 +67,7 @@ const styles = StyleSheet.create({
   },
   points: {
     fontFamily: "SemiBold",
+    lineHeight: 16,
   },
   button: {
     paddingVertical: 10,

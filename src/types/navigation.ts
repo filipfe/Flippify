@@ -60,6 +60,7 @@ export type ProfileStackParams = {
     ProfileStack: undefined;
     OwnFlashCards: undefined;
     FlashLists: undefined;
+    Settings: undefined;
   };
 
 export type ProfileNavigation = NavigationProp<ProfileStackParams, "ProfileStack">;

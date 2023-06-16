@@ -6,8 +6,10 @@ import {
   DefaultProfileIcon,
   NotificationsIcon,
 } from "../../assets/icons/icons";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Greeting() {
+  const { font, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const { username, profile_picture } = user;
   return (
@@ -50,12 +52,12 @@ export default function Greeting() {
           height: 48,
           width: 48,
           borderRadius: 12,
-          backgroundColor: "#F2F8FD",
+          backgroundColor: background,
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <NotificationsIcon width={20} height={20} />
+        <NotificationsIcon stroke={font} width={20} height={20} />
       </Pressable>
     </SafeAreaView>
   );

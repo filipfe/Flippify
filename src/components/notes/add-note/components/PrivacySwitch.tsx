@@ -24,7 +24,7 @@ export default function PrivacySwitch() {
       >
         Typ notatki
       </Text>
-      <Switch<boolean>
+      <Switch
         activeValue={item.is_public}
         onChange={changePrivacy}
         options={[

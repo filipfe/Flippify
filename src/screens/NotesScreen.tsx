@@ -8,6 +8,8 @@ import HeaderMenu from "../components/notes/header/HeaderMenu";
 import HeaderTitle from "../components/HeaderTitle";
 import { ThemeContext } from "../context/ThemeContext";
 import Header from "../components/Header";
+import { initialCategory } from "../const/flashcards";
+import OwnNotesScreen from "./notes/OwnNotesScreen";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
@@ -25,7 +27,7 @@ export default function NotesScreen() {
       <NoteStack.Screen
         name="NoteList"
         component={NoteList}
-        initialParams={{ search: "", category_id: -1 }}
+        initialParams={{ search: "", category: initialCategory }}
         options={{
           title: "Notatki",
           headerShadowVisible: false,
@@ -36,19 +38,20 @@ export default function NotesScreen() {
       <NoteStack.Screen
         name="Note"
         component={Note}
-        options={({ route }) => {
-          return {
-            title: "Notatka " + route.params.title,
-            headerTitleStyle: { fontFamily: "SemiBold", color: font },
-            headerTransparent: true,
-            header: (props) => <Header {...props} />,
-          };
-        }}
+        options={({ route }) => ({
+          title: "Notatka " + route.params.title,
+          headerTransparent: true,
+        })}
       />
       <NoteStack.Screen
         name="AddNote"
         component={AddNote}
         options={{ title: "Dodaj notatkę", headerTransparent: true }}
+      />
+      <NoteStack.Screen
+        name="OwnNotes"
+        component={OwnNotesScreen}
+        options={{ title: "Moje notatki" }}
       />
     </NoteStack.Navigator>
   );

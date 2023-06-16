@@ -14,3 +14,8 @@ export type Category = {
   name: string;
   icon: string;
 }
+
+export type Option<T> = {
+  value: T
+  label: string
+}

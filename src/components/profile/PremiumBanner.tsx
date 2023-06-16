@@ -3,6 +3,7 @@ import { linearGradient } from "../../const/styles";
 import { StyleSheet, Text, View } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
+import { PremiumIcon } from "../../assets/icons/icons";
 
 export default function PremiumBanner() {
   const { light } = useContext(ThemeContext);
@@ -13,7 +14,7 @@ export default function PremiumBanner() {
       colors={linearGradient}
     >
       <View style={{ ...styles.logoWrapper, backgroundColor: "#F2F8FD" }}>
-        <Text style={{ fontSize: 24 }}>👑</Text>
+        <PremiumIcon height={36} width={36} />
       </View>
       <View>
         <Text style={{ ...styles.price, color: "#F2F8FD" }}>

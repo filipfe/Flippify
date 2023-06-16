@@ -8,6 +8,8 @@ import { TopicListRouteProp } from "../../../types/navigation";
 import TopicRef from "./TopicRef";
 import NotFound from "../../NotFound";
 import { ThemeContext } from "../../../context/ThemeContext";
+import Layout from "../../Layout";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function TopicList({ route }: { route: TopicListRouteProp }) {
   const { background } = useContext(ThemeContext);
@@ -22,20 +24,20 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
       .then((data) => setTopics(data))
       .catch((err) => alert(err))
       .finally(() => setIsLoading(false));
-  }, [route]);
+  }, [route.name]);
 
   return isLoading ? (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Loader />
-    </View>
+    <Loader />
   ) : topics.length > 0 ? (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ ...styles.wrapper, backgroundColor: background }}>
-        {topics.map((topic) => (
-          <TopicRef topic={topic} category={category} key={topic} />
-        ))}
-      </View>
-    </ScrollView>
+    <Layout paddingHorizontal={0} paddingVertical={0}>
+      <FlatList
+        data={topics}
+        renderItem={({ item }) => (
+          <TopicRef topic={item} category={category} key={item} />
+        )}
+        keyExtractor={(topic) => topic}
+      />
+    </Layout>
   ) : (
     <NotFound />
   );
@@ -44,7 +46,7 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
 const styles = StyleSheet.create({
   wrapper: {
     paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     flex: 1,
   },
 });

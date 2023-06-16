@@ -8,6 +8,7 @@ import CategoryRef from "./CategoryRef";
 import { DEFAULT_STYLES } from "../../../const/styles";
 import Loader from "../../Loader";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function CategoryList() {
   const route = useRoute();
@@ -28,27 +29,30 @@ export default function CategoryList() {
   return isLoading ? (
     <Loader />
   ) : (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ ...styles.wrapper, backgroundColor: background }}>
-        {categories.length > 0 ? (
-          categories.map((category) => (
-            <CategoryRef {...category} key={category.name} />
-          ))
-        ) : (
-          <Text style={DEFAULT_STYLES.error}>
-            Wystąpił błąd, spróbuj ponownie później!
-          </Text>
-        )}
-      </View>
-    </ScrollView>
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
+      {categories.length > 0 ? (
+        <FlatList
+          contentContainerStyle={{ overflow: "visible", paddingVertical: 24 }}
+          showsVerticalScrollIndicator={false}
+          numColumns={3}
+          data={categories}
+          ItemSeparatorComponent={() => <View style={{ height: 24 }}></View>}
+          renderItem={({ item, index }) => (
+            <CategoryRef {...item} index={index} key={item.id} />
+          )}
+          keyExtractor={(category) => category.name}
+        />
+      ) : (
+        <Text style={DEFAULT_STYLES.error}>
+          Wystąpił błąd, spróbuj ponownie później!
+        </Text>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-  },
+  wrapper: {},
   addFlashList: {
     fontFamily: "Medium",
     marginBottom: 16,

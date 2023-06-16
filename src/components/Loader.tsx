@@ -1,7 +1,9 @@
-import { ActivityIndicator, View, useColorScheme } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext } from "react";
 
 export default function Loader() {
-  const colorScheme = useColorScheme();
+  const { background } = useContext(ThemeContext);
   return (
     <View
       style={{
@@ -9,7 +11,7 @@ export default function Loader() {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        backgroundColor: colorScheme === "light" ? "#FFF" : "#120F23",
+        backgroundColor: background,
       }}
     >
       <ActivityIndicator size="large" color={"#2386F1"} />

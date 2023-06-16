@@ -17,7 +17,7 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
         refreshToken &&
           (await new Promise((res) => res(updateToken(refreshToken))));
       } finally {
-        SplashScreen.hideAsync();
+        await SplashScreen.hideAsync();
       }
     }
     fetchUser();

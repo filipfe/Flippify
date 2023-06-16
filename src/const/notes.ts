@@ -20,7 +20,7 @@ export const initialAddedNote: AddedNote = {
     images: [],
     created_at: '',
     user: initialUserState,
-    privacy: 'public',
+    is_public: true,
     category: {
         id: -1,
         name: '',

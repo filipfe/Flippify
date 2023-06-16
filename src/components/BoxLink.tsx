@@ -1,26 +1,21 @@
 import { Pressable, View } from "react-native";
-import { ProfileBoxLinkProps } from "../../types/profile";
+import { ProfileBoxLinkProps } from "../types/profile";
 import { Text } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import useShadow from "../../hooks/useShadow";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ThemeContext } from "../../context/ThemeContext";
+import useShadow from "../hooks/useShadow";
+import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
-import { RootTabParams } from "../../types/navigation";
 
-export default function HomeBoxLink({
-  to,
+export default function BoxLink({
+  navigate,
   title,
   subtitle,
   icon,
 }: ProfileBoxLinkProps) {
   const { light, background, font } = useContext(ThemeContext);
-  const shadow = useShadow(24);
-  const { navigate } =
-    useNavigation<NativeStackNavigationProp<RootTabParams>>();
+  const shadow = useShadow(16);
   return (
     <Pressable
-      onPress={() => navigate("Profile", { screen: to })}
+      onPress={navigate}
       style={{
         backgroundColor: background,
         borderRadius: 32,

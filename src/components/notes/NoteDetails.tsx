@@ -23,7 +23,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
   const [isLiked, setIsLiked] = useState(false);
-  const { title, created_at, user, image } = details;
+  const { title, created_at, user, desc, image } = details;
   const { activeIndex, images, setImages } = useNoteImages<string>();
 
   const handleLike = async () => {
@@ -55,64 +55,74 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
     );
 
   return (
-    <ScrollView>
-      <LinearGradient
-        colors={linearGradient}
-        start={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: background,
-            borderTopRightRadius: 36,
-            borderTopLeftRadius: 36,
-            paddingHorizontal: 24,
-          }}
+    <View style={{ flex: 1, backgroundColor: background }}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <LinearGradient
+          colors={linearGradient}
+          start={{ x: 1, y: 1 }}
+          style={styles.gradient}
         >
-          <View style={{ marginTop: -132, marginBottom: 32 }}>
-            <View
-              style={{ ...styles.imageWrapper, backgroundColor: background }}
-            >
-              <ImageHandler
-                // images={images.map((image) => ({
-                //   uri: image,
-                //   name: image,
-                //   type: "",
-                // }))}
-                images={[{ uri: image, name: image, type: "" }]}
-              />
-              {[""].length > 1 && (
-                <NoteImageIndex
-                  // images={images}
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: background,
+              borderTopRightRadius: 36,
+              borderTopLeftRadius: 36,
+              paddingHorizontal: 24,
+            }}
+          >
+            <View style={{ marginTop: -132, marginBottom: 32 }}>
+              <View
+                style={{ ...styles.imageWrapper, backgroundColor: background }}
+              >
+                <ImageHandler
+                  // images={images.map((image) => ({
+                  //   uri: image,
+                  //   name: image,
+                  //   type: "",
+                  // }))}
                   images={[{ uri: image, name: image, type: "" }]}
-                  activeIndex={activeIndex}
                 />
-              )}
+                {[""].length > 1 && (
+                  <NoteImageIndex
+                    // images={images}
+                    images={[{ uri: image, name: image, type: "" }]}
+                    activeIndex={activeIndex}
+                  />
+                )}
+              </View>
+            </View>
+            <View
+              style={{
+                paddingBottom: 32,
+                justifyContent: "space-between",
+                flex: 1,
+                height: "100%",
+              }}
+            >
+              <View>
+                <Text style={{ ...styles.date, color: secondary }}>
+                  {new Date(created_at).toLocaleDateString("default")}
+                </Text>
+                <Text style={{ ...styles.noteTitle, color: font }}>
+                  {title}
+                </Text>
+                <Text style={{ ...styles.noteDesc, color: secondary }}>
+                  {desc || ""}
+                </Text>
+              </View>
+              <View style={{ marginTop: 32 }}>
+                <UserCredentials
+                  user={user}
+                  isLiked={isLiked}
+                  handleLike={handleLike}
+                />
+              </View>
             </View>
           </View>
-          <View style={{ paddingBottom: 32 }}>
-            <Text style={{ ...styles.date, color: secondary }}>
-              {new Date(created_at).toLocaleDateString("default")}
-            </Text>
-            <Text style={{ ...styles.noteTitle, color: font }}>{title}</Text>
-            <Text style={{ ...styles.noteDesc, color: secondary }}>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia
-              assumenda obcaecati, harum molestiae iusto accusamus facilis
-              asperiores quisquam ad, rerum totam aut corporis neque. Voluptate
-              nesciunt obcaecati natus? Deleniti, numquam!
-            </Text>
-            <View style={{ marginTop: 32 }}>
-              <UserCredentials
-                user={user}
-                isLiked={isLiked}
-                handleLike={handleLike}
-              />
-            </View>
-          </View>
-        </View>
-      </LinearGradient>
-    </ScrollView>
+        </LinearGradient>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -121,6 +131,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     paddingTop: 232,
+    height: "100%",
   },
   loaderWrapper: {
     flex: 1,

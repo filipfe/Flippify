@@ -33,10 +33,12 @@ export default function Register() {
     setStatus("loading");
     if (userData.password !== confPassword)
       return setStatus("Hasła się nie zgadzają!");
+    if (userData.password.length < 6)
+      return setStatus("Hasło powinno zawierać co najmniej 6 znaków");
     axios
       .post(`${API_URL}/api/signup`, JSON.stringify(userData))
       .then(() => setModal(true))
-      .catch(() => setStatus("Error"));
+      .catch((err) => console.log(err.response.data));
   };
 
   const handleCodeSubmit = () => {
@@ -56,7 +58,7 @@ export default function Register() {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={{ color: font }}>
+      <Text style={[styles.title, { color: font }]}>
         Załóż <Text style={{ color: primary }}>bezpłatne</Text> konto
       </Text>
       <ScrollView style={styles.form}>
@@ -89,7 +91,16 @@ export default function Register() {
           onPress={() => setAuthFormIndex(1)}
         />
         <View style={styles.submitButton}>
-          <PrimaryButton text="Zarejestruj" onPress={handleSubmit} />
+          <PrimaryButton
+            text="Zarejestruj"
+            active={
+              userData.email.length > 3 &&
+              userData.password.length > 1 &&
+              userData.username.length > 2 &&
+              confPassword.length > 1
+            }
+            onPress={handleSubmit}
+          />
         </View>
       </View>
       <Modal visible={modal} animationType="slide">

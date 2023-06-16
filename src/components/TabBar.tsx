@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import {
   NavigationProp,
+  ParamListBase,
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
@@ -17,47 +18,57 @@ import {
 } from "../assets/general";
 import GradientText from "./GradientText";
 import { ThemeContext } from "../context/ThemeContext";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { RootTabParams } from "../types/navigation";
 
-export default function TabBar({
+export default function TabBar(props: BottomTabBarProps) {
+  const { state } = props;
+  const { background } = useContext(ThemeContext);
+  return (
+    <View style={{ ...styles.tabBar, backgroundColor: background }}>
+      {state.routes.map((route, index) => (
+        <TabBarLink {...props} route={route} index={index} key={route.key} />
+      ))}
+    </View>
+  );
+}
+
+type LinkProps = { route: any; index: number };
+
+function TabBarLink({
   state,
   descriptors,
   navigation,
-}: BottomTabBarProps) {
+  index,
+  route,
+}: BottomTabBarProps & LinkProps) {
+  const { primary, font } = useContext(ThemeContext);
   const { navigate } = navigation;
-  const { primary, font, background } = useContext(ThemeContext);
+
+  const { options } = descriptors[route.key];
+  const isCenterButton = index === Math.floor(state.routes.length / 2);
+  const { title } = options;
+  const isFocused = state.index === index;
   return (
-    <View style={{ ...styles.tabBar, backgroundColor: background }}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const isCenterButton = index === Math.floor(state.routes.length / 2);
-        const { title } = options;
-        const isFocused = state.index === index;
-        return (
-          <>
-            {isCenterButton && <CenterButton />}
-            <Pressable
-              style={styles.tabBarLink}
-              onPress={() => navigate(route.name, route.params)}
-            >
-              <LinkIcon
-                route={route.name as keyof RootTabParams}
-                isFocused={isFocused}
-              />
-              <Text
-                style={{
-                  ...styles.tabBarLabel,
-                  color: isFocused ? primary : font,
-                }}
-              >
-                {title}
-              </Text>
-            </Pressable>
-          </>
-        );
-      })}
-    </View>
+    <>
+      {isCenterButton && <CenterButton />}
+      <Pressable
+        style={styles.tabBarLink}
+        onPress={() => navigate(route.name, route.params)}
+      >
+        <LinkIcon
+          route={route.name as keyof RootTabParams}
+          isFocused={isFocused}
+        />
+        <Text
+          style={{
+            ...styles.tabBarLabel,
+            color: isFocused ? primary : font,
+          }}
+        >
+          {title}
+        </Text>
+      </Pressable>
+    </>
   );
 }
 

@@ -4,14 +4,10 @@ import { linearGradient } from "../const/styles";
 import GradientText from "./GradientText";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-
-type OptionProps<T> = {
-  label: string;
-  value: T;
-};
+import { Option as OptionType } from "../types/general";
 
 type SwitchProps<T> = {
-  options: OptionProps<T>[];
+  options: OptionType<T>[];
   onChange: (value: T) => void;
   activeValue: T;
 };
@@ -46,7 +42,7 @@ function Option<T>({
   value,
   onChange,
   isActive,
-}: OptionProps<T> & OptionRefProps<T>) {
+}: OptionType<T> & OptionRefProps<T>) {
   return (
     <Pressable style={{ flex: 1 }} onPress={() => onChange(value)}>
       {isActive ? (

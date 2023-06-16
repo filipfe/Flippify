@@ -9,6 +9,9 @@ import LogoIcon from './logo.svg'
 import XIcon from './x.svg'
 import BinIcon from './bin.svg'
 import FilterIcon from './filter.svg'
+import SettingsIcon from './settings.svg'
+import DropdownIcon from './dropdown.svg'
+import PremiumIcon from './premium.svg'
 
 export {
     NotificationsIcon,
@@ -21,5 +24,8 @@ export {
     LogoIcon,
     XIcon,
     BinIcon,
-    FilterIcon
+    FilterIcon,
+    SettingsIcon,
+    DropdownIcon,
+    PremiumIcon,
 }
