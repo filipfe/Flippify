@@ -1,30 +1,32 @@
 import { StyleSheet, Text, View } from "react-native";
 import { shadowPrimary } from "../../styles/general";
-import { THEME } from "../../const/theme";
 import PrimaryButton from "../PrimaryButton";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
 
 export default function Stats() {
+  const { font, secondary, background } = useContext(ThemeContext);
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <View style={{ ...styles.row, marginBottom: 8 }}>
-        <Text style={styles.title}>Wynik profilu</Text>
-        <Text style={styles.title}>77%</Text>
+        <Text style={{ ...styles.title, color: font }}>Wynik profilu</Text>
+        <Text style={{ ...styles.title, color: font }}>77%</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.stat}>Dokładność</Text>
-        <Text style={styles.stat}>57%</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>Dokładność</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>57%</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.stat}>Dodane fiszki</Text>
-        <Text style={styles.stat}>24</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>Dodane fiszki</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>24</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.stat}>Dodane notatki</Text>
-        <Text style={styles.stat}>33</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>Dodane notatki</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>33</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.stat}>Liczba uznań</Text>
-        <Text style={styles.stat}>22</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>Liczba uznań</Text>
+        <Text style={{ ...styles.stat, color: secondary }}>22</Text>
       </View>
       <View style={{ ...styles.row, marginTop: 12 }}>
         <PrimaryButton
@@ -53,12 +55,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   title: {
-    color: THEME.font,
     fontFamily: "Bold",
     fontSize: 16,
   },
   stat: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
     fontSize: 12,
   },

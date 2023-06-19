@@ -1,55 +1,113 @@
-import { useNavigationState } from "@react-navigation/native";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { useState, useEffect } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useState, useEffect, useContext } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
 import axios from "axios";
 import { API_URL } from "@env";
 import { Note } from "../types/notes";
-import { THEME } from "../const/theme";
+import { ThemeContext } from "../context/ThemeContext";
+import { FlatList } from "react-native-gesture-handler";
+import NoteRef from "../components/notes/NoteRef";
+import { AuthContext } from "../context/AuthContext";
+import Loader from "../components/Loader";
 
-export default function useNotes() {
-  const [didLoad, setDidLoad] = useState(false);
+export default function useNotes(search?: string) {
+  const { font } = useContext(ThemeContext);
+  const { user } = useContext(AuthContext);
+  const [didInitialLoad, setDidInitialLoad] = useState(false);
+  const [didSearchedLoad, setDidSearchedLoad] = useState(false);
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
-  const location = useNavigationState((state) => state);
+  const [searchedNotes, setSearchedNotes] = useState<Note[]>([
+    {
+      id: 6,
+      desc: "",
+      images: [],
+      created_at: "",
+      user,
+      image:
+        "https://res.cloudinary.com/dvblmhhhz/image/upload/v1685227642/DivideKnowledge/notes/6-0.png",
+      is_liked: true,
+      like_count: 1,
+      title: "test2",
+    },
+  ]);
+
+  const load = () => {
+    setDidInitialLoad(true);
+    setDidSearchedLoad(true);
+  };
 
   useEffect(() => {
+    setDidSearchedLoad(false);
     axios
-      .get(`${API_URL}/api/notes`)
+      .get(`${API_URL}/api/notes${search ? `?search=${search}` : ""}`)
       .then((res) => res.data)
       .then((data) => {
-        setRecentNotes(data.recent);
-        setPopularNotes(data.popular);
+        setRecentNotes(data.recent || []);
+        setPopularNotes(data.popular || []);
       })
-      .finally(() => setDidLoad(true));
-  }, [location]);
+      .finally(load);
+  }, [search]);
 
-  const PopularNotes = () => {
+  const PopularNotes = ({ text = "Popularne teraz" }: { text?: string }) => {
     return (
-      <View style={styles.wrapper}>
-        <Text style={styles.title}>Popularne teraz</Text>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-          <View style={styles.list}>
-            {popularNotes.map((note) => (
-              <SmallNoteRef {...note} key={`Popular:${note.id + note.title}`} />
-            ))}
-          </View>
-        </ScrollView>
+      <View>
+        <Text style={{ ...styles.title, color: font }}>{text}</Text>
+        {didInitialLoad ? (
+          <FlatList
+            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={popularNotes}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 24, height: "100%" }}></View>
+            )}
+            renderItem={({ item }) => (
+              <SmallNoteRef {...item} key={`Popular:${item.id}`} />
+            )}
+            keyExtractor={(note) => "Popular:" + note.id}
+          />
+        ) : (
+          <Loader />
+        )}
       </View>
     );
   };
 
-  const RecentNotes = () => {
+  const RecentNotes = ({ text = "Ostatnio dodane" }: { text?: string }) => {
     return (
-      <View style={styles.wrapper}>
-        <Text style={styles.title}>Ostatnio dodane</Text>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-          <View style={styles.list}>
-            {recentNotes.map((note) => (
-              <SmallNoteRef {...note} key={`Recent:${note.id + note.title}`} />
-            ))}
-          </View>
-        </ScrollView>
+      <View>
+        <Text style={{ ...styles.title, color: font }}>{text}</Text>
+        {didInitialLoad ? (
+          <FlatList
+            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={recentNotes}
+            ItemSeparatorComponent={() => (
+              <View style={{ width: 24, height: "100%" }}></View>
+            )}
+            renderItem={({ item }) => (
+              <SmallNoteRef {...item} key={`Popular:${item.id}`} />
+            )}
+            keyExtractor={(note) => "Recent:" + note.id}
+          />
+        ) : (
+          <Loader />
+        )}
+      </View>
+    );
+  };
+
+  const SearchedNotes = () => {
+    return (
+      <View>
+        <Text style={{ ...styles.title, color: font }}>Szukane “{search}”</Text>
+        <View>
+          {searchedNotes.map((note) => (
+            <NoteRef {...note} key={"Searched" + note.id} />
+          ))}
+        </View>
       </View>
     );
   };
@@ -57,19 +115,17 @@ export default function useNotes() {
   return {
     RecentNotes,
     PopularNotes,
-    didLoad,
+    SearchedNotes,
+    didInitialLoad,
+    didSearchedLoad,
   };
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginBottom: 24,
-  },
   title: {
     fontFamily: "ExtraBold",
     marginBottom: 24,
     fontSize: 22,
-    color: THEME.font,
     paddingHorizontal: 24,
   },
   list: {

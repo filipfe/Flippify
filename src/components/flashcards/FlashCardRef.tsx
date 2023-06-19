@@ -1,17 +1,17 @@
 import { Text, View, StyleSheet } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
-import { THEME } from "../../const/theme";
 import RadioAnswer from "./answers/RadioAnswer";
 import Animated, {
   useAnimatedStyle,
-  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import Result from "./Result";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function FlashCardRef() {
+  const { font, background } = useContext(ThemeContext);
   const { activeCard, rotateValue } = useContext(FlashCardContext);
   const { question, type, answers } = activeCard;
 
@@ -35,9 +35,15 @@ export default function FlashCardRef() {
   );
 
   return (
-    <View style={styles.wrapper}>
-      <Animated.View style={[styles.card, frontCardTransform]}>
-        <Text style={styles.question}>
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
+      <Animated.View
+        style={[
+          styles.card,
+          frontCardTransform,
+          { backgroundColor: background },
+        ]}
+      >
+        <Text style={{ ...styles.question, color: font }}>
           {question.split("[input]").join(".....")}
         </Text>
         <View style={styles.answersWrapper}>
@@ -48,7 +54,14 @@ export default function FlashCardRef() {
         </View>
         {/* {type === "input" && <InputAnswer />} */}
       </Animated.View>
-      <Animated.View style={[styles.card, styles.backCard, backCardTransform]}>
+      <Animated.View
+        style={[
+          styles.card,
+          styles.backCard,
+          backCardTransform,
+          { backgroundColor: background },
+        ]}
+      >
         <Result />
       </Animated.View>
     </View>
@@ -57,14 +70,12 @@ export default function FlashCardRef() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "#FFF",
     flex: 1,
     position: "relative",
   },
   card: {
     paddingHorizontal: 24,
     paddingVertical: 24,
-    backgroundColor: "#FFF",
     borderRadius: 24,
     alignItems: "center",
     backfaceVisibility: "hidden",
@@ -81,7 +92,6 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   question: {
-    color: THEME.font,
     fontSize: 20,
     fontFamily: "ExtraBold",
     textAlign: "center",

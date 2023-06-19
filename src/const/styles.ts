@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ColorSchemeName } from "react-native";
+import { Option } from "../types/general";
 
 export const DEFAULT_STYLES = StyleSheet.create({
     error: {
@@ -7,3 +8,12 @@ export const DEFAULT_STYLES = StyleSheet.create({
 })
 
 export const linearGradient = ["#2386F1", "#46B8FA"]
+
+export const themeOptions: Option<ColorSchemeName | "system">[] = [
+    {
+      value: "system",
+      label: "System",
+    },
+    { value: "dark", label: "Ciemny" },
+    { value: "light", label: "Jasny" },
+  ];

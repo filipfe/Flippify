@@ -6,6 +6,12 @@ import SearchIcon from './search.svg'
 import BackIcon from './back.svg'
 import LogoutIcon from './logout.svg'
 import LogoIcon from './logo.svg'
+import XIcon from './x.svg'
+import BinIcon from './bin.svg'
+import FilterIcon from './filter.svg'
+import SettingsIcon from './settings.svg'
+import DropdownIcon from './dropdown.svg'
+import PremiumIcon from './premium.svg'
 
 export {
     NotificationsIcon,
@@ -15,5 +21,11 @@ export {
     SearchIcon,
     BackIcon,
     LogoutIcon,
-    LogoIcon
+    LogoIcon,
+    XIcon,
+    BinIcon,
+    FilterIcon,
+    SettingsIcon,
+    DropdownIcon,
+    PremiumIcon,
 }

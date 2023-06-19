@@ -2,11 +2,12 @@ import { Topic } from "../../../types/flashcards";
 import { Category } from "../../../types/general";
 import { useNavigation } from "@react-navigation/native";
 import { TopicListNavigationProp } from "../../../types/navigation";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { THEME } from "../../../const/theme";
-import { linearGradient } from "../../../const/styles";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RangeSlider from "../../RangeSlider";
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
+import useShadow from "../../../hooks/useShadow";
+import GradientText from "../../GradientText";
 
 const TopicRef = ({
   topic,
@@ -15,49 +16,49 @@ const TopicRef = ({
   topic: Topic;
   category: Category;
 }) => {
+  const { font, secondary, background } = useContext(ThemeContext);
+  const shadow = useShadow(24);
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
-    <TouchableOpacity
-      style={styles.wrapper}
-      onPress={() =>
-        navigation.navigate("FlashCardsGenerator", { topic, category })
-      }
-    >
+    <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
       <View style={styles.topWrapper}>
-        <Text style={styles.title}>{topic}</Text>
-        <Text style={styles.title}>58%</Text>
+        <Text style={{ ...styles.title, color: font }}>{topic}</Text>
+        <Text style={{ ...styles.title, color: font }}>58%</Text>
       </View>
-      <View style={{ marginVertical: 16 }}>
+      <View style={{ marginTop: 16, marginBottom: 24 }}>
         <RangeSlider value={20} />
       </View>
       <View style={{ ...styles.topWrapper }}>
-        <Text style={styles.points}>144 / 255 punkty</Text>
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          style={styles.button}
-          colors={linearGradient}
+        <Text style={{ ...styles.points, color: secondary }}>
+          144 / 255 punkty
+        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("FlashCardsGenerator", { topic, category })
+          }
         >
-          <Text style={styles.buttonText}>Wybierz</Text>
-        </LinearGradient>
+          <GradientText
+            style={{ fontFamily: "Bold", fontSize: 14, lineHeight: 18 }}
+          >
+            Wybierz
+          </GradientText>
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
-    marginBottom: 16,
+    marginVertical: 8,
     paddingHorizontal: 24,
-    paddingVertical: 12,
-    elevation: 16,
-    shadowColor: "#3C85C2",
+    marginHorizontal: 24,
+    paddingVertical: 16,
     borderRadius: 24,
   },
   title: {
     fontFamily: "SemiBold",
     fontSize: 18,
-    color: THEME.font,
   },
   topWrapper: {
     flexDirection: "row",
@@ -65,8 +66,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   points: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
+    lineHeight: 16,
   },
   button: {
     paddingVertical: 10,

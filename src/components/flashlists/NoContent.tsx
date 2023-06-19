@@ -1,19 +1,24 @@
 import { StyleSheet, Text, View } from "react-native";
-import { THEME } from "../../const/theme";
 import PrimaryButton from "../PrimaryButton";
-import { useNavigation } from "@react-navigation/native";
-import { ListOfFlashCardListsNavigation } from "../../types/navigation";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
-export default function NoContent() {
-  const { navigate } = useNavigation<ListOfFlashCardListsNavigation>();
+type Props = {
+  text?: string;
+  buttonText?: string;
+  onPress: () => void;
+};
+
+export default function NoContent({
+  text = "Nie znaleziono",
+  buttonText = "Cofnij",
+  onPress,
+}: Props) {
+  const { font, background } = useContext(ThemeContext);
   return (
-    <View style={styles.wrapper}>
-      <Text style={styles.text}>Nie posiadasz żadnych FiszkoList</Text>
-      <PrimaryButton
-        onPress={() => navigate("AddFlashList")}
-        paddingVertical={14}
-        text="Dodaj FiszkoListę"
-      />
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
+      <Text style={{ ...styles.text, color: font }}>{text}</Text>
+      <PrimaryButton onPress={onPress} paddingVertical={14} text={buttonText} />
     </View>
   );
 }
@@ -26,7 +31,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   text: {
-    color: THEME.font,
     fontFamily: "Bold",
     fontSize: 18,
     marginBottom: 24,

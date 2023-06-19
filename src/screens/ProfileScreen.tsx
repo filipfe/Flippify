@@ -6,10 +6,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
 import UserInfo from "../components/profile/UserInfo";
-import { LogoIcon, NotificationsIcon } from "../assets/icons/icons";
+import {
+  LogoIcon,
+  NotificationsIcon,
+  PremiumIcon,
+  SettingsIcon,
+} from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
+import Header from "../components/Header";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import SettingsScreen from "./profile/SettingsScreen";
+import { AuthContext } from "../context/AuthContext";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
@@ -18,7 +29,7 @@ export default function ProfileScreen() {
     <ProfileStack.Navigator
       initialRouteName="ProfileStack"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "Bold" },
+        header: (props) => <Header {...props} />,
       }}
     >
       <ProfileStack.Screen
@@ -44,11 +55,24 @@ export default function ProfileScreen() {
           headerShown: false,
         }}
       />
+      <ProfileStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: "Ustawienia",
+          header: (props) => <Header {...props} />,
+        }}
+      />
     </ProfileStack.Navigator>
   );
 }
 
 const Profile = () => {
+  const { user } = useContext(AuthContext);
+  const { is_premium } = user;
+  const { navigate } =
+    useNavigation<NavigationProp<ProfileStackParams, "ProfileStack">>();
+  const { background, light, font } = useContext(ThemeContext);
   return (
     <ScrollView>
       <LinearGradient
@@ -57,23 +81,24 @@ const Profile = () => {
         style={{ flex: 1 }}
       >
         <View style={styles.settingsWrapper}>
-          <LogoIcon />
+          {is_premium ? <PremiumIcon width={64} /> : <LogoIcon width={64} />}
           <Pressable
+            onPress={() => navigate("Settings")}
             style={{
               height: 48,
               width: 48,
               borderRadius: 12,
-              backgroundColor: "#F2F8FD",
+              backgroundColor: light,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <NotificationsIcon width={20} height={20} />
+            <SettingsIcon fill={font} width={24} height={24} />
           </Pressable>
         </View>
         <View
           style={{
-            backgroundColor: "#FFF",
+            backgroundColor: background,
             borderTopRightRadius: 36,
             borderTopLeftRadius: 36,
             paddingHorizontal: 24,
@@ -83,7 +108,7 @@ const Profile = () => {
         >
           <UserInfo />
           <Stats />
-          <PremiumBanner />
+          {!is_premium && <PremiumBanner />}
           <LogoutButton />
         </View>
       </LinearGradient>

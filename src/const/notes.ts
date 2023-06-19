@@ -9,7 +9,7 @@ export const initialNote: Note = {
     images: [],
     category: '',
     created_at: '',
-    likes: 0,
+    like_count: 0,
     is_liked: false,
     user: initialUserState
 }
@@ -20,6 +20,7 @@ export const initialAddedNote: AddedNote = {
     images: [],
     created_at: '',
     user: initialUserState,
+    is_public: true,
     category: {
         id: -1,
         name: '',

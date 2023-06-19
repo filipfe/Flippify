@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontFamily: "ExtraBold",
+    fontFamily: "Bold",
     color: "#FFF",
   },
 });

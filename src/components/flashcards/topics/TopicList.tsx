@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
 import Loader from "../../Loader";
@@ -7,8 +7,12 @@ import { Topic } from "../../../types/flashcards";
 import { TopicListRouteProp } from "../../../types/navigation";
 import TopicRef from "./TopicRef";
 import NotFound from "../../NotFound";
+import { ThemeContext } from "../../../context/ThemeContext";
+import Layout from "../../Layout";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function TopicList({ route }: { route: TopicListRouteProp }) {
+  const { background } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true);
   const [topics, setTopics] = useState<Topic[]>([]);
   const category = route.params.category;
@@ -20,20 +24,20 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
       .then((data) => setTopics(data))
       .catch((err) => alert(err))
       .finally(() => setIsLoading(false));
-  }, [route]);
+  }, [route.name]);
 
   return isLoading ? (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Loader />
-    </View>
+    <Loader />
   ) : topics.length > 0 ? (
-    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-      <View style={styles.wrapper}>
-        {topics.map((topic) => (
-          <TopicRef topic={topic} category={category} key={topic} />
-        ))}
-      </View>
-    </ScrollView>
+    <Layout paddingHorizontal={0} paddingVertical={0}>
+      <FlatList
+        data={topics}
+        renderItem={({ item }) => (
+          <TopicRef topic={item} category={category} key={item} />
+        )}
+        keyExtractor={(topic) => topic}
+      />
+    </Layout>
   ) : (
     <NotFound />
   );
@@ -41,9 +45,8 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
     paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     flex: 1,
   },
 });

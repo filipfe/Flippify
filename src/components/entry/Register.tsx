@@ -14,9 +14,10 @@ import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
 import SecondaryButton from "../SecondaryButton";
 import { styles } from "./Login";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Register() {
+  const { primary, font } = useContext(ThemeContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [status, setStatus] = useState<string | boolean>("");
   const [confPassword, setConfPassword] = useState("");
@@ -32,10 +33,12 @@ export default function Register() {
     setStatus("loading");
     if (userData.password !== confPassword)
       return setStatus("Hasła się nie zgadzają!");
+    if (userData.password.length < 6)
+      return setStatus("Hasło powinno zawierać co najmniej 6 znaków");
     axios
       .post(`${API_URL}/api/signup`, JSON.stringify(userData))
       .then(() => setModal(true))
-      .catch(() => setStatus("Error"));
+      .catch((err) => console.log(err.response.data));
   };
 
   const handleCodeSubmit = () => {
@@ -55,27 +58,31 @@ export default function Register() {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>
-        Załóż <Text style={{ color: THEME.primary }}>bezpłatne</Text> konto
+      <Text style={[styles.title, { color: font }]}>
+        Załóż <Text style={{ color: primary }}>bezpłatne</Text> konto
       </Text>
       <ScrollView style={styles.form}>
         <PrimaryInput
-          field="username"
           label="Nazwa użytkownika"
-          setState={setUserData}
+          onChangeText={(text) =>
+            setUserData((prev) => ({ ...prev, username: text }))
+          }
         />
-        <PrimaryInput field="email" label="Email" setState={setUserData} />
         <PrimaryInput
-          field="password"
+          label="Email"
+          onChangeText={(email) => setUserData((prev) => ({ ...prev, email }))}
+        />
+        <PrimaryInput
           label="Hasło"
           secureTextEntry={true}
-          setState={setUserData}
+          onChangeText={(password) =>
+            setUserData((prev) => ({ ...prev, password }))
+          }
         />
         <PrimaryInput
-          field="confPassword"
           label="Powtórz hasło"
           secureTextEntry={true}
-          setState={setConfPassword}
+          onChangeText={(text) => setConfPassword(text)}
         />
       </ScrollView>
       <View>
@@ -84,7 +91,16 @@ export default function Register() {
           onPress={() => setAuthFormIndex(1)}
         />
         <View style={styles.submitButton}>
-          <PrimaryButton text="Zarejestruj" onPress={handleSubmit} />
+          <PrimaryButton
+            text="Zarejestruj"
+            active={
+              userData.email.length > 3 &&
+              userData.password.length > 1 &&
+              userData.username.length > 2 &&
+              confPassword.length > 1
+            }
+            onPress={handleSubmit}
+          />
         </View>
       </View>
       <Modal visible={modal} animationType="slide">

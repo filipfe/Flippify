@@ -1,10 +1,18 @@
-import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { NavigationProp, NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { FlashList, Topic } from "./flashcards";
 import { Category } from "./general";
+import { NoteStackParams } from "./notes";
+
+export type RootTabParams = {
+  Home: undefined;
+  FlashCards: NavigatorScreenParams<FlashCardsStackParams>;
+  Notes: NavigatorScreenParams<NoteStackParams>;
+  Profile: NavigatorScreenParams<ProfileStackParams>;
+};
 
 // FLASHCARDS
 
-export type CategoryStackParams = {
+export type FlashCardsStackParams = {
   CategoryList: undefined;
   AddCard: undefined;
   TopicList: { category: Category };
@@ -15,18 +23,18 @@ export type CategoryStackParams = {
 };
 
 export type CategoryNavigationProps = NavigationProp<
-CategoryStackParams,
-"CategoryList"
+  FlashCardsStackParams,
+  "CategoryList"
 >;
 
 export type GeneratorRouteProps = RouteProp<
-  CategoryStackParams,
+  FlashCardsStackParams,
   "FlashCardsGenerator"
 >;
 
 
-export type TopicListNavigationProp = NavigationProp<CategoryStackParams, "TopicList">;
-export type TopicListRouteProp = RouteProp<CategoryStackParams, "TopicList">;
+export type TopicListNavigationProp = NavigationProp<FlashCardsStackParams, "TopicList">;
+export type TopicListRouteProp = RouteProp<FlashCardsStackParams, "TopicList">;
 
 export type AddCardStackParams = {
   CardForm: undefined;
@@ -46,17 +54,13 @@ export type FlashListStackParams = {
   FlashList: FlashList;
 };
 
-export type ListOfFlashCardListsNavigation = NavigationProp<
-FlashListStackParams,
-"ListOfLists"
->;
-
 // PROFILE
 
 export type ProfileStackParams = {
     ProfileStack: undefined;
     OwnFlashCards: undefined;
     FlashLists: undefined;
+    Settings: undefined;
   };
 
 export type ProfileNavigation = NavigationProp<ProfileStackParams, "ProfileStack">;

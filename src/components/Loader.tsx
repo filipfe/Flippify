@@ -1,18 +1,20 @@
 import { ActivityIndicator, View } from "react-native";
-import { THEME } from "../const/theme";
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext } from "react";
 
 export default function Loader() {
+  const { background } = useContext(ThemeContext);
   return (
     <View
       style={{
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#FFF",
         width: "100%",
+        backgroundColor: background,
       }}
     >
-      <ActivityIndicator size="large" color={THEME.primary} />
+      <ActivityIndicator size="large" color={"#2386F1"} />
     </View>
   );
 }

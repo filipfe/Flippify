@@ -46,6 +46,9 @@ export default function useAuth() {
       })
       .then((res) => {
         const userData = res.data;
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${tokens.access}`;
         setUser(userData);
         setTokens(tokens);
         setIsLogged(true);

@@ -4,11 +4,14 @@ import Info from "../components/entry/Info";
 import Auth from "../components/entry/Auth";
 import PrimaryButton from "../components/PrimaryButton";
 import StepDisplayer from "../components/entry/StepDisplayer";
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext } from "react";
 
 export default function EntryScreen() {
+  const { background } = useContext(ThemeContext);
   const { step, setStep, form } = useMultiStepForm([<Info />, <Auth />]);
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <StepDisplayer step={step} />
       <View style={styles.innerWrapper}>
         {form}

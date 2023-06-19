@@ -5,51 +5,50 @@ import {
   TextInputProps,
   View,
 } from "react-native";
-import { useState, Dispatch, SetStateAction } from "react";
-import { THEME } from "../const/theme";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 type Input = {
-  field: string;
   label?: string;
-  setState: Dispatch<SetStateAction<any>>;
 };
 
 export default function PrimaryInput({
-  field,
   label,
   multiline = false,
   numberOfLines,
   maxLength,
   style,
   secureTextEntry,
+  placeholder,
   value,
-  setState,
+  autoFocus,
+  onSubmitEditing,
+  onChangeText,
 }: TextInputProps & Input) {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleChange = (input: string) => {
-    setState((prev: string | {}) => {
-      if (typeof prev === "string") return input;
-      return {
-        ...prev,
-        [field]: input,
-      };
-    });
-  };
-
+  const { secondary, light, font } = useContext(ThemeContext);
   return (
     <View style={styles.wrapper}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text style={{ ...styles.label, color: secondary }}>{label}</Text>
+      )}
       <TextInput
+        autoFocus={autoFocus}
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
         multiline={multiline}
+        onSubmitEditing={onSubmitEditing}
         numberOfLines={numberOfLines}
+        placeholder={placeholder}
+        placeholderTextColor={secondary}
         value={value}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        style={{ ...styles.input, ...(style as any) }}
-        onChangeText={handleChange}
+        style={{
+          ...styles.input,
+          ...(style as any),
+          paddingVertical: label ? 12 : 10,
+          color: font,
+          backgroundColor: light,
+        }}
+        onChangeText={onChangeText}
       />
     </View>
   );
@@ -65,17 +64,13 @@ const styles = StyleSheet.create({
     zIndex: 10,
     position: "relative",
     fontSize: 12,
-    color: THEME.p,
     paddingHorizontal: 24,
   },
   input: {
     fontFamily: "SemiBold",
-    paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 16,
     width: "100%",
-    backgroundColor: THEME.light,
-    color: THEME.font,
     alignItems: "flex-start",
   },
 });

@@ -1,13 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
 
 export default function Info() {
+  const { primary, font, secondary } = useContext(ThemeContext);
   return (
-    <View style={styles.wrapper}>
-      <Text style={styles.title}>
-        Witaj w <Text style={{ color: THEME.primary }}>Flippify!</Text>
+    <View style={{ ...styles.wrapper }}>
+      <Text style={{ ...styles.title, color: font }}>
+        Witaj w <Text style={{ color: primary }}>Flippify!</Text>
       </Text>
-      <Text style={styles.paragraph}>
+      <Text style={{ ...styles.paragraph, color: secondary }}>
         Przygotuj się na opanowanie najważniejszych i najbardziej interesujących
         Cię informacji przy pomocy jednej aplikacji.
       </Text>
@@ -21,12 +23,10 @@ const styles = StyleSheet.create({
     fontFamily: "Bold",
     marginBottom: 24,
     fontSize: 24,
-    color: THEME.font,
     textAlign: "center",
   },
   paragraph: {
     fontFamily: "Medium",
-    color: THEME.p,
     fontSize: 14,
     textAlign: "center",
     lineHeight: 24,

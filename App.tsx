@@ -4,12 +4,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FlashCardsScreen from "./src/screens/FlashCardsScreen";
 import NotesScreen from "./src/screens/NotesScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import {
-  FlashCardsIcon,
-  HomeIcon,
-  NotesIcon,
-  ProfileIcon,
-} from "./src/assets/general";
 import { useContext } from "react";
 import { AuthContext } from "./src/context/AuthContext";
 import EntryScreen from "./src/screens/EntryScreen";
@@ -24,9 +18,12 @@ import {
   PlusJakartaSans_700Bold as Bold,
   PlusJakartaSans_800ExtraBold as ExtraBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import Loader from "./src/components/Loader";
 import * as SplashScreen from "expo-splash-screen";
-import { THEME } from "./src/const/theme";
+import { RootTabParams } from "./src/types/navigation";
+import TabBar from "./src/components/TabBar";
+import ThemeProvider from "./src/providers/ThemeProvider";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,23 +36,20 @@ export default function AppProvider() {
     ExtraBold,
   });
 
-  if (!isFontLoaded) return <Loader />;
+  if (!isFontLoaded)
+    return <ActivityIndicator size="large" color={"#2386F1"} />;
 
   return (
-    <AuthProvider>
-      <AxiosProvider>
-        <App />
-      </AxiosProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AxiosProvider>
+          <StatusBar translucent />
+          <App />
+        </AxiosProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
-
-export type RootTabParams = {
-  Home: undefined;
-  FlashCards: undefined;
-  Notes: undefined;
-  Profile: undefined;
-};
 
 const RootTab = createBottomTabNavigator<RootTabParams>();
 
@@ -68,12 +62,11 @@ function App() {
     <NavigationContainer>
       <RootTab.Navigator
         sceneContainerStyle={styles.sceneContainer}
+        tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
-          headerTitleStyle: styles.headerTitle,
           tabBarActiveTintColor: "#2386F1",
           tabBarInactiveTintColor: "#382E6D",
-          tabBarStyle: styles.tabBar,
-          tabBarShowLabel: false,
+          headerShown: false,
         }}
       >
         <RootTab.Screen
@@ -81,15 +74,6 @@ function App() {
           component={HomeScreen}
           options={{
             title: "Eksploruj",
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <HomeIcon
-                stroke={focused ? "#2386F1" : "#382E6D"}
-                strokeWidth="2"
-                height={28}
-                width={28}
-              />
-            ),
           }}
         />
         <RootTab.Screen
@@ -97,15 +81,6 @@ function App() {
           component={FlashCardsScreen}
           options={{
             title: "Fiszki",
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <FlashCardsIcon
-                stroke={focused ? "#2386F1" : "#382E6D"}
-                strokeWidth="2"
-                height={24}
-                width={24}
-              />
-            ),
           }}
         />
         <RootTab.Screen
@@ -113,15 +88,6 @@ function App() {
           component={NotesScreen}
           options={{
             title: "Notatki",
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <NotesIcon
-                stroke={focused ? "#2386F1" : "#382E6D"}
-                strokeWidth="2"
-                height={25}
-                width={25}
-              />
-            ),
           }}
         />
         <RootTab.Screen
@@ -129,15 +95,6 @@ function App() {
           component={ProfileScreen}
           options={{
             title: "Profil",
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <ProfileIcon
-                stroke={focused ? "#2386F1" : "#382E6D"}
-                strokeWidth="2"
-                height={26}
-                width={26}
-              />
-            ),
           }}
         />
       </RootTab.Navigator>
@@ -146,18 +103,6 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-  tabBar: {
-    paddingHorizontal: 24,
-    height: 64,
-    alignItems: "center",
-    flexDirection: "row",
-    shadowColor: THEME.primary,
-  },
-  tabBarLabel: {
-    fontSize: 14,
-    fontFamily: "Bold",
-    paddingBottom: 16,
-  },
   sceneContainer: {
     backgroundColor: "#FFFFFF",
   },

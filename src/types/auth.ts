@@ -3,6 +3,7 @@ export type User = {
     username: string,
     profile_picture: string,
     is_staff: boolean,
+    is_premium: boolean,
     level: number
 }
 

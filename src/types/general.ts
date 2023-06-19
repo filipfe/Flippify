@@ -10,7 +10,12 @@ export type Button = {
 };    
   
 export type Category = {
-  id: number,
+  id: number | null,
   name: string;
   icon: string;
+}
+
+export type Option<T> = {
+  value: T
+  label: string
 }

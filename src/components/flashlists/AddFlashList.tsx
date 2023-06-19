@@ -9,9 +9,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { FlashList } from "../../types/flashcards";
 import { initialFlashList } from "../../const/flashcards";
 import { shadowPrimary } from "../../styles/general";
-import { THEME } from "../../const/theme";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function AddFlashList() {
+  const { font, secondary } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [newFlashList, setNewFlashList] = useState<FlashList>(initialFlashList);
@@ -28,11 +29,20 @@ export default function AddFlashList() {
   return (
     <View style={styles.wrapper}>
       <View>
-        <PrimaryInput field="name" setState={setNewFlashList} label="Nazwa" />
+        <PrimaryInput
+          label="Nazwa"
+          onChangeText={(name) =>
+            setNewFlashList((prev) => ({ ...prev, name }))
+          }
+        />
         <View style={styles.flashcardsWrapper}>
           <View style={styles.flashcardsTextWrapper}>
-            <Text style={styles.flashcardsText}>Fiszki</Text>
-            <Text style={styles.flashcardsCount}>512 fiszek</Text>
+            <Text style={{ ...styles.flashcardsText, color: font }}>
+              Fiszki
+            </Text>
+            <Text style={{ ...styles.flashcardsCount, color: secondary }}>
+              512 fiszek
+            </Text>
           </View>
           <PrimaryButton
             paddingHorizontal={24}
@@ -71,12 +81,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flashcardsText: {
-    color: THEME.font,
     fontFamily: "SemiBold",
   },
   flashcardsCount: {
     fontSize: 12,
-    color: THEME.secondary,
     fontFamily: "SemiBold",
     marginLeft: 12,
   },

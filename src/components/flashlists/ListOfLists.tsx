@@ -3,22 +3,26 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Loader from "../Loader";
 import axios from "axios";
 import { API_URL } from "@env";
-import { useNavigation, useNavigationState } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useNavigation,
+  useNavigationState,
+} from "@react-navigation/native";
 import PrimaryButton from "../PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
-import { THEME } from "../../const/theme";
 import { shadowPrimary } from "../../styles/general";
 import GradientText from "../GradientText";
 import { FlashList } from "../../types/flashcards";
-import { ListOfFlashCardListsNavigation } from "../../types/navigation";
 import NoContent from "./NoContent";
+import { ThemeContext } from "../../context/ThemeContext";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { FlashListStackParams } from "../../types/navigation";
 
 export default function ListOfLists({
   navigation,
-}: {
-  navigation: ListOfFlashCardListsNavigation;
-}) {
+}: NativeStackScreenProps<FlashListStackParams>) {
+  const { background } = useContext(ThemeContext);
   const { navigate } = navigation;
   const [loading, setLoading] = useState(true);
   const [removed, setRemoved] = useState<number[]>([]);
@@ -36,28 +40,38 @@ export default function ListOfLists({
 
   if (loading) return <Loader />;
 
-  if (flashLists.length < 1) return <NoContent />;
+  if (flashLists.length < 1)
+    return (
+      <NoContent
+        text="Nie znaleziono FiszkoList"
+        buttonText="Dodaj FiszkoListę"
+        onPress={() => navigate("AddFlashList")}
+      />
+    );
 
   return (
-    <ScrollView>
-      <View style={styles.wrapper}>
-        <View style={{ marginBottom: 8 }}>
-          <PrimaryButton
-            onPress={() => navigate("AddFlashList")}
-            text="+ Dodaj nową"
-          />
+    <View style={{ flex: 1, backgroundColor: background }}>
+      <ScrollView>
+        <View style={styles.wrapper}>
+          <View style={{ marginBottom: 8 }}>
+            <PrimaryButton
+              onPress={() => navigate("AddFlashList")}
+              text="Dodaj nową"
+            />
+          </View>
+          {flashLists.length > 0 &&
+            flashLists.map((list) => (
+              <FlashListRef setRemoved={setRemoved} {...list} key={list.name} />
+            ))}
         </View>
-        {flashLists.length > 0 &&
-          flashLists.map((list) => (
-            <FlashListRef setRemoved={setRemoved} {...list} key={list.name} />
-          ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const FlashListRef = (props: FlashList & { setRemoved: any }) => {
-  const { navigate } = useNavigation<ListOfFlashCardListsNavigation>();
+  const { font, secondary, light, background } = useContext(ThemeContext);
+  const { navigate } = useNavigation<NavigationProp<FlashListStackParams>>();
   const { setRemoved, ...rest } = props;
   const { name, created_at, count } = rest;
 
@@ -70,19 +84,21 @@ const FlashListRef = (props: FlashList & { setRemoved: any }) => {
   };
 
   return (
-    <View style={styles.refWrapper}>
+    <View style={{ ...styles.refWrapper, backgroundColor: background }}>
       <View style={styles.topWrapper}>
-        <Text style={styles.title}>{name}</Text>
-        <Text style={styles.points}>{count} fiszki</Text>
+        <Text style={{ ...styles.title, color: font }}>{name}</Text>
+        <Text style={{ ...styles.points, color: secondary }}>
+          {count} fiszki
+        </Text>
       </View>
       <View style={{ ...styles.topWrapper, marginTop: 8 }}>
-        <Text style={styles.points}>
+        <Text style={{ ...styles.points, color: secondary }}>
           {new Date(created_at).toLocaleDateString("default")}
         </Text>
         <View style={styles.buttonsWrapper}>
           <Pressable
             onPress={() => navigate("FlashList", rest)}
-            style={styles.modifyButton}
+            style={{ ...styles.modifyButton, backgroundColor: light }}
           >
             <GradientText style={styles.buttonText}>Modyfikuj</GradientText>
           </Pressable>
@@ -104,7 +120,6 @@ const FlashListRef = (props: FlashList & { setRemoved: any }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#FFF",
     paddingHorizontal: 24,
     paddingVertical: 24,
   },
@@ -119,7 +134,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "SemiBold",
     fontSize: 18,
-    color: THEME.font,
   },
   topWrapper: {
     flexDirection: "row",
@@ -127,7 +141,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   points: {
-    color: THEME.secondary,
     fontFamily: "SemiBold",
   },
   button: {
@@ -148,6 +161,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 24,
-    backgroundColor: THEME.light,
   },
 });

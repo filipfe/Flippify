@@ -1,24 +1,23 @@
 import { Pressable, View } from "react-native";
-import { ProfileBoxLinkProps } from "../../types/profile";
+import { ProfileBoxLinkProps } from "../types/profile";
 import { Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import useShadow from "../../hooks/useShadow";
-import { RootTabParams } from "../../../App";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import useShadow from "../hooks/useShadow";
+import { ThemeContext } from "../context/ThemeContext";
+import { useContext } from "react";
 
-export default function HomeBoxLink({
+export default function BoxLink({
+  navigate,
   title,
   subtitle,
   icon,
 }: ProfileBoxLinkProps) {
-  const shadow = useShadow(24);
-  const { navigate } =
-    useNavigation<NativeStackNavigationProp<RootTabParams, "Profile">>();
+  const { light, background, font } = useContext(ThemeContext);
+  const shadow = useShadow(16);
   return (
     <Pressable
-      onPress={() => navigate("Profile")}
+      onPress={navigate}
       style={{
-        backgroundColor: "#F2F8FD",
+        backgroundColor: background,
         borderRadius: 32,
         paddingVertical: 24,
         paddingHorizontal: 36,
@@ -35,7 +34,7 @@ export default function HomeBoxLink({
       >
         <View
           style={{
-            backgroundColor: "white",
+            backgroundColor: light,
             borderRadius: 12,
             height: 52,
             width: 52,
@@ -56,7 +55,7 @@ export default function HomeBoxLink({
             style={{
               fontSize: 14,
               fontFamily: "Medium",
-              color: "#382E6D",
+              color: font,
               opacity: 0.8,
             }}
           >
@@ -66,7 +65,7 @@ export default function HomeBoxLink({
             style={{
               fontSize: 16,
               fontFamily: "Bold",
-              color: "#382E6D",
+              color: font,
             }}
           >
             {title}

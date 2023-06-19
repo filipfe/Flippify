@@ -8,8 +8,11 @@ import { initialUserState } from "../../const/auth";
 import useFlashCard from "../../hooks/useFlashCard";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import NotFound from "../NotFound";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function FlashCardsGenerator() {
+  const { background } = useContext(ThemeContext);
   const { params } = useRoute<GeneratorRouteProps>();
   const flashCard = useFlashCard(params);
   const { isLoading, activeCard } = flashCard;
@@ -18,7 +21,7 @@ export default function FlashCardsGenerator() {
   if (!flashCard.activeCard) return <NotFound />;
   return (
     <FlashCardContext.Provider value={flashCard}>
-      <View style={styles.wrapper}>
+      <View style={{ ...styles.wrapper, backgroundColor: background }}>
         <FlashCardRef />
         <View style={{ marginTop: 24 }}>
           <UserCredentials
@@ -37,6 +40,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 24,
     flex: 1,
-    backgroundColor: "#FFF",
   },
 });

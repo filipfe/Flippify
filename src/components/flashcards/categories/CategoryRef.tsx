@@ -2,28 +2,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
 import { CategoryNavigationProps } from "../../../types/navigation";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { THEME } from "../../../const/theme";
-import PrimaryButton from "../../PrimaryButton";
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
+import { TouchableWithoutFeedback } from "react-native";
 
-const CategoryRef = (props: Category) => {
+const CategoryRef = (props: Category & { index: number }) => {
+  const { font, light } = useContext(ThemeContext);
   const { navigate } = useNavigation<CategoryNavigationProps>();
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.topWrapper}>
-        <View style={styles.titleWrapper}>
-          <View style={styles.iconWrapper}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 12,
+      }}
+    >
+      <TouchableWithoutFeedback
+        onPress={() => navigate("TopicList", { category: props })}
+      >
+        <View style={[styles.wrapper]}>
+          <View style={[styles.iconWrapper, { backgroundColor: light }]}>
             <Image style={styles.icon} source={{ uri: props.icon }} />
           </View>
-          <Text style={styles.title}>{props.name}</Text>
+          <Text style={{ ...styles.title, color: font }}>{props.name}</Text>
         </View>
-        <Text style={styles.topicCount}>24 tematy</Text>
-      </View>
-      <PrimaryButton
-        onPress={() => navigate("TopicList", { category: props })}
-        paddingVertical={10}
-        width={"100%"}
-        text="Wybierz"
-      />
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -31,57 +33,30 @@ const CategoryRef = (props: Category) => {
 const styles = StyleSheet.create({
   wrapper: {
     borderRadius: 24,
-    elevation: 12,
-    shadowColor: "#3C85C2",
-    backgroundColor: "#FFFFFF",
-    marginBottom: 24,
-    paddingHorizontal: 28,
-    paddingTop: 18,
-    paddingBottom: 24,
-  },
-  topWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    flex: 1,
   },
   title: {
-    color: THEME.font,
-    fontSize: 18,
+    marginTop: 12,
+    fontSize: 16,
     fontFamily: "SemiBold",
-    lineHeight: 18,
+    lineHeight: 22,
+    textAlign: "center",
   },
   topicCount: {
     fontFamily: "SemiBold",
-    color: THEME.secondary,
     fontSize: 12,
-  },
-  button: {
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-    borderRadius: 24,
-  },
-  buttonText: {
-    fontFamily: "ExtraBold",
-    color: "#FFFFFF",
-    fontSize: 12,
-  },
-  titleWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   iconWrapper: {
-    height: 44,
-    width: 44,
-    borderRadius: 44,
-    backgroundColor: THEME.light,
-    marginRight: 12,
+    height: 64,
+    width: 64,
+    borderRadius: 64,
     alignItems: "center",
     justifyContent: "center",
   },
   icon: {
-    height: 20,
-    width: 20,
+    height: 36,
+    width: 36,
   },
 });
 
