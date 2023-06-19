@@ -31,9 +31,15 @@ export default function AddNote() {
     form.append("title", newNote.title);
     form.append("description", newNote.desc);
     // @ts-ignore
-    form.append("image", images);
+    images.forEach((image, index) => {
+      form.append(`image`, {
+        uri: image.uri,
+        name: image.name,
+        type: image.type,
+      });
+    });
     form.append("category_id", "1");
-
+    
     axios
       .postForm(`${API_URL}/api/notes/add`, form)
       .catch((err) => console.log(err.response.data))
