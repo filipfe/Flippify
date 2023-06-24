@@ -15,7 +15,7 @@ export default function useOpus<T>(initialValue: T): OpusContext<T> {
 
   useEffect(() => {
     setTopics([]);
-    if (activeCategory.id === -1) return;
+    if (!activeCategory.id) return;
     setAreTopicsLoading(true);
     let isCancelled = false;
     !isCancelled &&

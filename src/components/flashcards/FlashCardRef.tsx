@@ -9,8 +9,11 @@ import Animated, {
 } from "react-native-reanimated";
 import Result from "./Result";
 import { ThemeContext } from "../../context/ThemeContext";
+import InputAnswer from "./answers/InputAnswer";
+import { SettingsContext } from "../../context/SettingsContext";
 
 export default function FlashCardRef() {
+  const { settings } = useContext(SettingsContext);
   const { font, background } = useContext(ThemeContext);
   const { activeCard, rotateValue } = useContext(FlashCardContext);
   const { question, type, answers } = activeCard;
@@ -18,7 +21,11 @@ export default function FlashCardRef() {
   const frontCardTransform = useAnimatedStyle(
     () => ({
       transform: [
-        { rotateX: withTiming(`${rotateValue}deg`, { duration: 400 }) },
+        {
+          rotateY: settings.animations
+            ? withTiming(`${rotateValue}deg`, { duration: 400 })
+            : `${rotateValue}deg`,
+        },
       ],
     }),
     [rotateValue]
@@ -27,9 +34,12 @@ export default function FlashCardRef() {
   const backCardTransform = useAnimatedStyle(
     () => ({
       transform: [
-        { rotateX: withTiming(`${180 + rotateValue}deg`, { duration: 400 }) },
+        {
+          rotateY: settings.animations
+            ? withTiming(`${rotateValue - 180}deg`, { duration: 400 })
+            : `${rotateValue - 180}deg`,
+        },
       ],
-      zIndex: rotateValue === 180 ? 1 : -1,
     }),
     [rotateValue]
   );
@@ -52,14 +62,17 @@ export default function FlashCardRef() {
               <RadioAnswer {...answer} index={i} key={answer.text} />
             ))}
         </View>
-        {/* {type === "input" && <InputAnswer />} */}
+        {type === "input" && <InputAnswer {...answers[0]} />}
       </Animated.View>
       <Animated.View
         style={[
           styles.card,
           styles.backCard,
           backCardTransform,
-          { backgroundColor: background },
+          {
+            backgroundColor: background,
+            zIndex: rotateValue === -180 ? 1 : -1,
+          },
         ]}
       >
         <Result />

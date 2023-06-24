@@ -9,15 +9,28 @@ import SecondaryButton from "../SecondaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { ThemeContext } from "../../context/ThemeContext";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { CORRECT_ANSWER_POINTS } from "../../const/flashcards";
+import LevelDisplayer from "./result/LevelDisplayer";
 
 export default function Result() {
   const { font, secondary } = useContext(ThemeContext);
+  const [hasAlreadyAnswered, setHasAlreadyAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const { flipCard, changeCard, activeCard, answer } =
     useContext(FlashCardContext);
   const { type, answers } = activeCard;
-  const { user } = useContext(AuthContext);
-  const { profile_picture } = user;
+  const { user, addPoints } = useContext(AuthContext);
+  const { profile_picture, level } = user;
+  const { points, points_required } = level;
+  const isPromotion = isCorrect && points < 20;
+  const animatedWidth = useSharedValue(
+    ((points / points_required) * 100).toFixed(2)
+  );
 
   const checkIfCorrect = (answer: string) => {
     switch (type) {
@@ -25,15 +38,41 @@ export default function Result() {
         const correctAnswer = answers.find((ans) => ans.is_correct)?.text;
         return correctAnswer === answer;
       case "input":
-        return false;
+        return (
+          answers[0].text.toLowerCase().split(" ").join("") ===
+          answer.toLowerCase().split(" ").join("")
+        );
     }
+  };
+
+  const reflipCard = () => {
+    setHasAlreadyAnswered(true);
+    flipCard();
+  };
+
+  const goNext = () => {
+    changeCard();
+    setHasAlreadyAnswered(false);
   };
 
   useEffect(() => {
     if (!answer) return;
     const isAnswerCorrect = checkIfCorrect(answer);
+    const newPoints =
+      isAnswerCorrect && !hasAlreadyAnswered
+        ? addPoints(CORRECT_ANSWER_POINTS)
+        : points;
+    animatedWidth.value = isAnswerCorrect
+      ? ((newPoints / points_required) * 100).toFixed(2)
+      : animatedWidth.value;
     setIsCorrect(isAnswerCorrect);
   }, [answer]);
+
+  const animatedWidthStyle = useAnimatedStyle(() => {
+    return {
+      width: withTiming(animatedWidth.value + "%", { duration: 600 }),
+    };
+  }, [animatedWidth.value]);
 
   return (
     <View style={styles.wrapper}>
@@ -45,15 +84,32 @@ export default function Result() {
             <DefaultProfileIcon width={96} height={96} />
           )}
         </View>
-        <Text style={{ ...styles.title, color: font }}>Poziom 17</Text>
+        <View style={{ marginTop: 24, marginBottom: 12 }}>
+          <LevelDisplayer {...level} isPromotion={isPromotion} />
+        </View>
         <View style={styles.progressWrapper}>
-          <LinearGradient
-            style={{ width: `20%`, ...styles.progress }}
-            start={{ x: 0, y: 0 }}
-            colors={linearGradient}
-          >
-            <Text style={{ ...styles.points, color: secondary }}>+24</Text>
-          </LinearGradient>
+          <Animated.View style={animatedWidthStyle}>
+            <LinearGradient
+              style={styles.progress}
+              start={{ x: 0, y: 0 }}
+              colors={linearGradient}
+            >
+              {isCorrect && (
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    ...styles.points,
+                    color: secondary,
+                  }}
+                >
+                  +20
+                </Text>
+              )}
+            </LinearGradient>
+          </Animated.View>
+          <Text style={{ ...styles.points, fontSize: 12, color: secondary }}>
+            {points} / {points_required}
+          </Text>
         </View>
         <Text style={{ ...styles.title, color: font }}>
           {isCorrect ? "To poprawna odpowiedź!" : "Niepoprawna odpowiedź!"}
@@ -71,13 +127,13 @@ export default function Result() {
           text={"Odwróć"}
           style={{ marginRight: 4, flex: 1 }}
           paddingHorizontal={0}
-          onPress={flipCard}
+          onPress={reflipCard}
         />
         <PrimaryButton
           style={{ marginLeft: 4, flex: 1 }}
           paddingHorizontal={0}
           text="Przejdź dalej"
-          onPress={changeCard}
+          onPress={goNext}
         />
       </View>
     </View>
@@ -121,8 +177,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   answer: {
-    fontFamily: "Bold",
-    fontSize: 24,
+    fontFamily: "ExtraBold",
+    fontSize: 18,
+    textAlign: "center",
   },
   progressWrapper: {
     width: "90%",
@@ -130,18 +187,20 @@ const styles = StyleSheet.create({
     borderRadius: 255,
     backgroundColor: "#D4E9FA",
     marginVertical: 24,
+    position: "relative",
   },
   progress: {
+    width: "100%",
     height: "100%",
     borderRadius: 255,
     position: "relative",
+    overflow: "visible",
   },
   points: {
     position: "absolute",
     top: -28,
     right: 0,
     transform: [{ translateX: 8 }],
-    fontFamily: "SemiBold",
-    fontSize: 14,
+    fontFamily: "Bold",
   },
 });

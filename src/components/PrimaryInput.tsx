@@ -10,10 +10,12 @@ import { ThemeContext } from "../context/ThemeContext";
 
 type Input = {
   label?: string;
+  deleteIcon?: JSX.Element;
 };
 
 export default function PrimaryInput({
   label,
+  deleteIcon,
   multiline = false,
   numberOfLines,
   maxLength,
@@ -31,25 +33,30 @@ export default function PrimaryInput({
       {label && (
         <Text style={{ ...styles.label, color: secondary }}>{label}</Text>
       )}
-      <TextInput
-        autoFocus={autoFocus}
-        maxLength={maxLength}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        onSubmitEditing={onSubmitEditing}
-        numberOfLines={numberOfLines}
-        placeholder={placeholder}
-        placeholderTextColor={secondary}
-        value={value}
-        style={{
-          ...styles.input,
-          ...(style as any),
-          paddingVertical: label ? 12 : 10,
-          color: font,
-          backgroundColor: light,
-        }}
-        onChangeText={onChangeText}
-      />
+      <View
+        style={{ position: "relative", borderRadius: 16, overflow: "hidden" }}
+      >
+        <TextInput
+          autoFocus={autoFocus}
+          maxLength={maxLength}
+          secureTextEntry={secureTextEntry}
+          multiline={multiline}
+          onSubmitEditing={onSubmitEditing}
+          numberOfLines={numberOfLines}
+          placeholder={placeholder}
+          placeholderTextColor={secondary}
+          value={value}
+          style={{
+            ...styles.input,
+            ...(style as any),
+            paddingVertical: label ? 12 : 10,
+            color: font,
+            backgroundColor: light,
+          }}
+          onChangeText={onChangeText}
+        />
+        {deleteIcon}
+      </View>
     </View>
   );
 }

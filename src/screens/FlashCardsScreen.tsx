@@ -1,11 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddCard from "../components/flashcards/add-card/AddCard";
 import CategoryList from "../components/flashcards/categories/CategoryList";
 import FlashCardsGenerator from "../components/flashcards/FlashCardsGenerator";
 import TopicList from "../components/flashcards/topics/TopicList";
 import { FlashCardsStackParams } from "../types/navigation";
-import HeaderTitle from "../components/HeaderTitle";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
+import OwnFlashCardsScreen from "./flashcards/OwnFlashCardsScreen";
+import OwnFlashListsScreen from "./flashcards/OwnFlashListsScreen";
+import HeaderMenu from "../components/header/HeaderMenu";
 
 const FlashCardsStack = createNativeStackNavigator<FlashCardsStackParams>();
 
@@ -21,13 +22,9 @@ export default function FlashCardsScreen() {
       <FlashCardsStack.Screen
         name="CategoryList"
         component={CategoryList}
-        options={{ title: "Wybierz kategorię", headerTitle: HeaderTitle }}
+        options={{ title: "Wybierz kategorię" }}
       />
-      <FlashCardsStack.Screen
-        name="AddCard"
-        component={AddCard}
-        options={{ title: "Nowa fiszka", headerTitle: HeaderTitle }}
-      />
+
       <FlashCardsStack.Screen
         name="TopicList"
         component={TopicList}
@@ -39,8 +36,26 @@ export default function FlashCardsScreen() {
         name="FlashCardsGenerator"
         component={FlashCardsGenerator}
         options={({ route }) => ({
-          title: route.params.topic,
+          title: route.params.topic?.name || route.params.category.name,
         })}
+      />
+      <FlashCardsStack.Screen
+        name="OwnFlashCards"
+        component={OwnFlashCardsScreen}
+        options={{
+          title: "Dodane fiszki",
+          headerRight: () => (
+            <HeaderMenu route="OwnFlashCards" dataType="card" />
+          ),
+        }}
+      />
+      <FlashCardsStack.Screen
+        name="OwnFlashLists"
+        component={OwnFlashListsScreen}
+        options={{
+          title: "Moje FiszkoListy",
+          headerShown: false,
+        }}
       />
     </FlashCardsStack.Navigator>
   );

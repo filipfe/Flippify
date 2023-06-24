@@ -7,13 +7,13 @@ import RangeSlider from "../../RangeSlider";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 import useShadow from "../../../hooks/useShadow";
-import GradientText from "../../GradientText";
+import RippleButton from "../../RippleButton";
 
 const TopicRef = ({
   topic,
   category,
 }: {
-  topic: Topic;
+  topic?: Topic;
   category: Category;
 }) => {
   const { font, secondary, background } = useContext(ThemeContext);
@@ -21,29 +21,32 @@ const TopicRef = ({
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
     <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
-      <View style={styles.topWrapper}>
-        <Text style={{ ...styles.title, color: font }}>{topic}</Text>
-        <Text style={{ ...styles.title, color: font }}>58%</Text>
-      </View>
-      <View style={{ marginTop: 16, marginBottom: 24 }}>
-        <RangeSlider value={20} />
-      </View>
-      <View style={{ ...styles.topWrapper }}>
-        <Text style={{ ...styles.points, color: secondary }}>
-          144 / 255 punkty
-        </Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("FlashCardsGenerator", { topic, category })
-          }
-        >
-          <GradientText
-            style={{ fontFamily: "Bold", fontSize: 14, lineHeight: 18 }}
-          >
-            Wybierz
-          </GradientText>
-        </TouchableOpacity>
-      </View>
+      <RippleButton
+        borderless
+        onPress={() =>
+          navigation.navigate("FlashCardsGenerator", {
+            topic: topic || undefined,
+            category,
+          })
+        }
+      >
+        <View style={styles.innerWrapper}>
+          <View style={styles.topWrapper}>
+            <Text style={{ ...styles.title, color: font }}>
+              {topic?.name || "Wszystkie tematy"}
+            </Text>
+            <Text style={{ ...styles.title, color: font }}>58%</Text>
+          </View>
+          <View style={{ marginTop: 16, marginBottom: 24 }}>
+            <RangeSlider value={20} />
+          </View>
+          <View style={styles.topWrapper}>
+            <Text style={{ ...styles.points, color: secondary }}>
+              144 / 255 punkty
+            </Text>
+          </View>
+        </View>
+      </RippleButton>
     </View>
   );
 };
@@ -51,10 +54,14 @@ const TopicRef = ({
 const styles = StyleSheet.create({
   wrapper: {
     marginVertical: 8,
-    paddingHorizontal: 24,
+
     marginHorizontal: 24,
-    paddingVertical: 16,
+
     borderRadius: 24,
+  },
+  innerWrapper: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   title: {
     fontFamily: "SemiBold",

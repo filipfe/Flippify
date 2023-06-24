@@ -3,50 +3,38 @@ import { useState, useEffect, useContext } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
 import axios from "axios";
 import { API_URL } from "@env";
-import { Note } from "../types/notes";
+import { Filter, Note } from "../types/notes";
 import { ThemeContext } from "../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
-import NoteRef from "../components/notes/NoteRef";
-import { AuthContext } from "../context/AuthContext";
 import Loader from "../components/Loader";
 
-export default function useNotes(search?: string) {
+export default function useNotes({ category, search }: Filter) {
   const { font } = useContext(ThemeContext);
-  const { user } = useContext(AuthContext);
   const [didInitialLoad, setDidInitialLoad] = useState(false);
-  const [didSearchedLoad, setDidSearchedLoad] = useState(false);
+  const [areSearchedLoading, setAreSearchedLoading] = useState(false);
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
-  const [searchedNotes, setSearchedNotes] = useState<Note[]>([
-    {
-      id: 6,
-      desc: "",
-      images: [],
-      created_at: "",
-      user,
-      image:
-        "https://res.cloudinary.com/dvblmhhhz/image/upload/v1685227642/DivideKnowledge/notes/6-0.png",
-      is_liked: true,
-      like_count: 1,
-      title: "test2",
-    },
-  ]);
-
-  const load = () => {
-    setDidInitialLoad(true);
-    setDidSearchedLoad(true);
-  };
+  const [searchedNotes, setSearchedNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    setDidSearchedLoad(false);
     axios
-      .get(`${API_URL}/api/notes${search ? `?search=${search}` : ""}`)
+      .get(`${API_URL}/api/notes`)
       .then((res) => res.data)
       .then((data) => {
         setRecentNotes(data.recent || []);
         setPopularNotes(data.popular || []);
       })
-      .finally(load);
+      .finally(() => setDidInitialLoad(true));
+  }, []);
+
+  useEffect(() => {
+    setAreSearchedLoading(true);
+    setSearchedNotes([]);
+    axios
+      .get(`${API_URL}/api/notes/search${search ? `?q=${search}` : ""}`)
+      .then((res) => res.data)
+      .then((data) => setSearchedNotes(data.items))
+      .finally(() => setAreSearchedLoading(false));
   }, [search]);
 
   const PopularNotes = ({ text = "Popularne teraz" }: { text?: string }) => {
@@ -55,8 +43,10 @@ export default function useNotes(search?: string) {
         <Text style={{ ...styles.title, color: font }}>{text}</Text>
         {didInitialLoad ? (
           <FlatList
-            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
             horizontal
+            contentContainerStyle={{
+              paddingHorizontal: 24,
+            }}
             showsHorizontalScrollIndicator={false}
             data={popularNotes}
             ItemSeparatorComponent={() => (
@@ -80,7 +70,7 @@ export default function useNotes(search?: string) {
         <Text style={{ ...styles.title, color: font }}>{text}</Text>
         {didInitialLoad ? (
           <FlatList
-            style={{ paddingBottom: 24, paddingHorizontal: 24 }}
+            contentContainerStyle={{ paddingHorizontal: 24 }}
             horizontal
             showsHorizontalScrollIndicator={false}
             data={recentNotes}
@@ -99,25 +89,12 @@ export default function useNotes(search?: string) {
     );
   };
 
-  const SearchedNotes = () => {
-    return (
-      <View>
-        <Text style={{ ...styles.title, color: font }}>Szukane “{search}”</Text>
-        <View>
-          {searchedNotes.map((note) => (
-            <NoteRef {...note} key={"Searched" + note.id} />
-          ))}
-        </View>
-      </View>
-    );
-  };
-
   return {
     RecentNotes,
     PopularNotes,
-    SearchedNotes,
+    areSearchedLoading,
+    searchedNotes,
     didInitialLoad,
-    didSearchedLoad,
   };
 }
 
@@ -127,12 +104,5 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontSize: 22,
     paddingHorizontal: 24,
-  },
-  list: {
-    flexDirection: "row",
-    position: "relative",
-    zIndex: 9999,
-    paddingHorizontal: 24,
-    paddingBottom: 24,
   },
 });

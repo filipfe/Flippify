@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
-import { themeOptions } from "../../const/styles";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import { DropdownIcon } from "../../assets/icons/icons";
+import { themeOptions } from "../../const/settings";
 
 export default function ThemeSwitch() {
   const {

@@ -2,7 +2,7 @@ import { View, StyleSheet, Text } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 
-type Props = { children: JSX.Element; title: string };
+type Props = { children: JSX.Element | JSX.Element[]; title: string };
 
 const SettingsSection = ({ children, title }: Props) => {
   const { font } = useContext(ThemeContext);

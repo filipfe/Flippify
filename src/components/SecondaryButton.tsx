@@ -11,7 +11,7 @@ export default function SecondaryButton({
   style,
   fontSize = 12,
   width = "auto",
-  paddingHorizontal = 48,
+  paddingHorizontal = 28,
   paddingVertical = 14,
 }: Button) {
   const { light, font } = useContext(ThemeContext);

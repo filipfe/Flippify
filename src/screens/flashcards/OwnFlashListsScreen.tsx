@@ -1,13 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ListOfLists from "../flashlists/ListOfLists";
-import AddFlashList from "../flashlists/AddFlashList";
-import FlashListDetails from "../flashlists/FlashListDetails";
+import ListOfLists from "../../components/flashcards/flashlists/ListOfLists";
+import AddFlashList from "../../components/flashcards/flashlists/AddFlashList";
+import FlashListDetails from "../../components/flashcards/flashlists/FlashListDetails";
 import { FlashListStackParams } from "../../types/navigation";
-import Header from "../Header";
+import Header from "../../components/header/Header";
 
 const FlashListStack = createNativeStackNavigator<FlashListStackParams>();
 
-export default function FlashLists() {
+export default function OwnFlashListsScreen() {
   return (
     <FlashListStack.Navigator
       initialRouteName="ListOfLists"

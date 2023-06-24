@@ -17,7 +17,7 @@ export default function FlashCardsGenerator() {
   const flashCard = useFlashCard(params);
   const { isLoading, activeCard } = flashCard;
 
-  if (!isLoading) return <Loader />;
+  if (isLoading.active) return <Loader />;
   if (!flashCard.activeCard) return <NotFound />;
   return (
     <FlashCardContext.Provider value={flashCard}>

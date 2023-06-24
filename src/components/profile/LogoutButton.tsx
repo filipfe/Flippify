@@ -28,7 +28,7 @@ export default function LogoutButton() {
       style={styles.button}
       onPress={handleLogout}
     >
-      <LogoutIcon />
+      <LogoutIcon stroke={wrong} />
       <Text style={{ ...styles.text, color: wrong }}>Wyloguj się</Text>
     </Pressable>
   );

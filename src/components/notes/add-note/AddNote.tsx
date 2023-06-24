@@ -1,5 +1,5 @@
-import { ScrollView, Text, View } from "react-native";
-import { useContext, useState } from "react";
+import { ScrollView, Text, View, Modal } from "react-native";
+import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
 import { AuthContext } from "../../../context/AuthContext";
@@ -14,49 +14,102 @@ import PrimaryButton from "../../PrimaryButton";
 import useNoteImages from "../../../hooks/useNoteImages";
 import Loader from "../../Loader";
 import NoteImageIndex from "../NoteImageIndex";
-import { initialAddedNote } from "../../../const/notes";
+import { initialAddedNote, initialFilter } from "../../../const/notes";
 import ImageHandler from "../ImageHandler";
-import { NewNoteContext } from "../../../context/OpusContext";
 import useOpus from "../../../hooks/useOpus";
 import PrivacySwitch from "./components/PrivacySwitch";
-import CategoryPicker from "./components/CategoryPicker";
+import CategoryPicker from "../../filter/CategoryPicker";
 import { ThemeContext } from "../../../context/ThemeContext";
+import Success from "../../Success";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NoteStackParams, RootTabParams } from "../../../types/navigation";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NewNoteContext } from "../../../context/OpusContext";
 
-export default function AddNote() {
+export default function AddNote({
+  route,
+}: NativeStackScreenProps<RootTabParams, "AddNote">) {
+  const { navigate } = useNavigation<NavigationProp<NoteStackParams>>();
   const { user } = useContext(AuthContext);
   const { secondary, background } = useContext(ThemeContext);
+  const [hasBeenAdded, setHasBeenAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { images, setImages, activeIndex } = useNoteImages<ImageFile>();
-  const opus = useOpus<AddedNote>(initialAddedNote);
+  const {
+    images,
+    setImages,
+    modificationImages,
+    addImage,
+    activeIndex,
+    setActiveIndex,
+  } = useNoteImages<ImageFile>(undefined, true);
+  const opus = useOpus<AddedNote>(route.params || initialAddedNote);
+  const { tokens } = useContext(AuthContext);
+  const { access } = tokens;
   const { item, setItem, changeCategory, activeCategory } = opus;
-  const newNote = item;
-  const setNewNote = setItem;
 
   const handleSubmit = async () => {
     if (!activeCategory.id) return;
     setIsLoading(true);
     const form = new FormData();
-    form.append("title", newNote.title);
-    form.append("description", newNote.desc);
-    form.append("is_public", String(newNote.is_public));
+    form.append("title", item.title);
+    form.append("description", item.description);
+    form.append("is_public", String(item.is_public));
     form.append("category_id", activeCategory.id.toString());
-    images.forEach((image) => {
+    // @ts-ignore
+    form.append("thumbnail", images[0]);
+    if (item.id) {
+      let newImages: ImageFile[] = [];
+      let remainingImages: ImageFile[] = [];
+      images.forEach((item, index) =>
+        modificationImages.includes(index)
+          ? newImages.push(item)
+          : remainingImages.push(item)
+      );
       // @ts-ignore
-      form.append("image", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
+      form.append("images", {
+        new_images: newImages,
+        remaining_images: remainingImages,
       });
-    });
+    } else {
+      images.forEach((image) => {
+        // @ts-ignore
+        form.append("images", {
+          uri: image.uri,
+          name: image.name,
+          type: image.type,
+        });
+      });
+    }
 
-    axios
-      .postForm(`${API_URL}/api/notes/add`, form)
-      .catch((err) => console.log(err.response.data))
-      .finally(() => setIsLoading(false));
+    item.id
+      ? axios
+          .patchForm(`${API_URL}/api/notes/${item.id}`, form)
+          .then(() => setHasBeenAdded(true))
+          .catch((err) => console.log(err.response.data))
+          .finally(() => setIsLoading(false))
+      : axios
+          .postForm(`${API_URL}/api/notes/add`, form, {
+            headers: { Authorization: `Bearer ${access}` },
+          })
+          .then(() => setHasBeenAdded(true))
+          .catch((err) => console.log(err.response.data))
+          .finally(() => setIsLoading(false));
   };
 
-  const addNewImage = (image: ImageFile) => {
-    setImages((prev) => [...prev, image]);
+  useEffect(() => {
+    if (route.params) {
+      setItem(route.params);
+      setImages(route.params.images);
+      changeCategory(route.params.category);
+    }
+  }, [route.params]);
+
+  const onModalReject = () => navigate("OwnNotes", initialFilter);
+
+  const onModalSubmit = () => {
+    setItem(initialAddedNote);
+    setIsLoading(false);
+    setHasBeenAdded(false);
   };
 
   return (
@@ -80,8 +133,8 @@ export default function AddNote() {
               <View
                 style={{ ...styles.imageWrapper, backgroundColor: background }}
               >
-                <ImageHandler images={images} />
-                {images.length < 4 && <AddButton addNewImage={addNewImage} />}
+                <ImageHandler images={images} setActiveIndex={setActiveIndex} />
+                {images.length < 4 && <AddButton addNewImage={addImage} />}
                 {images.length > 1 && (
                   <View style={{ position: "absolute", bottom: 8 }}>
                     <NoteImageIndex images={images} activeIndex={activeIndex} />
@@ -91,13 +144,16 @@ export default function AddNote() {
             </View>
             <View style={{ paddingBottom: 32 }}>
               <Text style={{ ...styles.date, color: secondary }}>
-                {new Date().toLocaleDateString("default")}
+                {item.created_at
+                  ? new Date(item.created_at).toLocaleDateString("default")
+                  : new Date().toLocaleDateString()}
               </Text>
               <PrimaryInput
                 label="Tytuł notatki"
                 maxLength={48}
+                value={item.title}
                 onChangeText={(title) =>
-                  setNewNote((prev) => ({ ...prev, title }))
+                  setItem((prev) => ({ ...prev, title }))
                 }
               />
               <View style={{ marginTop: 16, position: "relative" }}>
@@ -106,9 +162,10 @@ export default function AddNote() {
                   multiline={true}
                   numberOfLines={6}
                   maxLength={200}
+                  value={item.description}
                   style={{ minHeight: 160, textAlignVertical: "top" }}
                   onChangeText={(desc) =>
-                    setNewNote((prev) => ({ ...prev, desc }))
+                    setItem((prev) => ({ ...prev, description: desc }))
                   }
                 />
                 <Text
@@ -121,13 +178,15 @@ export default function AddNote() {
                     bottom: 12,
                   }}
                 >
-                  {newNote.desc?.length || 0} / 200
+                  {item.description?.length || 0} / 200
                 </Text>
               </View>
-              <CategoryPicker
-                active={activeCategory}
-                onChange={changeCategory}
-              />
+              <View style={{ marginTop: 32 }}>
+                <CategoryPicker
+                  active={activeCategory}
+                  onChange={changeCategory}
+                />
+              </View>
               <PrivacySwitch />
               <View style={{ marginVertical: 32 }}>
                 <UserCredentials user={user} isLiked={false} />
@@ -137,12 +196,7 @@ export default function AddNote() {
               ) : (
                 <PrimaryButton
                   active={
-                    !!(
-                      images.length > 0 &&
-                      newNote.desc &&
-                      newNote.category.id &&
-                      newNote.title
-                    )
+                    !!(images.length > 0 && item.category.id && item.title)
                   }
                   width={"100%"}
                   onPress={handleSubmit}
@@ -153,6 +207,26 @@ export default function AddNote() {
           </View>
         </LinearGradient>
       </ScrollView>
+      <Modal
+        animationType="fade"
+        statusBarTranslucent
+        visible={hasBeenAdded}
+        onRequestClose={onModalSubmit}
+      >
+        <Success
+          text={
+            item.is_public
+              ? "Notatka wysłana do weryfikacji"
+              : route.params?.id
+              ? "Notatka pomyślnie zmodyfikowana"
+              : "Notatka została pomyślnie dodana"
+          }
+          rejectButtonText="Przeglądaj"
+          submitButtonText="Dodaj następną"
+          onReject={onModalReject}
+          onSubmit={onModalSubmit}
+        />
+      </Modal>
     </NewNoteContext.Provider>
   );
 }

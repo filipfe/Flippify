@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -8,7 +8,6 @@ import { TopicListRouteProp } from "../../../types/navigation";
 import TopicRef from "./TopicRef";
 import NotFound from "../../NotFound";
 import { ThemeContext } from "../../../context/ThemeContext";
-import Layout from "../../Layout";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function TopicList({ route }: { route: TopicListRouteProp }) {
@@ -21,7 +20,7 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
     axios
       .get(`${API_URL}/api/topics/${category.id}`)
       .then((res) => res.data)
-      .then((data) => setTopics(data))
+      .then((data) => setTopics(data.items))
       .catch((err) => alert(err))
       .finally(() => setIsLoading(false));
   }, [route.name]);
@@ -29,15 +28,14 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
   return isLoading ? (
     <Loader />
   ) : topics.length > 0 ? (
-    <Layout paddingHorizontal={0} paddingVertical={0}>
-      <FlatList
-        data={topics}
-        renderItem={({ item }) => (
-          <TopicRef topic={item} category={category} key={item} />
-        )}
-        keyExtractor={(topic) => topic}
-      />
-    </Layout>
+    <FlatList
+      style={{ backgroundColor: background }}
+      contentContainerStyle={{ paddingVertical: 16 }}
+      ListHeaderComponent={<TopicRef category={category} />}
+      data={topics}
+      renderItem={({ item }) => <TopicRef topic={item} category={category} />}
+      keyExtractor={(topic) => topic.id.toString()}
+    />
   ) : (
     <NotFound />
   );

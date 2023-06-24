@@ -13,7 +13,7 @@ type Props = {
 
 export default function UserCredentials({ user, isLiked, handleLike }: Props) {
   const { profile_picture, username } = user;
-  const { primary, secondary, font, light } = useContext(ThemeContext);
+  const { primary, secondary, font, light, ripple } = useContext(ThemeContext);
   return (
     <View style={styles.bottomWrapper}>
       <View style={styles.userWrapper}>

@@ -4,10 +4,11 @@ import PrimaryInput from "../../../PrimaryInput";
 import { NewCardContext } from "../../../../context/OpusContext";
 import { styles } from "./InputForm";
 import AddAnswerButton from "./AddAnswerButton";
-import { BinIcon } from "../../../../assets/icons/icons";
 import RadioAnswer from "./RadioAnswer";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export default function RadioForm() {
+  const { font } = useContext(ThemeContext);
   const { item, setItem } = useContext(NewCardContext);
   const { question, answers } = item;
   const splittedQuestion = question.split("?").join("");
@@ -19,7 +20,9 @@ export default function RadioForm() {
   return (
     <View style={{ alignSelf: "stretch" }}>
       {question.length > 0 && (
-        <Text style={styles.question}>{formattedQuestion}</Text>
+        <Text style={[styles.question, { color: font }]}>
+          {formattedQuestion}
+        </Text>
       )}
       <PrimaryInput
         maxLength={56}

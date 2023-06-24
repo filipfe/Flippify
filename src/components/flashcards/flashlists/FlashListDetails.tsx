@@ -3,10 +3,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { API_URL } from "@env";
-import Loader from "../Loader";
-import { FlashListStackParams } from "../profile/FlashLists";
+import Loader from "../../Loader";
 import CardChooser from "./CardChooser";
-import { FlashListCard } from "../../types/flashcards";
+import { FlashListCard } from "../../../types/flashcards";
+import { FlashListStackParams } from "../../../types/navigation";
 
 export default function FlashListDetails({
   route,

@@ -4,9 +4,9 @@ import { CategoryNavigationProps } from "../../../types/navigation";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import { TouchableWithoutFeedback } from "react-native";
+import RippleButton from "../../RippleButton";
 
-const CategoryRef = (props: Category & { index: number }) => {
+const CategoryRef = ({ index, ...props }: Category & { index: number }) => {
   const { font, light } = useContext(ThemeContext);
   const { navigate } = useNavigation<CategoryNavigationProps>();
   return (
@@ -16,7 +16,8 @@ const CategoryRef = (props: Category & { index: number }) => {
         paddingHorizontal: 12,
       }}
     >
-      <TouchableWithoutFeedback
+      <RippleButton
+        borderless
         onPress={() => navigate("TopicList", { category: props })}
       >
         <View style={[styles.wrapper]}>
@@ -25,7 +26,7 @@ const CategoryRef = (props: Category & { index: number }) => {
           </View>
           <Text style={{ ...styles.title, color: font }}>{props.name}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </RippleButton>
     </View>
   );
 };

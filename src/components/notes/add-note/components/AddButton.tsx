@@ -1,9 +1,10 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { linearGradient } from "../../../../const/styles";
 import * as ImagePicker from "expo-image-picker";
 import { NoteAddButtonProps } from "../../../../types/notes";
 import { shadowPrimary } from "../../../../styles/general";
+import { PlusIcon } from "../../../../assets/icons/icons";
 
 export default function AddButton({ addNewImage }: NoteAddButtonProps) {
   const pickImage = async () => {
@@ -11,7 +12,6 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [3, 4],
-      quality: 1,
     });
 
     if (!result.canceled) {
@@ -31,6 +31,7 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
   return (
     <TouchableOpacity
       onPress={pickImage}
+      activeOpacity={0.6}
       style={{
         position: "absolute",
         top: "50%",
@@ -51,16 +52,7 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
           ...shadowPrimary,
         }}
       >
-        <Text
-          style={{
-            fontFamily: "Bold",
-            color: "#FFF",
-            lineHeight: 20,
-            fontSize: 22,
-          }}
-        >
-          +
-        </Text>
+        <PlusIcon width={16} />
       </LinearGradient>
     </TouchableOpacity>
   );

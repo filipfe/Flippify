@@ -1,26 +1,20 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import OwnFlashCards from "../components/profile/OwnFlashCards";
-import FlashLists from "../components/profile/FlashLists";
+import { Pressable, ScrollView, StyleSheet, View, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
 import UserInfo from "../components/profile/UserInfo";
-import {
-  LogoIcon,
-  NotificationsIcon,
-  PremiumIcon,
-  SettingsIcon,
-} from "../assets/icons/icons";
+import { LogoIcon, PremiumIcon, SettingsIcon } from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import SettingsScreen from "./profile/SettingsScreen";
 import { AuthContext } from "../context/AuthContext";
+import PremiumPurchase from "./profile/PremiumPurchase";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
@@ -41,26 +35,10 @@ export default function ProfileScreen() {
         }}
       />
       <ProfileStack.Screen
-        name="OwnFlashCards"
-        component={OwnFlashCards}
-        options={{
-          title: "Dodane fiszki",
-        }}
-      />
-      <ProfileStack.Screen
-        name="FlashLists"
-        component={FlashLists}
-        options={{
-          title: "FiszkoListy",
-          headerShown: false,
-        }}
-      />
-      <ProfileStack.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
           title: "Ustawienia",
-          header: (props) => <Header {...props} />,
         }}
       />
     </ProfileStack.Navigator>
@@ -68,6 +46,7 @@ export default function ProfileScreen() {
 }
 
 const Profile = () => {
+  const [premiumModalActive, setPremiumModalActive] = useState(false);
   const { user } = useContext(AuthContext);
   const { is_premium } = user;
   const { navigate } =
@@ -108,10 +87,20 @@ const Profile = () => {
         >
           <UserInfo />
           <Stats />
-          {!is_premium && <PremiumBanner />}
+          {!is_premium && (
+            <PremiumBanner onPress={() => setPremiumModalActive(true)} />
+          )}
           <LogoutButton />
         </View>
       </LinearGradient>
+      <Modal
+        animationType="fade"
+        visible={premiumModalActive}
+        statusBarTranslucent
+        onRequestClose={() => setPremiumModalActive(false)}
+      >
+        <PremiumPurchase onClose={() => setPremiumModalActive(false)} />
+      </Modal>
     </ScrollView>
   );
 };
