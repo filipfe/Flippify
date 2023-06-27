@@ -13,6 +13,7 @@ import SettingsIcon from './settings.svg'
 import DropdownIcon from './dropdown.svg'
 import PremiumIcon from './premium.svg'
 import PlusIcon from './plus.svg'
+import CheckmarkIcon from './checkmark.svg'
 
 export {
     NotificationsIcon,
@@ -29,5 +30,6 @@ export {
     SettingsIcon,
     DropdownIcon,
     PremiumIcon,
-    PlusIcon
+    PlusIcon,
+    CheckmarkIcon
 }

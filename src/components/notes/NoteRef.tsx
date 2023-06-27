@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Image, Text, StyleSheet, View } from "react-native";
 import { Note } from "../../types/notes";
-import { LikeIcon } from "../../assets/icons/icons";
+import { LikeIcon, PremiumIcon } from "../../assets/icons/icons";
 import { ThemeContext } from "../../context/ThemeContext";
 import { NoteRefNavigationProp } from "../../types/navigation";
 import RippleButton from "../RippleButton";
@@ -10,7 +10,7 @@ import RippleButton from "../RippleButton";
 const NoteRef = (props: Note) => {
   const { secondary, background, font } = useContext(ThemeContext);
   const { navigate } = useNavigation<NoteRefNavigationProp>();
-  const { title, thumbnail, like_count } = props;
+  const { title, thumbnail, like_count, category, user } = props;
   return (
     <View style={{ backgroundColor: background, flex: 1 }}>
       <RippleButton borderless onPress={() => navigate("Note", { ...props })}>
@@ -21,18 +21,46 @@ const NoteRef = (props: Note) => {
               uri: thumbnail,
             }}
           />
-          <View style={styles.textWrapper}>
-            <Text style={{ ...styles.title, color: font }}>{title}</Text>
-            <View style={styles.likesWrapper}>
-              <Text style={{ ...styles.likesCount, color: secondary }}>
-                {like_count || 0}
+          <View style={styles.infoWrapper}>
+            <View style={styles.textWrapper}>
+              <Text style={[styles.category, { color: secondary }]}>
+                {category.name}
               </Text>
-              <LikeIcon
-                strokeWidth={2}
-                height={12}
-                width={12}
-                stroke={secondary}
-              />
+              <View style={styles.likesWrapper}>
+                <Text style={{ ...styles.likesCount, color: secondary }}>
+                  {like_count || 0}
+                </Text>
+                <View style={{ marginTop: 2 }}>
+                  <LikeIcon
+                    strokeWidth={2}
+                    height={11}
+                    width={11}
+                    stroke={secondary}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={[styles.textWrapper, { marginTop: 6 }]}>
+              <Text style={{ ...styles.title, color: font }}>{title}</Text>
+            </View>
+            <View
+              style={[styles.userWrapper, { marginTop: 4, flexWrap: "wrap" }]}
+            >
+              <Text style={[styles.category, { color: secondary }]}>
+                Dodane przez
+              </Text>
+              <View style={[styles.userWrapper, { marginLeft: 8 }]}>
+                {user.is_premium && (
+                  <PremiumIcon
+                    height={12}
+                    width={16}
+                    style={{ marginTop: 2, marginRight: 4 }}
+                  />
+                )}
+                <Text style={[styles.category, { color: font }]}>
+                  {user.username}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -46,10 +74,17 @@ const styles = StyleSheet.create({
     height: 164,
   },
   textWrapper: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  category: {
+    fontSize: 12,
+    fontFamily: "SemiBold",
+  },
+  infoWrapper: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   title: {
     fontFamily: "SemiBold",
@@ -64,8 +99,11 @@ const styles = StyleSheet.create({
   likesCount: {
     fontFamily: "SemiBold",
     fontSize: 12,
-    lineHeight: 14,
     marginRight: 4,
+  },
+  userWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 

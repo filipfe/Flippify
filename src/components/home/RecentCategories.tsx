@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     fontFamily: "ExtraBold",
     fontSize: 22,
     lineHeight: 24,
-    marginHorizontal: 24,
     marginBottom: 24,
   },
 });

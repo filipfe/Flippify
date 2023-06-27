@@ -6,7 +6,10 @@ import { NoteAddButtonProps } from "../../../../types/notes";
 import { shadowPrimary } from "../../../../styles/general";
 import { PlusIcon } from "../../../../assets/icons/icons";
 
-export default function AddButton({ addNewImage }: NoteAddButtonProps) {
+export default function AddButton({
+  size = 48,
+  addNewImage,
+}: NoteAddButtonProps) {
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -16,6 +19,7 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
 
     if (!result.canceled) {
       const imageUri = result.assets[0].uri;
+      console.log(imageUri);
       const imageName = imageUri.split("/").pop();
       const match = /\.(\w+)$/.exec(imageName ? imageName : "");
       const type: string = match ? `image/${match[1]}` : `image`;
@@ -35,8 +39,8 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
       style={{
         position: "absolute",
         top: "50%",
-        width: 48,
-        height: 48,
+        width: size,
+        height: size,
         transform: [{ translateY: -24 }],
       }}
     >
@@ -44,15 +48,15 @@ export default function AddButton({ addNewImage }: NoteAddButtonProps) {
         start={{ x: 0, y: 0 }}
         colors={linearGradient}
         style={{
-          height: 48,
-          width: 48,
+          height: size,
+          width: size,
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 48,
+          borderRadius: size,
           ...shadowPrimary,
         }}
       >
-        <PlusIcon width={16} />
+        <PlusIcon width={size / 3} />
       </LinearGradient>
     </TouchableOpacity>
   );

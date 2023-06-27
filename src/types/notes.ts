@@ -40,6 +40,7 @@ export type ImageFile = {
 };
 
 export type NoteAddButtonProps = {
+  size?: number,
   addNewImage: (image: ImageFile) => void
 }
 
@@ -48,6 +49,15 @@ export type ImageHandlerProps = {
   images: ImageFile[], 
   setActiveIndex: Dispatch<SetStateAction<number>>
 };
+
+export type ImageListProps = {
+  setImageListActive: Dispatch<SetStateAction<boolean>>
+}
+
+export type ImageRefProps = {
+  chosen: string;
+  setChosen: Dispatch<SetStateAction<string>>
+}
 
 
 export type OwnNote = Omit<AddedNote, "images"> & { images: string[] }

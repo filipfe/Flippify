@@ -25,10 +25,10 @@ export const lightTheme: Theme = {
   background: "#FFFFFF",
   light: "#F2F8FD",
   box: "#FFFFFF",
-  font: "#211C3F",
+  font: "#2A2353",
   wrong: "#DC555D",
   stroke: "#E3E8E4",
-  ripple: "#0B0918",
+  ripple: "#E8E8E8",
 };
 
 export const darkTheme: Theme = {

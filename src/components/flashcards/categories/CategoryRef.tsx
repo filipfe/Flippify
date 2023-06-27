@@ -21,7 +21,7 @@ const CategoryRef = ({ index, ...props }: Category & { index: number }) => {
         onPress={() => navigate("TopicList", { category: props })}
       >
         <View style={[styles.wrapper]}>
-          <View style={[styles.iconWrapper, { backgroundColor: light }]}>
+          <View style={[styles.iconWrapper, { backgroundColor: font }]}>
             <Image style={styles.icon} source={{ uri: props.icon }} />
           </View>
           <Text style={{ ...styles.title, color: font }}>{props.name}</Text>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    marginTop: 12,
+    marginTop: 8,
     fontSize: 16,
     fontFamily: "SemiBold",
     lineHeight: 22,

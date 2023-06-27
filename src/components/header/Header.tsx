@@ -27,13 +27,13 @@ export default function Header({
   return (
     <SafeAreaView
       style={{
-        ...styles.wrapper,
+        ...headerStyles.wrapper,
         backgroundColor: headerTransparent ? "transparent" : background,
       }}
     >
-      <View style={styles.titleWrapper}>
+      <View style={headerStyles.titleWrapper}>
         {!isInitial && canGoBackBool && (
-          <Pressable style={styles.back} onPress={goBack}>
+          <Pressable style={headerStyles.back} onPress={goBack}>
             <BackIcon
               height={16}
               width={16}
@@ -42,7 +42,10 @@ export default function Header({
           </Pressable>
         )}
         <Text
-          style={{ ...styles.title, color: headerTransparent ? "#FFF" : font }}
+          style={{
+            ...headerStyles.title,
+            color: headerTransparent ? "#FFF" : font,
+          }}
         >
           {title}
         </Text>
@@ -52,7 +55,7 @@ export default function Header({
   );
 }
 
-const styles = StyleSheet.create({
+export const headerStyles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     justifyContent: "space-between",

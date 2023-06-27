@@ -75,10 +75,10 @@ const NoteList = ({
         ListFooterComponent={
           <View style={{ marginTop: route.params.search ? 48 : 0 }}>
             <PopularNotes />
-            <View style={{ marginVertical: 24 }}>
+            <View style={{ marginVertical: 48 }}>
               <RecentNotes />
             </View>
-            <View style={{ paddingHorizontal: 24, marginTop: 24 }}>
+            <View style={{ paddingHorizontal: 24 }}>
               <BoxLink
                 navigate={() => navigate("OwnNotes", initialFilter)}
                 title="Moje notatki"

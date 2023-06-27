@@ -1,5 +1,5 @@
 import { ScrollView, Text, View, Modal } from "react-native";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { API_URL } from "@env";
 import { AuthContext } from "../../../context/AuthContext";
@@ -25,27 +25,26 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { NoteStackParams, RootTabParams } from "../../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NewNoteContext } from "../../../context/OpusContext";
+import { initialCategory } from "../../../const/flashcards";
+import ImageList from "./components/ImageList";
 
 export default function AddNote({
   route,
 }: NativeStackScreenProps<RootTabParams, "AddNote">) {
+  const scrollRef = useRef<ScrollView>(null!);
   const { navigate } = useNavigation<NavigationProp<NoteStackParams>>();
   const { user } = useContext(AuthContext);
   const { secondary, background } = useContext(ThemeContext);
   const [hasBeenAdded, setHasBeenAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    images,
-    setImages,
-    modificationImages,
-    addImage,
-    activeIndex,
-    setActiveIndex,
-  } = useNoteImages<ImageFile>(undefined, true);
+  const [imageListActive, setImageListActive] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const opus = useOpus<AddedNote>(route.params || initialAddedNote);
   const { tokens } = useContext(AuthContext);
   const { access } = tokens;
   const { item, setItem, changeCategory, activeCategory } = opus;
+
+  const setImages = () => {};
 
   const handleSubmit = async () => {
     if (!activeCategory.id) return;
@@ -57,29 +56,10 @@ export default function AddNote({
     form.append("category_id", activeCategory.id.toString());
     // @ts-ignore
     form.append("thumbnail", images[0]);
-    if (item.id) {
-      let newImages: ImageFile[] = [];
-      let remainingImages: ImageFile[] = [];
-      images.forEach((item, index) =>
-        modificationImages.includes(index)
-          ? newImages.push(item)
-          : remainingImages.push(item)
-      );
+    item.images.forEach((image) => {
       // @ts-ignore
-      form.append("images", {
-        new_images: newImages,
-        remaining_images: remainingImages,
-      });
-    } else {
-      images.forEach((image) => {
-        // @ts-ignore
-        form.append("images", {
-          uri: image.uri,
-          name: image.name,
-          type: image.type,
-        });
-      });
-    }
+      form.append("images", image);
+    });
 
     item.id
       ? axios
@@ -97,10 +77,13 @@ export default function AddNote({
   };
 
   useEffect(() => {
+    scrollRef.current && scrollRef.current.scrollTo({ y: 0 });
     if (route.params) {
       setItem(route.params);
-      setImages(route.params.images);
       changeCategory(route.params.category);
+    } else {
+      setItem(initialAddedNote);
+      changeCategory(initialCategory);
     }
   }, [route.params]);
 
@@ -112,9 +95,14 @@ export default function AddNote({
     setHasBeenAdded(false);
   };
 
+  const addImage = (image: ImageFile) => {
+    setItem((prev) => ({ ...prev, images: [...prev.images, image] }));
+    setImageListActive(true);
+  };
+
   return (
     <NewNoteContext.Provider value={opus}>
-      <ScrollView>
+      <ScrollView ref={(ref) => ref && (scrollRef.current = ref)}>
         <LinearGradient
           colors={linearGradient}
           start={{ x: 1, y: 1 }}
@@ -133,11 +121,17 @@ export default function AddNote({
               <View
                 style={{ ...styles.imageWrapper, backgroundColor: background }}
               >
-                <ImageHandler images={images} setActiveIndex={setActiveIndex} />
-                {images.length < 4 && <AddButton addNewImage={addImage} />}
-                {images.length > 1 && (
+                <ImageHandler
+                  images={item.images}
+                  setActiveIndex={setActiveImageIndex}
+                />
+                {item.images.length < 4 && <AddButton addNewImage={addImage} />}
+                {item.images.length > 1 && (
                   <View style={{ position: "absolute", bottom: 8 }}>
-                    <NoteImageIndex images={images} activeIndex={activeIndex} />
+                    <NoteImageIndex
+                      images={item.images}
+                      activeIndex={activeImageIndex}
+                    />
                   </View>
                 )}
               </View>
@@ -196,7 +190,7 @@ export default function AddNote({
               ) : (
                 <PrimaryButton
                   active={
-                    !!(images.length > 0 && item.category.id && item.title)
+                    !!(item.images.length > 0 && item.category.id && item.title)
                   }
                   width={"100%"}
                   onPress={handleSubmit}
@@ -226,6 +220,14 @@ export default function AddNote({
           onReject={onModalReject}
           onSubmit={onModalSubmit}
         />
+      </Modal>
+      <Modal
+        animationType="fade"
+        statusBarTranslucent
+        visible={imageListActive}
+        onRequestClose={() => setImageListActive(false)}
+      >
+        <ImageList setImageListActive={setImageListActive} />
       </Modal>
     </NewNoteContext.Provider>
   );

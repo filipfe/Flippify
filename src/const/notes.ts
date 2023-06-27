@@ -1,6 +1,6 @@
-import { AddedNote, Filter, Note } from "../types/notes";
+import { AddedNote, Filter, ImageFile, Note } from "../types/notes";
 import { initialUserState } from "./auth";
-import { initialCategory } from "./flashcards";
+import { initialCategory, initialTopic } from "./flashcards";
 
 export const initialNote: Note = {
     id:0,
@@ -29,5 +29,13 @@ export const initialAddedNote: AddedNote = {
 
 export const initialFilter: Filter = {
     search: '',
-    category: initialCategory
+    category: initialCategory,
+    topic: initialTopic,
+    type: undefined
+}
+
+export const initialImageFile: ImageFile = {
+    uri: '',
+    name: '',
+    type: ''
 }

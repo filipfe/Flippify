@@ -45,7 +45,7 @@ function TabBarLink({
   index,
   route,
 }: BottomTabBarProps & LinkProps) {
-  const { primary, font } = useContext(ThemeContext);
+  const { primary, font, ripple } = useContext(ThemeContext);
   const { navigate } = navigation;
 
   const { options } = descriptors[route.key];
@@ -59,7 +59,7 @@ function TabBarLink({
       <Pressable
         android_ripple={{
           radius: 36,
-          color: "#0B0918",
+          color: ripple,
           borderless: true,
         }}
         style={styles.tabBarLink}
@@ -175,7 +175,7 @@ const CenterButton = () => {
                 marginBottom: 12,
               }}
             />
-            <RippleButton onPress={() => navigate("AddCard")}>
+            <RippleButton onPress={() => navigate("AddCard", undefined)}>
               <View style={styles.centerButtonLink}>
                 <FlashCardsIcon stroke={primary} strokeWidth={2} height={24} />
                 <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
@@ -183,7 +183,7 @@ const CenterButton = () => {
                 </GradientText>
               </View>
             </RippleButton>
-            <RippleButton onPress={() => navigate("AddNote")}>
+            <RippleButton onPress={() => navigate("AddNote", undefined)}>
               <View style={styles.centerButtonLink}>
                 <NotesIcon
                   stroke={primary}
