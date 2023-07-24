@@ -82,7 +82,7 @@ const NoteList = ({
               <BoxLink
                 navigate={() => navigate("OwnNotes", initialFilter)}
                 title="Moje notatki"
-                subtitle="24"
+                count={24}
                 icon={<NotesIcon width={42} stroke={font} strokeWidth={1.6} />}
               />
             </View>

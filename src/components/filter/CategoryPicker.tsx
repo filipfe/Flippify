@@ -9,6 +9,7 @@ import { API_URL } from "@env";
 import SelectDropdown from "react-native-select-dropdown";
 import useShadow from "../../hooks/useShadow";
 import { DropdownIcon } from "../../assets/icons/icons";
+import { supabase } from "../../hooks/useAuth";
 
 type Props = {
   label?: string;
@@ -24,11 +25,15 @@ export default function CategoryPicker({ label, active, onChange }: Props) {
   const shadow = useShadow(12);
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/categories`)
-      .then((res) => res.data)
-      .then((data) => setCategories(data))
-      .finally(() => setAreLoading(false));
+    async function fetchCategories() {
+      const { data } = await supabase
+        .from("categories")
+        .select("*")
+        .order("name");
+      setCategories((data as Category[]) || []);
+      setAreLoading(false);
+    }
+    fetchCategories();
   }, []);
 
   return (

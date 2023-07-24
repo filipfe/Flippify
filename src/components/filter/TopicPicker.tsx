@@ -6,12 +6,10 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Category } from "../../types/general";
 import { Topic } from "../../types/flashcards";
 import SelectDropdown from "react-native-select-dropdown";
-import axios from "axios";
-import { API_URL } from "@env";
 import { styles } from "./CategoryPicker";
 import { DropdownIcon } from "../../assets/icons/icons";
 import useShadow from "../../hooks/useShadow";
-import { initialTopic } from "../../const/flashcards";
+import { supabase } from "../../hooks/useAuth";
 
 type Props = {
   category: Category;
@@ -31,13 +29,17 @@ export default function TopicPicker({ active, category, onChange }: Props) {
     if (isDisabled) return;
     setAreLoading(true);
     setTopics([]);
+    async function fetchTopics() {
+      const { data } = await supabase
+        .from("topics")
+        .select("*")
+        .eq("category_id", category.id)
+        .order("name");
+      setTopics((data as Topic[]) || []);
+      setAreLoading(false);
+    }
     let isCancelled = false;
-    !isCancelled &&
-      axios
-        .get(`${API_URL}/api/topics/${category.id}`)
-        .then((res) => res.data)
-        .then((data) => setTopics(data.items))
-        .finally(() => setAreLoading(false));
+    !isCancelled && fetchTopics();
     return () => {
       isCancelled = true;
     };

@@ -1,4 +1,4 @@
-import { Pressable, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ProfileBoxLinkProps } from "../types/profile";
 import { Text } from "react-native";
 import useShadow from "../hooks/useShadow";
@@ -9,75 +9,63 @@ import RippleButton from "./RippleButton";
 export default function BoxLink({
   navigate,
   title,
-  subtitle,
+  count,
   icon,
 }: ProfileBoxLinkProps) {
-  const { light, background, font, ripple } = useContext(ThemeContext);
+  const { light, background, font, secondary } = useContext(ThemeContext);
   const shadow = useShadow(16);
   return (
-    <View
-      style={{
-        backgroundColor: background,
-        borderRadius: 32,
-        marginBottom: 24,
-        ...shadow,
-        width: "100%",
-      }}
-    >
+    <View style={[shadow, styles.wrapper, { backgroundColor: background }]}>
       <RippleButton borderless onPress={navigate}>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            paddingVertical: 24,
-            paddingHorizontal: 36,
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: light,
-              borderRadius: 12,
-              height: 52,
-              width: 52,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+        <View style={styles.innerWrapper}>
+          <View style={{ marginBottom: 2 }}>
             {typeof icon === "string" ? (
               <Text style={{ fontSize: 20, fontFamily: "Medium" }}>{icon}</Text>
             ) : (
               icon
             )}
           </View>
-          <View
-            style={{
-              marginLeft: 16,
-              justifyContent: "space-evenly",
-              height: 52,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "Medium",
-                color: font,
-                opacity: 0.8,
-              }}
-            >
-              {subtitle}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Bold",
-                color: font,
-              }}
-            >
-              {title}
-            </Text>
+          <Text style={[styles.title, { color: font, marginTop: 2 }]}>
+            {title}
+          </Text>
+          <View style={[styles.countWrapper, { backgroundColor: light }]}>
+            <Text style={[styles.count, { color: secondary }]}>{count}</Text>
           </View>
         </View>
       </RippleButton>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    borderRadius: 16,
+    flex: 1,
+    overflow: "hidden",
+    justifyContent: "flex-end",
+  },
+  innerWrapper: {
+    alignItems: "center",
+    paddingVertical: 32,
+    paddingHorizontal: 8,
+    position: "relative",
+  },
+  title: {
+    fontSize: 12,
+    fontFamily: "SemiBold",
+  },
+  countWrapper: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    borderBottomLeftRadius: 16,
+    height: 28,
+    width: 28,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  count: {
+    fontSize: 10,
+    fontFamily: "SemiBold",
+  },
+});

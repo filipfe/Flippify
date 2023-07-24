@@ -1,6 +1,6 @@
 import Layout from "../../components/Layout";
 import { View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AddedNote, OwnNote } from "../../types/notes";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -11,10 +11,13 @@ import NoContent from "../../components/flashcards/flashlists/NoContent";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { NoteStackParams, RootTabParams } from "../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { supabase } from "../../hooks/useAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function OwnNotesScreen({
   route,
 }: NativeStackScreenProps<NoteStackParams, "OwnNotes">) {
+  const { user } = useContext(AuthContext);
   const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
   const [areLoading, setAreLoading] = useState(true);
   const [notes, setNotes] = useState<OwnNote[]>([]);
@@ -22,17 +25,15 @@ export default function OwnNotesScreen({
 
   useEffect(() => {
     setAreLoading(true);
-    const searchArr = [
-      category.id && `category_id=${category.id}`,
-      search && `q=${search}`,
-    ].filter((item) => item);
-    const searchQuery = searchArr.length > 0 ? "?" + searchArr.join("&") : "";
-    let url = `${API_URL}/api/profile/notes${searchQuery}`;
-    const fetchNotes = async () => axios.get(url).then((res) => res.data);
-    fetchNotes()
-      .then((data) => setNotes(data.items))
-      .catch((err) => console.log(err.response.data))
-      .finally(() => setAreLoading(false));
+    const fetchNotes = async () => {
+      const { data } = await supabase
+        .from("notes")
+        .select("*, category:categories(*)")
+        .eq("user_id", 1);
+      setNotes((data as OwnNote[]) || []);
+      setAreLoading(false);
+    };
+    fetchNotes();
   }, [search, category]);
 
   return areLoading ? (

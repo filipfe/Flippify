@@ -7,6 +7,7 @@ import { Filter, Note } from "../types/notes";
 import { ThemeContext } from "../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import Loader from "../components/Loader";
+import { supabase } from "./useAuth";
 
 export default function useNotes({ category, search }: Filter) {
   const { font } = useContext(ThemeContext);
@@ -17,24 +18,35 @@ export default function useNotes({ category, search }: Filter) {
   const [searchedNotes, setSearchedNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/notes`)
-      .then((res) => res.data)
-      .then((data) => {
-        setRecentNotes(data.recent || []);
-        setPopularNotes(data.popular || []);
-      })
-      .finally(() => setDidInitialLoad(true));
+    const fetchNotes = async () => {
+      const recent = await supabase
+        .from("notes")
+        .select("*, category:categories(id, name, icon), user:users(*)")
+        .order("created_at")
+        .limit(6);
+      const popular = await supabase
+        .from("notes")
+        .select("*, category:categories(id, name, icon), user:users(*)")
+        .limit(6);
+      setRecentNotes((recent.data as Note[]) || []);
+      setPopularNotes((popular.data as Note[]) || []);
+      setDidInitialLoad(true);
+    };
+    fetchNotes();
   }, []);
 
   useEffect(() => {
+    if (!search) return;
     setAreSearchedLoading(true);
     setSearchedNotes([]);
-    axios
-      .get(`${API_URL}/api/notes/search${search ? `?q=${search}` : ""}`)
-      .then((res) => res.data)
-      .then((data) => setSearchedNotes(data.items))
-      .finally(() => setAreSearchedLoading(false));
+    const fetchNotes = async () => {
+      const { data } = await supabase
+        .from("notes")
+        .select("*")
+        .ilike("title", search);
+      setSearchedNotes((data as Note[]) || []);
+    };
+    fetchNotes();
   }, [search]);
 
   const PopularNotes = ({ text = "Popularne teraz" }: { text?: string }) => {
@@ -47,11 +59,9 @@ export default function useNotes({ category, search }: Filter) {
             contentContainerStyle={{
               paddingHorizontal: 24,
             }}
+            ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
             showsHorizontalScrollIndicator={false}
             data={popularNotes}
-            ItemSeparatorComponent={() => (
-              <View style={{ width: 24, height: "100%" }}></View>
-            )}
             renderItem={({ item }) => (
               <SmallNoteRef {...item} key={`Popular:${item.id}`} />
             )}
@@ -71,12 +81,10 @@ export default function useNotes({ category, search }: Filter) {
         {didInitialLoad ? (
           <FlatList
             contentContainerStyle={{ paddingHorizontal: 24 }}
+            ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
             horizontal
             showsHorizontalScrollIndicator={false}
             data={recentNotes}
-            ItemSeparatorComponent={() => (
-              <View style={{ width: 24, height: "100%" }}></View>
-            )}
             renderItem={({ item }) => (
               <SmallNoteRef {...item} key={`Popular:${item.id}`} />
             )}

@@ -1,5 +1,4 @@
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -7,42 +6,33 @@ import {
   Dimensions,
 } from "react-native";
 import { useState, useContext } from "react";
-import axios from "axios";
 import Loader from "../Loader";
-import { API_URL } from "@env";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
 import { AuthContext } from "../../context/AuthContext";
 import SecondaryButton from "../SecondaryButton";
 import { ThemeContext } from "../../context/ThemeContext";
+import { LoginData } from "../../const/auth";
+import RippleButton from "../RippleButton";
+import Recovery from "../../screens/entry/Recovery";
 
 const { width } = Dimensions.get("screen");
 
 export default function Login() {
-  const { font, primary } = useContext(ThemeContext);
-  const { login } = useContext(AuthContext);
+  const { font, primary, secondary } = useContext(ThemeContext);
+  const { signInWithPassword, signInWithGoogle } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [userData, setUserData] = useState({
+  const [recoveryActive, setRecoveryActive] = useState(false);
+  const [userData, setUserData] = useState<LoginData>({
     email: "",
     password: "",
   });
 
   const handleSubmit = () => {
     setIsLoading(true);
-    axios
-      .post(
-        `${API_URL}/api/login`,
-        JSON.stringify({
-          login: userData.email,
-          password: userData.password,
-        })
-      )
-      .then((res) => login(res.data))
-      .catch((err) => setError(err.response.data.detail))
-      .finally(() => setIsLoading(false));
+    signInWithPassword(userData);
   };
 
   if (isLoading)
@@ -52,10 +42,13 @@ export default function Login() {
       </View>
     );
 
+  if (recoveryActive)
+    return <Recovery close={() => setRecoveryActive(false)} />;
+
   return (
     <View style={styles.wrapper}>
       <Text style={{ ...styles.title, color: font }}>Zaloguj się</Text>
-      <ScrollView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <PrimaryInput
           onChangeText={(text) =>
             setUserData((prev) => ({ ...prev, email: text }))
@@ -73,13 +66,19 @@ export default function Login() {
           <Text style={{ ...styles.recoverText, color: font, opacity: 0.8 }}>
             Zapomniałeś hasła?{" "}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setRecoveryActive(true)}>
             <Text style={[styles.recoverText, { color: primary }]}>
               Odzyskaj hasło
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+        <View style={[styles.line, { backgroundColor: secondary }]}>
+          <Text style={[styles.lineText, { color: secondary }]}>lub</Text>
+        </View>
+        <RippleButton onPress={signInWithGoogle}>
+          <Text>Zaloguj z Google</Text>
+        </RippleButton>
+      </View>
       <View>
         <SecondaryButton
           text="Chcę założyć konto"
@@ -130,5 +129,18 @@ export const styles = StyleSheet.create({
   modalText: {
     color: "#FFFFFF",
     fontFamily: "Medium",
+  },
+  line: {
+    width: "100%",
+    height: 1,
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  lineText: {
+    fontFamily: "Medium",
+    fontSize: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
 });

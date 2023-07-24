@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { FlashCard } from "../types/flashcards";
+import { Answer, FlashCard } from "../types/flashcards";
 
 type IsCardLoading = {
   active: boolean;
@@ -13,7 +13,7 @@ export type FlashCardContextType = {
   changeCard: () => void;
   isLoading: IsCardLoading;
   rotateValue: number;
-  answer: string;
+  answer: Answer;
 };
 
 export const FlashCardContext = createContext<FlashCardContextType>(null!);

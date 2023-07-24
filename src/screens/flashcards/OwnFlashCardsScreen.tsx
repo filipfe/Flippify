@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { View } from "react-native";
-import axios from "axios";
-import { API_URL } from "@env";
 import Loader from "../../components/Loader";
 import { AddedFlashCard } from "../../types/flashcards";
 import NoContent from "../../components/flashcards/flashlists/NoContent";
@@ -11,34 +9,28 @@ import { FlatList } from "react-native-gesture-handler";
 import Layout from "../../components/Layout";
 import OwnFlashCardRef from "../../components/flashcards/own-flashcards/OwnFlashCardRef";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Filter } from "../../types/notes";
+import { supabase } from "../../hooks/useAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function OwnFlashCards({
   route,
 }: NativeStackScreenProps<FlashCardsStackParams, "OwnFlashCards">) {
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation<NavigationProp<RootTabParams>>();
   const [cards, setCards] = useState<AddedFlashCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    const queryArr = route.params
-      ? [
-          route.params.category?.id &&
-            !route.params.topic?.id &&
-            `category_id=${route.params.category.id}`,
-          route.params.topic?.id && `topic_id=${route.params.topic.id}`,
-          route.params.search && `q=${route.params.search}`,
-          route.params.type && `type=${route.params.type}`,
-        ].filter((item) => item)
-      : [];
-    const query = queryArr.length > 0 ? "?" + queryArr.join("&") : "";
-    axios
-      .get(`${API_URL}/api/profile/flashcards${query}`)
-      .then((res) => res.data)
-      .then((data) => setCards(data.items))
-      .catch((err) => alert(err))
-      .finally(() => setIsLoading(false));
+    async function fetchFlashCards() {
+      const { data } = await supabase
+        .from("flashcards")
+        .select("*, category:categories(*)")
+        .eq("user_id", user.id);
+      setCards((data as AddedFlashCard[]) || []);
+      setIsLoading(false);
+    }
+    fetchFlashCards();
   }, [route.params]);
 
   return isLoading ? (

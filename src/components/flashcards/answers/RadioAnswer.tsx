@@ -13,7 +13,7 @@ const RadioAnswer = (props: Answer & { index: number }) => {
 
   const correctColor = (base: string) => {
     if (is_correct && answer) return "#13C331";
-    if (!answer || answer !== text) return base;
+    if (!answer.text || answer.text !== text) return base;
     return "red";
   };
 

@@ -11,7 +11,6 @@ import { linearGradient } from "../../../const/styles";
 import AddButton from "./components/AddButton";
 import PrimaryInput from "../../PrimaryInput";
 import PrimaryButton from "../../PrimaryButton";
-import useNoteImages from "../../../hooks/useNoteImages";
 import Loader from "../../Loader";
 import NoteImageIndex from "../NoteImageIndex";
 import { initialAddedNote, initialFilter } from "../../../const/notes";
@@ -27,6 +26,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NewNoteContext } from "../../../context/OpusContext";
 import { initialCategory } from "../../../const/flashcards";
 import ImageList from "./components/ImageList";
+import GridButton from "./components/GridButton";
 
 export default function AddNote({
   route,
@@ -34,7 +34,7 @@ export default function AddNote({
   const scrollRef = useRef<ScrollView>(null!);
   const { navigate } = useNavigation<NavigationProp<NoteStackParams>>();
   const { user } = useContext(AuthContext);
-  const { secondary, background } = useContext(ThemeContext);
+  const { secondary, background, light, font } = useContext(ThemeContext);
   const [hasBeenAdded, setHasBeenAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imageListActive, setImageListActive] = useState(false);
@@ -121,6 +121,7 @@ export default function AddNote({
               <View
                 style={{ ...styles.imageWrapper, backgroundColor: background }}
               >
+                <GridButton onPress={() => setImageListActive(true)} />
                 <ImageHandler
                   images={item.images}
                   setActiveIndex={setActiveImageIndex}

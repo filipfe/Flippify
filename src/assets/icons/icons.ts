@@ -14,6 +14,8 @@ import DropdownIcon from './dropdown.svg'
 import PremiumIcon from './premium.svg'
 import PlusIcon from './plus.svg'
 import CheckmarkIcon from './checkmark.svg'
+import GridIcon from './grid.svg'
+import EditIcon from './edit.svg'
 
 export {
     NotificationsIcon,
@@ -31,5 +33,7 @@ export {
     DropdownIcon,
     PremiumIcon,
     PlusIcon,
-    CheckmarkIcon
+    CheckmarkIcon,
+    GridIcon,
+    EditIcon
 }
