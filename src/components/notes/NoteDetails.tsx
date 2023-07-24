@@ -1,6 +1,4 @@
-import axios from "axios";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { API_URL } from "@env";
 import { Note } from "../../types/notes";
 import { useState, useEffect, useContext, useRef } from "react";
 import Loader from "../Loader";
@@ -16,12 +14,14 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NoteStackParams } from "../../types/navigation";
 import { supabase } from "../../hooks/useAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function NoteDetails({
   route,
 }: NativeStackScreenProps<NoteStackParams, "Note">) {
   const scrollRef = useRef<ScrollView>(null!);
   const { font, secondary, background } = useContext(ThemeContext);
+  const auth = useContext(AuthContext);
   const { id } = route.params;
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
@@ -30,22 +30,29 @@ export default function NoteDetails({
   const { activeIndex, images, setImages, setActiveIndex } =
     useNoteImages<string>();
 
-  const handleLike = async () => {
+  async function like() {
     setIsLiked((prev) => !prev);
-    return isLiked
-      ? axios.delete(`${API_URL}/api/notes/${id}/likes/delete`)
-      : axios.post(`${API_URL}/api/notes/${id}/likes/add`, null);
-  };
+    await supabase.from("likes").insert({ user_id: auth.user.id, note_id: id });
+  }
+
+  async function disLike() {
+    setIsLiked((prev) => !prev);
+    await supabase
+      .from("likes")
+      .delete()
+      .eq("note_id", id)
+      .eq("user_id", auth.user.id);
+  }
 
   useEffect(() => {
     scrollRef.current && scrollRef.current.scrollTo({ y: 0 });
     async function fetchDetails() {
       try {
+        setLoading(true);
         const { data } = await supabase
           .from("notes")
           .select("*, user:users(*)")
           .eq("id", id);
-        console.log(data, id);
         if (!data) return;
         const noteDetails: Note = data[0];
         setDetails(noteDetails);
@@ -57,13 +64,6 @@ export default function NoteDetails({
     }
     fetchDetails();
   }, [id]);
-
-  if (loading)
-    return (
-      <View style={styles.loaderWrapper}>
-        <Loader />
-      </View>
-    );
 
   return (
     <View style={{ flex: 1, backgroundColor: background }}>
@@ -85,53 +85,65 @@ export default function NoteDetails({
               paddingHorizontal: 24,
             }}
           >
-            <View style={{ marginTop: -132, marginBottom: 32 }}>
-              <View
-                style={{ ...styles.imageWrapper, backgroundColor: background }}
-              >
-                <ImageHandler
-                  initialIndex={activeIndex}
-                  setActiveIndex={setActiveIndex}
-                  images={images.map((image) => ({
-                    uri: image,
-                    name: image,
-                    type: "",
-                  }))}
-                />
-                {images.length > 1 && (
-                  <View style={{ bottom: 16, position: "absolute" }}>
-                    <NoteImageIndex images={images} activeIndex={activeIndex} />
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <View style={{ marginTop: -132, marginBottom: 32 }}>
+                  <View
+                    style={{
+                      ...styles.imageWrapper,
+                      backgroundColor: background,
+                    }}
+                  >
+                    <ImageHandler
+                      initialIndex={activeIndex}
+                      setActiveIndex={setActiveIndex}
+                      images={images.map((image) => ({
+                        uri: image,
+                        name: image,
+                        type: "",
+                      }))}
+                    />
+                    {images.length > 1 && (
+                      <View style={{ bottom: 16, position: "absolute" }}>
+                        <NoteImageIndex
+                          images={images}
+                          activeIndex={activeIndex}
+                        />
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
-            </View>
-            <View
-              style={{
-                paddingBottom: 32,
-                justifyContent: "space-between",
-                flex: 1,
-                height: "100%",
-              }}
-            >
-              <View>
-                <Text style={{ ...styles.date, color: secondary }}>
-                  {new Date(created_at).toLocaleDateString("default")}
-                </Text>
-                <Text style={{ ...styles.noteTitle, color: font }}>
-                  {title}
-                </Text>
-                <Text style={{ ...styles.noteDesc, color: secondary }}>
-                  {description || "Brak opisu dla tej notatki"}
-                </Text>
-              </View>
-              <View style={{ marginTop: 32 }}>
-                <UserCredentials
-                  user={user}
-                  isLiked={isLiked}
-                  handleLike={handleLike}
-                />
-              </View>
-            </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: 32,
+                    justifyContent: "space-between",
+                    flex: 1,
+                    height: "100%",
+                  }}
+                >
+                  <View>
+                    <Text style={{ ...styles.date, color: secondary }}>
+                      {new Date(created_at).toLocaleDateString("default")}
+                    </Text>
+                    <Text style={{ ...styles.noteTitle, color: font }}>
+                      {title}
+                    </Text>
+                    <Text style={{ ...styles.noteDesc, color: secondary }}>
+                      {description || "Brak opisu dla tej notatki"}
+                    </Text>
+                  </View>
+                  <View style={{ marginTop: 32 }}>
+                    <UserCredentials
+                      user={user}
+                      isLiked={isLiked}
+                      handleLike={isLiked ? disLike : like}
+                    />
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         </LinearGradient>
       </ScrollView>

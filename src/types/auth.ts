@@ -7,16 +7,10 @@ export type User = {
     level_id: number;
 }
 
-export type Tokens = {
-    access: string,
-    refresh: string
-}
-
 export type Auth = {
     isLogged: boolean,
     user: User,
     level: Level;
-    tokens: Tokens
 }
 
 export type Level = {

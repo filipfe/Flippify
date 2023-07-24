@@ -7,8 +7,6 @@ import {
   View,
 } from "react-native";
 import { useState, useContext } from "react";
-import axios from "axios";
-import { API_URL } from "@env";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
 import { AuthFormContext } from "../../providers/AuthFormProvider";
@@ -39,19 +37,6 @@ export default function Register() {
     if (userData.password.length < 6)
       return setStatus("Hasło powinno zawierać co najmniej 6 znaków");
     signUpWithEmail(userData);
-  };
-
-  const handleCodeSubmit = () => {
-    axios
-      .post(
-        `${API_URL}/api/verify`,
-        JSON.stringify({
-          email: userData.email,
-          code: parseInt(verificationCode),
-        })
-      )
-      .then(() => setAuthFormIndex(1))
-      .catch((err) => alert(err));
   };
 
   if (status === "Registered") return <Text>Zarejestrowano</Text>;
@@ -103,15 +88,15 @@ export default function Register() {
           />
         </View>
       </View>
-      <Modal visible={modal} animationType="slide">
+      <Modal visible={modal} animationType="fade">
         <Text>Na podany email wysłaliśmy kod weryfikacyjny.</Text>
         <TextInput
           placeholder="Kod"
           onChangeText={(text) => setVerificationCode(text)}
         />
-        <Pressable onPress={handleCodeSubmit} style={styles.modalButton}>
+        {/* <Pressable onPress={handleCodeSubmit} style={styles.modalButton}>
           <Text style={styles.modalText}>Wyślij</Text>
-        </Pressable>
+        </Pressable> */}
       </Modal>
     </View>
   );

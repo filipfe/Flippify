@@ -9,7 +9,6 @@ import { AuthContext } from "./src/context/AuthContext";
 import EntryScreen from "./src/screens/EntryScreen";
 import { StyleSheet } from "react-native";
 import AuthProvider from "./src/providers/AuthProvider";
-import AxiosProvider from "./src/providers/AxiosProvider";
 import {
   useFonts,
   PlusJakartaSans_400Regular as Regular,
@@ -48,10 +47,8 @@ export default function AppProvider() {
     <ThemeProvider>
       <AuthProvider>
         <SettingsProvider>
-          <AxiosProvider>
-            <StatusBar translucent />
-            <App />
-          </AxiosProvider>
+          <StatusBar translucent />
+          <App />
         </SettingsProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -44,41 +44,39 @@ export default function AddCard({
     category.id &&
     topic.id
   );
-  console.log(topic, category);
 
   async function insertCard() {
     setIsLoading(true);
     const { id, category, topic, answers, ...card } = item;
-    const isModification = Boolean(id);
-    try {
-      if (isModification) {
-        const { data } = await supabase
-          .from("flashcards")
-          .update({ ...card, topic_id: topic.id })
-          .eq("id", id);
-        const newCard: AddedFlashCard = data![0];
-        await supabase.from("answers").delete().eq("flashcard_id", newCard.id);
-        await supabase
-          .from("answers")
-          .insert(answers.map((ans) => ({ ...ans, flashcard_id: newCard.id })));
-      } else {
-        const response = await supabase
-          .from("flashcards")
-          .insert({
-            ...card,
-            user_id: user.id,
-            topic_id: topic.id,
-          })
-          .select();
-        console.log(response.data, response.error);
-        await supabase
-          .from("answers")
-          .insert(answers.map((ans) => ({ ...ans, flashcard_id: id })));
-      }
-      setHasBeenAdded(true);
-    } finally {
-      setIsLoading(false);
-    }
+    await supabase
+      .from("flashcards")
+      .insert({
+        ...card,
+        user_id: user.id,
+        topic_id: topic.id,
+      })
+      .select();
+    await supabase
+      .from("answers")
+      .insert(answers.map((ans) => ({ ...ans, flashcard_id: id })));
+    setHasBeenAdded(true);
+    setIsLoading(false);
+  }
+
+  async function modifyCard() {
+    setIsLoading(true);
+    const { id, category, topic, answers, ...card } = item;
+    const { data } = await supabase
+      .from("flashcards")
+      .update({ ...card, topic_id: topic.id })
+      .eq("id", id);
+    const newCard: AddedFlashCard = data![0];
+    await supabase.from("answers").delete().eq("flashcard_id", newCard.id);
+    await supabase
+      .from("answers")
+      .insert(answers.map((ans) => ({ ...ans, flashcard_id: newCard.id })));
+    setHasBeenAdded(true);
+    setIsLoading(false);
   }
 
   const changeType = (type: string) => {
@@ -167,7 +165,7 @@ export default function AddCard({
             ) : (
               <PrimaryButton
                 text="Dodaj fiszkę"
-                onPress={insertCard}
+                onPress={id ? modifyCard : insertCard}
                 active={canAdd}
                 width={"100%"}
               />

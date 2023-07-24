@@ -1,12 +1,11 @@
 import { Answer, FlashCard, Topic } from "../types/flashcards";
 import { useState, useMemo, useEffect, useContext } from "react";
 import { Category } from "../types/general";
-import axios from "axios";
-import { API_URL } from "@env";
 import { useSharedValue } from "react-native-reanimated";
 import { FlashCardContextType } from "../context/FlashCardContext";
 import { CORRECT_ANSWER_POINTS, initialFlashCard } from "../const/flashcards";
 import { AuthContext } from "../context/AuthContext";
+import { supabase } from "./useAuth";
 
 type Props = Readonly<{
   category: Category;
@@ -49,14 +48,23 @@ export default function useFlashCard({
     }
   };
 
+  async function getDeck() {
+    const { data } = await supabase
+      .from("flashcards")
+      .select("*")
+      .eq(topic ? "topic_id" : "category_id", topic ? topic.id : category.id)
+      .limit(10);
+    console.log(data);
+    return data as FlashCard[];
+  }
+
   const submitAnswer = (answer: string) => {
-    const isCorrect = checkIfCorrect(answer);
-    const newPoints =
-      isCorrect && !hasAlreadyAnswered
-        ? addPoints(CORRECT_ANSWER_POINTS)
-        : level.points;
-    setAnswer({ text: answer, is_correct: isCorrect });
     setHasAlreadyAnswered(true);
+    const isCorrect = checkIfCorrect(answer);
+    setAnswer({ text: answer, is_correct: isCorrect });
+    isCorrect && !hasAlreadyAnswered
+      ? addPoints(CORRECT_ANSWER_POINTS)
+      : level.points;
     flipCard();
   };
 
@@ -72,7 +80,7 @@ export default function useFlashCard({
   const fetchDeck = async (deckType: "active" | "next") => {
     setIsLoading((prev) => ({ ...prev, [deckType]: true }));
     if (!category.id) return;
-    const card = await getDeck(category.id, topic?.id).finally(() =>
+    const card = await getDeck().finally(() =>
       setIsLoading((prev) => ({ ...prev, [deckType]: false }))
     );
     deckType === "active" ? setActiveDeck(card) : setNextDeck(card);
@@ -112,13 +120,3 @@ export default function useFlashCard({
 
   return contextValue;
 }
-
-const getDeck = async (categoryId: number, topicId?: number) => {
-  return axios
-    .get(
-      `${API_URL}/api/flashcards/random?category_id=${categoryId}${
-        topicId ? "&topic_id=${topicId}" : ""
-      }`
-    )
-    .then((res) => res.data);
-};

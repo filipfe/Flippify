@@ -1,7 +1,6 @@
 import { ScrollView, Text, View, Modal } from "react-native";
 import { useContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { API_URL } from "@env";
 import { AuthContext } from "../../../context/AuthContext";
 import { AddedNote, ImageFile } from "../../../types/notes";
 import UserCredentials from "../../UserCredentials";
@@ -40,11 +39,7 @@ export default function AddNote({
   const [imageListActive, setImageListActive] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const opus = useOpus<AddedNote>(route.params || initialAddedNote);
-  const { tokens } = useContext(AuthContext);
-  const { access } = tokens;
   const { item, setItem, changeCategory, activeCategory } = opus;
-
-  const setImages = () => {};
 
   const handleSubmit = async () => {
     if (!activeCategory.id) return;
@@ -61,19 +56,19 @@ export default function AddNote({
       form.append("images", image);
     });
 
-    item.id
-      ? axios
-          .patchForm(`${API_URL}/api/notes/${item.id}`, form)
-          .then(() => setHasBeenAdded(true))
-          .catch((err) => console.log(err.response.data))
-          .finally(() => setIsLoading(false))
-      : axios
-          .postForm(`${API_URL}/api/notes/add`, form, {
-            headers: { Authorization: `Bearer ${access}` },
-          })
-          .then(() => setHasBeenAdded(true))
-          .catch((err) => console.log(err.response.data))
-          .finally(() => setIsLoading(false));
+    // item.id
+    //   ? axios
+    //       .patchForm(`${API_URL}/api/notes/${item.id}`, form)
+    //       .then(() => setHasBeenAdded(true))
+    //       .catch((err) => console.log(err.response.data))
+    //       .finally(() => setIsLoading(false))
+    //   : axios
+    //       .postForm(`${API_URL}/api/notes/add`, form, {
+    //         headers: { Authorization: `Bearer ${access}` },
+    //       })
+    //       .then(() => setHasBeenAdded(true))
+    //       .catch((err) => console.log(err.response.data))
+    //       .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {

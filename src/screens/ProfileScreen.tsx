@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
 import UserInfo from "../components/profile/UserInfo";
-import { LogoIcon, PremiumIcon, SettingsIcon } from "../assets/icons/icons";
+import { NotificationsIcon, SettingsIcon } from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";
@@ -25,13 +25,13 @@ const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 export default function ProfileScreen() {
   return (
     <ProfileStack.Navigator
-      initialRouteName="Profile"
+      initialRouteName="ProfileScreen"
       screenOptions={{
         header: (props) => <Header {...props} />,
       }}
     >
       <ProfileStack.Screen
-        name="Profile"
+        name="ProfileScreen"
         component={Profile}
         options={{
           title: "Profil",
@@ -62,7 +62,7 @@ const Profile = () => {
   const { user } = useContext(AuthContext);
   const { is_premium } = user;
   const { navigate } =
-    useNavigation<NavigationProp<ProfileStackParams, "Profile">>();
+    useNavigation<NavigationProp<ProfileStackParams, "ProfileScreen">>();
   const { background, light, font } = useContext(ThemeContext);
   return (
     <ScrollView>

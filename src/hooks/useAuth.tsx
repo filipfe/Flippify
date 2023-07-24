@@ -1,14 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
-import { Level, Tokens, User } from "../types/auth";
+import { Level, User } from "../types/auth";
 import { AuthContextType } from "../context/AuthContext";
-import {
-  LoginData,
-  SignUpData,
-  initialTokensState,
-  initialUserState,
-} from "../const/auth";
-import axios from "axios";
-import { API_URL } from "@env";
+import { LoginData, SignUpData, initialUserState } from "../const/auth";
+import { SUPABASE_KEY } from "@env";
 import "react-native-url-polyfill/auto";
 import * as SecureStore from "expo-secure-store";
 import { createClient, Session } from "@supabase/supabase-js";
@@ -27,8 +21,7 @@ const ExpoSecureStoreAdapter = {
 };
 
 const supabaseUrl = "https://viiurwkqrzbkvrauqbjq.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpaXVyd2txcnpia3ZyYXVxYmpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQ0MjU1MjcsImV4cCI6MjAwMDAwMTUyN30.4kV85Ft9MNFkQT7o0tp9l-5mR2W0sCLu07L7DfupO94";
+const supabaseAnonKey = SUPABASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -42,7 +35,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 export default function useAuth() {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState<User>(initialUserState);
-  const [tokens, setTokens] = useState<Tokens>(initialTokensState);
   const [level, setLevel] = useState<Level>({
     current_level: 0,
     points: 0,
@@ -50,15 +42,10 @@ export default function useAuth() {
   });
 
   async function logIn(session: Session) {
-    setTokens({
-      access: session.access_token,
-      refresh: session.refresh_token,
-    });
-    const user = session.user as any;
+    const user = { ...session.user, ...session.user.user_metadata } as any;
     setUser(user);
     setIsLogged(true);
     setLevel((prev) => ({ ...prev, points: user.knowledge_points }));
-    axios.defaults.headers.common.Authorization = `Bearer ${session.access_token}`;
   }
 
   async function signUpWithEmail(formData: SignUpData) {
@@ -97,7 +84,6 @@ export default function useAuth() {
       alert(error?.message);
     } else {
       setUser(initialUserState);
-      setTokens(initialTokensState);
       setIsLogged(false);
     }
   }
@@ -160,7 +146,6 @@ export default function useAuth() {
       isLogged,
       user,
       level,
-      tokens,
       addPoints,
       signInWithPassword,
       signUpWithEmail,
@@ -170,7 +155,6 @@ export default function useAuth() {
     [
       isLogged,
       user,
-      tokens,
       level,
       addPoints,
       signInWithPassword,

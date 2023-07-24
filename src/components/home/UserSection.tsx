@@ -1,26 +1,25 @@
-import { View, Text } from "react-native";
-import { useContext, useEffect } from "react";
+import { View } from "react-native";
 import UserCredentials from "../UserCredentials";
-import { AuthContext } from "../../context/AuthContext";
-import { Children } from "../../types/general";
-import { supabase } from "../../hooks/useAuth";
+import { ProposedUser } from "../../types/home";
+import { FlatList } from "react-native-gesture-handler";
+import SmallNoteRef from "../notes/SmallNoteRef";
 
-export default function UserSection({ children }: Children) {
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const { data } = await supabase
-        .from("notes")
-        .select("*")
-        .eq("user_id", 1);
-    };
-  }, []);
-
+export default function UserSection({ notes, ...user }: ProposedUser) {
   return (
-    <View style={{ paddingVertical: 16 }}>
-      <UserCredentials user={user} />
-      {children}
+    <View style={{ paddingVertical: 24 }}>
+      <View style={{ paddingHorizontal: 24, marginBottom: 24 }}>
+        <UserCredentials user={user} />
+      </View>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={notes}
+        contentContainerStyle={{ paddingHorizontal: 24 }}
+        ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
+        renderItem={({ item }) => (
+          <SmallNoteRef {...item} user={user} key={item.id} />
+        )}
+      />
     </View>
   );
 }

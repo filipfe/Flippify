@@ -20,7 +20,7 @@ import Recovery from "../../screens/entry/Recovery";
 const { width } = Dimensions.get("screen");
 
 export default function Login() {
-  const { font, primary, secondary } = useContext(ThemeContext);
+  const { font, primary, background } = useContext(ThemeContext);
   const { signInWithPassword, signInWithGoogle } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,11 +72,26 @@ export default function Login() {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={[styles.line, { backgroundColor: secondary }]}>
-          <Text style={[styles.lineText, { color: secondary }]}>lub</Text>
+        <View style={[styles.line, { backgroundColor: font }]}>
+          <Text
+            style={[
+              styles.lineText,
+              { color: font, backgroundColor: background, height: 40 },
+            ]}
+          >
+            lub
+          </Text>
         </View>
         <RippleButton onPress={signInWithGoogle}>
-          <Text>Zaloguj z Google</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: font,
+              fontFamily: "SemiBold",
+            }}
+          >
+            Zaloguj z Google
+          </Text>
         </RippleButton>
       </View>
       <View>
@@ -136,6 +151,7 @@ export const styles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
+    marginVertical: 36,
   },
   lineText: {
     fontFamily: "Medium",

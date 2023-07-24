@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Loader from "../../Loader";
-import axios from "axios";
-import { API_URL } from "@env";
 import {
   NavigationProp,
   useNavigation,
@@ -31,11 +29,11 @@ export default function ListOfLists({
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`${API_URL}/api/profile/flashlists`)
-      .then((res) => res.data)
-      .then((data) => setFlashLists(data.items))
-      .finally(() => setLoading(false));
+    // axios
+    //   .get(`${API_URL}/api/profile/flashlists`)
+    //   .then((res) => res.data)
+    //   .then((data) => setFlashLists(data.items))
+    //   .finally(() => setLoading(false));
   }, [location, removed]);
 
   if (loading) return <Loader />;
@@ -75,13 +73,13 @@ const FlashListRef = (props: FlashList & { setRemoved: any }) => {
   const { setRemoved, ...rest } = props;
   const { name, created_at, count } = rest;
 
-  const handleRemove = async () => {
-    const resp = await axios.delete(
-      `${API_URL}/api/flashlists/delete/${props.id}`
-    );
-    if (resp.status === 204)
-      setRemoved((prev: number[]) => [...prev, props.id]);
-  };
+  // const handleRemove = async () => {
+  //   const resp = await axios.delete(
+  //     `${API_URL}/api/flashlists/delete/${props.id}`
+  //   );
+  //   if (resp.status === 204)
+  //     setRemoved((prev: number[]) => [...prev, props.id]);
+  // };
 
   return (
     <View style={{ ...styles.refWrapper, backgroundColor: background }}>

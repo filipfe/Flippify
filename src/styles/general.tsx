@@ -25,7 +25,7 @@ export const lightTheme: Theme = {
   background: "#FFFFFF",
   light: "#F2F8FD",
   box: "#FFFFFF",
-  font: "#2A2353",
+  font: "#382E6D",
   wrong: "#DC555D",
   stroke: "#E3E8E4",
   ripple: "#E8E8E8",

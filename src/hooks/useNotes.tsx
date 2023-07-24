@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import SmallNoteRef from "../components/notes/SmallNoteRef";
-import axios from "axios";
-import { API_URL } from "@env";
 import { Filter, Note } from "../types/notes";
 import { ThemeContext } from "../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";

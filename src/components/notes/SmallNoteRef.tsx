@@ -1,18 +1,20 @@
 import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import { Note } from "../../types/notes";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LikeIcon, PremiumIcon } from "../../assets/icons/icons";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { NoteRefNavigationProp } from "../../types/navigation";
+import { RootTabParams } from "../../types/navigation";
 
 export default function SmallNoteRef(props: Note) {
   const { font, secondary, background, light } = useContext(ThemeContext);
   const { id, title, thumbnail, like_count, category, user } = props;
-  const { navigate } = useNavigation<NoteRefNavigationProp>();
+  const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
   return (
     <Pressable
-      onPress={() => navigate("Note", { id, title })}
+      onPress={() =>
+        navigate("Notes", { screen: "Note", params: { id, title } })
+      }
       style={{ ...styles.wrapper, backgroundColor: background }}
     >
       <View style={[styles.image, { backgroundColor: light }]}>

@@ -16,6 +16,8 @@ import PlusIcon from './plus.svg'
 import CheckmarkIcon from './checkmark.svg'
 import GridIcon from './grid.svg'
 import EditIcon from './edit.svg'
+import HintIcon from './hint.svg'
+import ArrowIcon from './arrow.svg'
 
 export {
     NotificationsIcon,
@@ -35,5 +37,7 @@ export {
     PlusIcon,
     CheckmarkIcon,
     GridIcon,
-    EditIcon
+    EditIcon,
+    HintIcon,
+    ArrowIcon
 }

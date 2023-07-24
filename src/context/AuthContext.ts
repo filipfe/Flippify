@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Auth, Tokens } from "../types/auth";
+import { Auth } from "../types/auth";
 import { LoginData, SignUpData } from "../const/auth";
 
 export type AuthContextType = Auth & {
