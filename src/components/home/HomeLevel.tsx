@@ -13,15 +13,15 @@ import GradientText from "../GradientText";
 
 export default function HomeLevel() {
   const auth = useContext(AuthContext);
-  const { points, points_required, current_level } = auth.user.level;
-  const { font, secondary, light, background } = useContext(ThemeContext);
+  const { points, points_required, current_level } = auth.level;
+  const { secondary, light, background } = useContext(ThemeContext);
   const shadow = useShadow(16);
 
   const animatedWidthStyle = useAnimatedStyle(
     () => ({
       width: withTiming(`${((points / points_required) * 100).toFixed(2)}%`),
     }),
-    []
+    [points, points_required]
   );
 
   return (
@@ -54,13 +54,14 @@ export default function HomeLevel() {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
+    marginTop: -64,
   },
   progressWrapper: {
     width: "100%",
     height: 5,
     borderRadius: 255,
     backgroundColor: "#D4E9FA",
-    marginVertical: 24,
+    marginVertical: 16,
     position: "relative",
   },
   progress: {

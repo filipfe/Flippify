@@ -1,7 +1,5 @@
 import { NewCardContext } from "../../../context/OpusContext";
 import { StyleSheet, Text, View, Modal } from "react-native";
-import axios from "axios";
-import { API_URL } from "@env";
 import { globalStyles, shadowPrimary } from "../../../styles/general";
 import Switch from "../../Switch";
 import { ScrollView } from "react-native-gesture-handler";
@@ -25,6 +23,7 @@ import {
   RootTabParams,
 } from "../../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { supabase } from "../../../hooks/useAuth";
 
 export default function AddCard({
   route,
@@ -32,7 +31,9 @@ export default function AddCard({
   const { navigate } = useNavigation<NavigationProp<FlashCardsStackParams>>();
   const { secondary, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
-  const opus = useOpus<AddedFlashCard>(initialNewCard);
+  const opus = useOpus<Omit<AddedFlashCard, "user">>(
+    route.params || initialNewCard
+  );
   const { item, setItem } = opus;
   const { id, question, answers, type, category, topic } = item;
   const [hasBeenAdded, setHasBeenAdded] = useState(false);
@@ -45,25 +46,40 @@ export default function AddCard({
   );
   console.log(topic, category);
 
-  const handleAdd = () => {
+  async function insertCard() {
     setIsLoading(true);
-    const { category, topic, ...card } = item;
-    id
-      ? axios
-          .patch(`${API_URL}/api/flashcards/${id}`)
-          .then(() => setHasBeenAdded(true))
-          .finally(() => setIsLoading(false))
-      : axios
-          .post(
-            `${API_URL}/api/flashcards/add`,
-            JSON.stringify({
-              ...card,
-              topic_id: topic.id,
-            })
-          )
-          .then(() => setHasBeenAdded(true))
-          .finally(() => setIsLoading(false));
-  };
+    const { id, category, topic, answers, ...card } = item;
+    const isModification = Boolean(id);
+    try {
+      if (isModification) {
+        const { data } = await supabase
+          .from("flashcards")
+          .update({ ...card, topic_id: topic.id })
+          .eq("id", id);
+        const newCard: AddedFlashCard = data![0];
+        await supabase.from("answers").delete().eq("flashcard_id", newCard.id);
+        await supabase
+          .from("answers")
+          .insert(answers.map((ans) => ({ ...ans, flashcard_id: newCard.id })));
+      } else {
+        const response = await supabase
+          .from("flashcards")
+          .insert({
+            ...card,
+            user_id: user.id,
+            topic_id: topic.id,
+          })
+          .select();
+        console.log(response.data, response.error);
+        await supabase
+          .from("answers")
+          .insert(answers.map((ans) => ({ ...ans, flashcard_id: id })));
+      }
+      setHasBeenAdded(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const changeType = (type: string) => {
     const cardType = type as "radio" | "input";
@@ -151,7 +167,7 @@ export default function AddCard({
             ) : (
               <PrimaryButton
                 text="Dodaj fiszkę"
-                onPress={handleAdd}
+                onPress={insertCard}
                 active={canAdd}
                 width={"100%"}
               />

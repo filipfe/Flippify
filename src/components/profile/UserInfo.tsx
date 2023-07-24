@@ -10,31 +10,38 @@ export default function UserInfo() {
   const { user } = useContext(AuthContext);
   const { username, profile_picture } = user;
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.pictureWrapper}>
+    <View style={profileStyles.wrapper}>
+      <View style={profileStyles.pictureWrapper}>
         {profile_picture ? (
-          <Image style={styles.picture} source={{ uri: profile_picture }} />
+          <Image
+            style={profileStyles.picture}
+            source={{ uri: profile_picture }}
+          />
         ) : (
-          <DefaultProfileIcon width={96} height={96} style={styles.picture} />
+          <DefaultProfileIcon
+            width={112}
+            height={112}
+            style={profileStyles.picture}
+          />
         )}
       </View>
-      <Text style={{ ...styles.username, color: font }}>{username}</Text>
+      <Text style={{ ...profileStyles.username, color: font }}>{username}</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+export const profileStyles = StyleSheet.create({
   wrapper: {
-    flexDirection: "column",
     alignItems: "center",
-    marginTop: -48,
+    marginTop: -36,
   },
   pictureWrapper: {
-    height: 96,
-    width: 96,
-    borderRadius: 96,
+    height: 104,
+    width: 104,
+    borderRadius: 112,
     borderColor: "#FFFFFF",
     borderWidth: 4,
+    position: "relative",
     overflow: "hidden",
     marginBottom: 12,
     alignItems: "center",
@@ -48,6 +55,6 @@ const styles = StyleSheet.create({
   },
   username: {
     fontFamily: "Bold",
-    fontSize: 24,
+    fontSize: 22,
   },
 });

@@ -15,6 +15,7 @@ import NoteImageIndex from "./NoteImageIndex";
 import { ThemeContext } from "../../context/ThemeContext";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NoteStackParams } from "../../types/navigation";
+import { supabase } from "../../hooks/useAuth";
 
 export default function NoteDetails({
   route,
@@ -38,15 +39,23 @@ export default function NoteDetails({
 
   useEffect(() => {
     scrollRef.current && scrollRef.current.scrollTo({ y: 0 });
-    axios
-      .get(`${API_URL}/api/notes/${id}`)
-      .then((res) => res.data)
-      .then((data) => {
-        setDetails(data);
-        setImages(data.images);
-        setIsLiked(data.is_liked);
-      })
-      .finally(() => setLoading(false));
+    async function fetchDetails() {
+      try {
+        const { data } = await supabase
+          .from("notes")
+          .select("*, user:users(*)")
+          .eq("id", id);
+        console.log(data, id);
+        if (!data) return;
+        const noteDetails: Note = data[0];
+        setDetails(noteDetails);
+        setImages(noteDetails.images);
+        setIsLiked(noteDetails.is_liked);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDetails();
   }, [id]);
 
   if (loading)

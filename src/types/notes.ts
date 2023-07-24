@@ -2,7 +2,6 @@ import { Category } from "./general";
 import { User } from "./auth";
 import { Dispatch, SetStateAction } from 'react'
 import { FlashCardType, Topic } from "./flashcards";
-import { FlashCardContextType } from "../context/FlashCardContext";
 
 export type Note = {
     id: number;
@@ -13,7 +12,7 @@ export type Note = {
     created_at: string;
     category: Category;
     like_count?: number;
-    is_liked?: boolean;
+    is_liked: boolean;
     user: User
 }
   
@@ -57,6 +56,10 @@ export type ImageListProps = {
 export type ImageRefProps = {
   chosen: string;
   setChosen: Dispatch<SetStateAction<string>>
+}
+
+export type GridButtonProps = {
+  onPress: () => void
 }
 
 

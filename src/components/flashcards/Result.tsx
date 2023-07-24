@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../PrimaryButton";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useMemo } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import { AuthContext } from "../../context/AuthContext";
@@ -11,62 +11,27 @@ import { linearGradient } from "../../const/styles";
 import { ThemeContext } from "../../context/ThemeContext";
 import Animated, {
   useAnimatedStyle,
-  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { CORRECT_ANSWER_POINTS } from "../../const/flashcards";
 import LevelDisplayer from "./result/LevelDisplayer";
 
 export default function Result() {
   const { font, secondary } = useContext(ThemeContext);
-  const [hasAlreadyAnswered, setHasAlreadyAnswered] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const { flipCard, changeCard, activeCard, answer } =
-    useContext(FlashCardContext);
-  const { type, answers } = activeCard;
-  const { user, addPoints } = useContext(AuthContext);
-  const { profile_picture, level } = user;
+  const { flipCard, changeCard, answer } = useContext(FlashCardContext);
+  const { user, level } = useContext(AuthContext);
+  const { profile_picture } = user;
   const { points, points_required } = level;
-  const isPromotion = isCorrect && points < 20;
-  const animatedWidth = useSharedValue(
-    ((points / points_required) * 100).toFixed(2)
+  const isPromotion = answer.is_correct && points < 20;
+  const animatedWidth = useMemo(
+    () => ((points / points_required) * 100).toFixed(2),
+    [points, points_required]
   );
 
-  const checkIfCorrect = (answer: string) => {
-    switch (type) {
-      case "radio":
-        const correctAnswer = answers.find((ans) => ans.is_correct)?.text;
-        return correctAnswer === answer;
-      case "input":
-        return (
-          answers[0].text.toLowerCase().split(" ").join("") ===
-          answer.toLowerCase().split(" ").join("")
-        );
-    }
-  };
-
-  const reflipCard = () => {
-    setHasAlreadyAnswered(true);
-    flipCard();
-  };
-
-  const goNext = () => {
-    changeCard();
-    setHasAlreadyAnswered(false);
-  };
-
-  useEffect(() => {
-    if (!answer) return;
-    const isAnswerCorrect = checkIfCorrect(answer);
-    const newPoints =
-      isAnswerCorrect && !hasAlreadyAnswered
-        ? addPoints(CORRECT_ANSWER_POINTS)
-        : points;
-    animatedWidth.value = isAnswerCorrect
-      ? ((newPoints / points_required) * 100).toFixed(2)
-      : animatedWidth.value;
-    setIsCorrect(isAnswerCorrect);
-  }, [answer]);
+  const animatedWidthStyle = useAnimatedStyle(() => {
+    return {
+      width: withTiming(animatedWidth + "%", { duration: 600 }),
+    };
+  }, [points]);
 
   const animatedWidthStyle = useAnimatedStyle(() => {
     return {
@@ -94,7 +59,7 @@ export default function Result() {
               start={{ x: 0, y: 0 }}
               colors={linearGradient}
             >
-              {isCorrect && (
+              {answer.is_correct && (
                 <Text
                   numberOfLines={1}
                   style={{
@@ -112,13 +77,18 @@ export default function Result() {
           </Text>
         </View>
         <Text style={{ ...styles.title, color: font }}>
-          {isCorrect ? "To poprawna odpowiedź!" : "Niepoprawna odpowiedź!"}
+          {answer.is_correct
+            ? "To poprawna odpowiedź!"
+            : "Niepoprawna odpowiedź!"}
         </Text>
         <View style={styles.answerWrapper}>
           <Text
-            style={{ ...styles.answer, color: isCorrect ? "#13C331" : "red" }}
+            style={{
+              ...styles.answer,
+              color: answer.is_correct ? "#13C331" : "red",
+            }}
           >
-            {answer}
+            {answer.text}
           </Text>
         </View>
       </View>

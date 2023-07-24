@@ -1,30 +1,30 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, ScrollView, View, StyleSheet } from "react-native";
-import axios from "axios";
-import { useRoute } from "@react-navigation/native";
-import { API_URL } from "@env";
 import { Category } from "../../../types/general";
 import CategoryRef from "./CategoryRef";
 import { DEFAULT_STYLES } from "../../../const/styles";
 import Loader from "../../Loader";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
+import { supabase } from "../../../hooks/useAuth";
 
 export default function CategoryList() {
-  const route = useRoute();
   const { background } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(`${API_URL}/api/categories`)
-      .then((res) => res.data)
-      .then((data) => setCategories(data))
-      .catch((err) => console.log(err.response))
-      .finally(() => setIsLoading(false));
-  }, [route]);
+    const fetchCategories = async () => {
+      const { data } = await supabase
+        .from("categories")
+        .select("*")
+        .order("name");
+      setCategories(data as Category[]);
+      setIsLoading(false);
+    };
+    fetchCategories();
+  }, []);
 
   return isLoading ? (
     <Loader />

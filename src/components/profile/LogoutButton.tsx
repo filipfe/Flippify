@@ -1,5 +1,3 @@
-import { API_URL } from "@env";
-import axios from "axios";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
@@ -10,24 +8,12 @@ import { ThemeContext } from "../../context/ThemeContext";
 export default function LogoutButton() {
   const { wrong } = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(false);
-  const { logout } = useContext(AuthContext);
-
-  const handleLogout = async () => {
-    setIsLoading(true);
-    const resp = await axios
-      .delete(`${API_URL}/api/logout`)
-      .finally(() => setIsLoading(false));
-    if (resp.status === 200) logout();
-  };
+  const { logOut } = useContext(AuthContext);
 
   return isLoading ? (
     <Loader />
   ) : (
-    <Pressable
-      disabled={isLoading}
-      style={styles.button}
-      onPress={handleLogout}
-    >
+    <Pressable disabled={isLoading} style={styles.button} onPress={logOut}>
       <LogoutIcon stroke={wrong} />
       <Text style={{ ...styles.text, color: wrong }}>Wyloguj się</Text>
     </Pressable>

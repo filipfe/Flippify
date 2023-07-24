@@ -4,6 +4,7 @@ import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import RadioAnswer from "./answers/RadioAnswer";
 import Animated, {
+  Easing,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
@@ -23,7 +24,10 @@ export default function FlashCardRef() {
       transform: [
         {
           rotateY: settings.animations
-            ? withTiming(`${rotateValue}deg`, { duration: 400 })
+            ? withTiming(`${rotateValue}deg`, {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+              })
             : `${rotateValue}deg`,
         },
       ],
@@ -36,7 +40,10 @@ export default function FlashCardRef() {
       transform: [
         {
           rotateY: settings.animations
-            ? withTiming(`${rotateValue - 180}deg`, { duration: 400 })
+            ? withTiming(`${rotateValue - 180}deg`, {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+              })
             : `${rotateValue - 180}deg`,
         },
       ],

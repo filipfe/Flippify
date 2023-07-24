@@ -15,23 +15,35 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import SettingsScreen from "./profile/SettingsScreen";
 import { AuthContext } from "../context/AuthContext";
 import PremiumPurchase from "./profile/PremiumPurchase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import BoxLinkRow from "../components/profile/BoxLinkRow";
+import EditButton from "../components/profile/EditButton";
+import Edit from "./profile/Edit";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
 export default function ProfileScreen() {
   return (
     <ProfileStack.Navigator
-      initialRouteName="ProfileStack"
+      initialRouteName="Profile"
       screenOptions={{
         header: (props) => <Header {...props} />,
       }}
     >
       <ProfileStack.Screen
-        name="ProfileStack"
+        name="Profile"
         component={Profile}
         options={{
           title: "Profil",
           headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="EditProfile"
+        component={Edit}
+        options={{
+          title: "Edytuj profil",
+          headerTransparent: true,
         }}
       />
       <ProfileStack.Screen
@@ -50,7 +62,7 @@ const Profile = () => {
   const { user } = useContext(AuthContext);
   const { is_premium } = user;
   const { navigate } =
-    useNavigation<NavigationProp<ProfileStackParams, "ProfileStack">>();
+    useNavigation<NavigationProp<ProfileStackParams, "Profile">>();
   const { background, light, font } = useContext(ThemeContext);
   return (
     <ScrollView>
@@ -59,37 +71,29 @@ const Profile = () => {
         start={{ x: 1, y: 1 }}
         style={{ flex: 1 }}
       >
-        <View style={styles.settingsWrapper}>
-          {is_premium ? <PremiumIcon width={64} /> : <LogoIcon width={64} />}
+        <SafeAreaView style={styles.settingsWrapper}>
           <Pressable
             onPress={() => navigate("Settings")}
-            style={{
-              height: 48,
-              width: 48,
-              borderRadius: 12,
-              backgroundColor: light,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            style={[styles.settingsButton, { backgroundColor: light }]}
+          >
+            <NotificationsIcon stroke={font} width={20} height={20} />
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigate("Settings")}
+            style={[styles.settingsButton, { backgroundColor: light }]}
           >
             <SettingsIcon fill={font} width={24} height={24} />
           </Pressable>
-        </View>
-        <View
-          style={{
-            backgroundColor: background,
-            borderTopRightRadius: 36,
-            borderTopLeftRadius: 36,
-            paddingHorizontal: 24,
-            paddingBottom: 24,
-            flex: 1,
-          }}
-        >
+        </SafeAreaView>
+        <View style={[styles.innerWrapper, { backgroundColor: background }]}>
           <UserInfo />
-          <Stats />
+          <EditButton />
+          <BoxLinkRow />
           {!is_premium && (
             <PremiumBanner onPress={() => setPremiumModalActive(true)} />
           )}
+          <Stats />
           <LogoutButton />
         </View>
       </LinearGradient>
@@ -107,10 +111,24 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   settingsWrapper: {
-    paddingTop: 64,
-    paddingBottom: 48,
+    paddingVertical: 24,
     paddingHorizontal: 24,
     justifyContent: "space-between",
     flexDirection: "row",
+  },
+  settingsButton: {
+    height: 48,
+    width: 48,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  innerWrapper: {
+    borderTopRightRadius: 36,
+    borderTopLeftRadius: 36,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    position: "relative",
+    flex: 1,
   },
 });

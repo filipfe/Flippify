@@ -18,7 +18,6 @@ import {
   PlusJakartaSans_700Bold as Bold,
   PlusJakartaSans_800ExtraBold as ExtraBold,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import * as SplashScreen from "expo-splash-screen";
 import { RootTabParams } from "./src/types/navigation";
 import TabBar from "./src/components/TabBar";
 import ThemeProvider from "./src/providers/ThemeProvider";
@@ -29,6 +28,7 @@ import SettingsProvider from "./src/providers/SettingsProvider";
 import AddCard from "./src/components/flashcards/add-card/AddCard";
 import AddNote from "./src/components/notes/add-note/AddNote";
 import Header from "./src/components/header/Header";
+import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 

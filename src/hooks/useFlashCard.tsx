@@ -1,11 +1,12 @@
-import { FlashCard, Topic } from "../types/flashcards";
-import { useState, useMemo, useEffect } from "react";
+import { Answer, FlashCard, Topic } from "../types/flashcards";
+import { useState, useMemo, useEffect, useContext } from "react";
 import { Category } from "../types/general";
 import axios from "axios";
 import { API_URL } from "@env";
 import { useSharedValue } from "react-native-reanimated";
 import { FlashCardContextType } from "../context/FlashCardContext";
-import { initialFlashCard } from "../const/flashcards";
+import { CORRECT_ANSWER_POINTS, initialFlashCard } from "../const/flashcards";
+import { AuthContext } from "../context/AuthContext";
 
 type Props = Readonly<{
   category: Category;
@@ -16,9 +17,11 @@ export default function useFlashCard({
   category,
   topic,
 }: Props): FlashCardContextType {
+  const { level, addPoints } = useContext(AuthContext);
   const [isFlipped, setIsFlipped] = useState(false);
   const rotate = useSharedValue<0 | -180>(0);
-  const [answer, setAnswer] = useState<string>("");
+  const [hasAlreadyAnswered, setHasAlreadyAnswered] = useState(false);
+  const [answer, setAnswer] = useState<Answer>({ text: "", is_correct: false });
   const [activeDeck, setActiveDeck] = useState<FlashCard[]>([]);
   const [nextDeck, setNextDeck] = useState<FlashCard[]>([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -32,8 +35,28 @@ export default function useFlashCard({
     setIsFlipped((prev) => !prev);
   };
 
+  const checkIfCorrect = (answer: string) => {
+    const { type, answers } = activeDeck[activeCardIndex];
+    switch (type) {
+      case "radio":
+        const correctAnswer = answers.find((ans) => ans.is_correct)?.text;
+        return correctAnswer === answer;
+      case "input":
+        return (
+          answers[0].text.toLowerCase().split(" ").join("") ===
+          answer.toLowerCase().split(" ").join("")
+        );
+    }
+  };
+
   const submitAnswer = (answer: string) => {
-    setAnswer(answer);
+    const isCorrect = checkIfCorrect(answer);
+    const newPoints =
+      isCorrect && !hasAlreadyAnswered
+        ? addPoints(CORRECT_ANSWER_POINTS)
+        : level.points;
+    setAnswer({ text: answer, is_correct: isCorrect });
+    setHasAlreadyAnswered(true);
     flipCard();
   };
 
@@ -41,7 +64,8 @@ export default function useFlashCard({
     activeCardIndex > 8 && setActiveDeck(nextDeck);
     setActiveCardIndex((prev) => (activeCardIndex > 8 ? 0 : prev + 1));
     rotate.value = 0;
-    setAnswer("");
+    setAnswer({ is_correct: false, text: "" });
+    setHasAlreadyAnswered(false);
     activeCardIndex === 8 && fetchDeck("next");
   };
 

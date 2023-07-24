@@ -71,11 +71,12 @@ export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
 // PROFILE
 
 export type ProfileStackParams = {
-    ProfileStack: undefined;
+    Profile: undefined;
+    EditProfile: undefined;
     Settings: undefined;
   };
 
-export type ProfileNavigation = NavigationProp<ProfileStackParams, "ProfileStack">;
+export type ProfileNavigation = NavigationProp<ProfileStackParams, "Profile">;
 
 
 // OTHER 

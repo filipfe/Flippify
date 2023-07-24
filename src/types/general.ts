@@ -19,3 +19,7 @@ export type Option<T> = {
   value: T
   label: string
 }
+
+export type Children = {
+  children: JSX.Element
+}

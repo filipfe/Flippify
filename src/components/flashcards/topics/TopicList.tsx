@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { API_URL } from "@env";
 import Loader from "../../Loader";
 import { Topic } from "../../../types/flashcards";
 import { TopicListRouteProp } from "../../../types/navigation";
@@ -9,6 +7,7 @@ import TopicRef from "./TopicRef";
 import NotFound from "../../NotFound";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
+import { supabase } from "../../../hooks/useAuth";
 
 export default function TopicList({ route }: { route: TopicListRouteProp }) {
   const { background } = useContext(ThemeContext);
@@ -17,13 +16,18 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
   const category = route.params.category;
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/topics/${category.id}`)
-      .then((res) => res.data)
-      .then((data) => setTopics(data.items))
-      .catch((err) => alert(err))
-      .finally(() => setIsLoading(false));
-  }, [route.name]);
+    setIsLoading(true);
+    const fetchCategories = async () => {
+      const { data } = await supabase
+        .from("topics")
+        .select("*")
+        .eq("category_id", category.id)
+        .order("name");
+      setTopics((data as Topic[]) || []);
+      setIsLoading(false);
+    };
+    fetchCategories();
+  }, [route.params]);
 
   return isLoading ? (
     <Loader />

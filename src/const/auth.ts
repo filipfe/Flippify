@@ -23,3 +23,12 @@ export const initialAuthState: Auth = {
     user: initialUserState,
     tokens: initialTokensState
 }
+
+export interface LoginData {
+    email: string;
+    password: string;
+}
+
+export interface SignUpData extends LoginData {
+    username: string;
+}

@@ -1,11 +1,10 @@
-import { Dimensions, View, StyleSheet } from "react-native";
+import { Dimensions, View, StyleSheet, Pressable } from "react-native";
 import { ResizeIcon } from "../../assets/icons/icons";
 import { ImageHandlerProps } from "../../types/notes";
 import { useContext, useState } from "react";
 import ResizeModal from "./ResizeModal";
 import { ThemeContext } from "../../context/ThemeContext";
 import ImageCarousel from "./ImageCarousel";
-import RippleButton from "../RippleButton";
 
 const { width } = Dimensions.get("screen");
 
@@ -14,7 +13,7 @@ export default function ImageHandler({
   setActiveIndex,
   images,
 }: ImageHandlerProps) {
-  const { light, font } = useContext(ThemeContext);
+  const { light, font, ripple } = useContext(ThemeContext);
   const [resizeModalActive, setResizeModalActive] = useState(false);
   return (
     <>
@@ -24,13 +23,15 @@ export default function ImageHandler({
         setActiveIndex={setActiveIndex}
       />
       {images.length > 0 && (
-        <View style={[styles.resize, { backgroundColor: light }]}>
-          <RippleButton
-            borderless
-            onPress={() => setResizeModalActive((prev) => !prev)}
+        <View style={[styles.resizeWrapper, { backgroundColor: light }]}>
+          <Pressable
+            android_ripple={{ color: ripple, radius: 36, borderless: true }}
+            onPress={() => setResizeModalActive(true)}
           >
-            <ResizeIcon fill={font} />
-          </RippleButton>
+            <View style={styles.resize}>
+              <ResizeIcon fill={font} />
+            </View>
+          </Pressable>
         </View>
       )}
       <ResizeModal
@@ -44,13 +45,17 @@ export default function ImageHandler({
 }
 
 const styles = StyleSheet.create({
-  resize: {
-    height: 48,
-    width: 48,
+  resizeWrapper: {
     position: "absolute",
     top: 16,
     right: 16,
+    zIndex: 1,
+    height: 48,
+    width: 48,
     borderRadius: 8,
+  },
+  resize: {
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },

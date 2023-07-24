@@ -25,20 +25,15 @@ export default function ImageList({ setImageListActive }: ImageListProps) {
   const { item, setItem } = useContext(NewNoteContext);
   const { images } = item;
 
-  const save = () => {
-    setAsThumbnail();
-    setImageListActive(false);
-  };
-
-  const setAsThumbnail = () => {
-    const thumbnail = images.find((item) => item.uri === chosen);
+  const setAsThumbnail = (uri?: string) => {
+    const thumbnail = images.find((item) => item.uri === (uri || chosen));
     thumbnail &&
       setItem((prev) => ({
         ...prev,
         thumbnail: thumbnail.uri,
         images: [
           thumbnail,
-          ...prev.images.filter((item) => item.uri !== chosen),
+          ...prev.images.filter((item) => item.uri !== (uri || chosen)),
         ],
       }));
   };
@@ -108,16 +103,18 @@ export default function ImageList({ setImageListActive }: ImageListProps) {
             </View>
             <View style={{ paddingHorizontal: 24, flexDirection: "row" }}>
               <SecondaryButton
+                onPress={() => setImageListActive(false)}
                 style={{ flex: 1, marginRight: 8 }}
                 paddingHorizontal={0}
-                text="Usuń"
+                text="Gotowe"
               />
               <PrimaryButton
+                active={chosen !== item.thumbnail || !chosen}
                 style={{ flex: 1, marginLeft: 8 }}
                 paddingHorizontal={0}
-                onPress={save}
+                onPress={setAsThumbnail}
                 width={"100%"}
-                text="Gotowe"
+                text="Ustaw jako pierwszy"
               />
             </View>
           </View>
