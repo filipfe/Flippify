@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from "react-native";
 import { useState, useContext } from "react";
 import axios from "axios";
@@ -16,8 +17,10 @@ import { AuthContext } from "../../context/AuthContext";
 import SecondaryButton from "../SecondaryButton";
 import { ThemeContext } from "../../context/ThemeContext";
 
+const { width } = Dimensions.get("screen");
+
 export default function Login() {
-  const { font } = useContext(ThemeContext);
+  const { font, primary } = useContext(ThemeContext);
   const { login } = useContext(AuthContext);
   const { setAuthFormIndex } = useContext(AuthFormContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +45,12 @@ export default function Login() {
       .finally(() => setIsLoading(false));
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading)
+    return (
+      <View style={{ width }}>
+        <Loader />
+      </View>
+    );
 
   return (
     <View style={styles.wrapper}>
@@ -62,8 +70,11 @@ export default function Login() {
           secureTextEntry={true}
         />
         <View style={styles.recoverWrapper}>
-          <TouchableOpacity style={styles.recoverButton}>
-            <Text style={{ ...styles.recoverText, color: font }}>
+          <Text style={{ ...styles.recoverText, color: font, opacity: 0.8 }}>
+            Zapomniałeś hasła?{" "}
+          </Text>
+          <TouchableOpacity>
+            <Text style={[styles.recoverText, { color: primary }]}>
               Odzyskaj hasło
             </Text>
           </TouchableOpacity>
@@ -75,7 +86,11 @@ export default function Login() {
           onPress={() => setAuthFormIndex(0)}
         />
         <View style={styles.submitButton}>
-          <PrimaryButton text="Zaloguj się" onPress={handleSubmit} />
+          <PrimaryButton
+            text="Zaloguj się"
+            active={userData.email.length > 3 && userData.password.length > 1}
+            onPress={handleSubmit}
+          />
         </View>
       </View>
     </View>
@@ -86,6 +101,10 @@ export const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     justifyContent: "space-between",
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    paddingTop: 96,
+    width,
   },
   title: {
     fontFamily: "Bold",
@@ -101,9 +120,8 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 16,
   },
-  recoverButton: { marginTop: 2, marginLeft: 2 },
-  recoverText: { fontFamily: "Bold", fontSize: 12 },
-  submitButton: { marginTop: 20 },
+  recoverText: { fontFamily: "SemiBold", fontSize: 12 },
+  submitButton: { marginTop: 16 },
   modalButton: {
     backgroundColor: "#0000FF",
     paddingVertical: 12,

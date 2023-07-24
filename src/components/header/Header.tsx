@@ -2,21 +2,22 @@ import {
   View,
   StyleSheet,
   Text,
-  Pressable,
   TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BackIcon } from "../assets/icons/icons";
+import { BackIcon } from "../../assets/icons/icons";
 import { useNavigationState } from "@react-navigation/native";
+import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 
 export default function Header({
   route,
   navigation,
   options,
-}: NativeStackHeaderProps) {
+}: BottomTabHeaderProps | NativeStackHeaderProps) {
   const { background, font } = useContext(ThemeContext);
   const { title, headerRight, headerTransparent } = options;
   const { goBack, canGoBack } = navigation;
@@ -26,24 +27,25 @@ export default function Header({
   return (
     <SafeAreaView
       style={{
-        ...styles.wrapper,
+        ...headerStyles.wrapper,
         backgroundColor: headerTransparent ? "transparent" : background,
       }}
     >
-      <View style={styles.titleWrapper}>
+      <View style={headerStyles.titleWrapper}>
         {!isInitial && canGoBackBool && (
-          <View style={{ marginRight: 24 }}>
-            <TouchableWithoutFeedback style={styles.back} onPress={goBack}>
-              <BackIcon
-                height={16}
-                width={16}
-                fill={headerTransparent ? "#FFF" : font}
-              />
-            </TouchableWithoutFeedback>
-          </View>
+          <Pressable style={headerStyles.back} onPress={goBack}>
+            <BackIcon
+              height={16}
+              width={16}
+              fill={headerTransparent ? "#FFF" : font}
+            />
+          </Pressable>
         )}
         <Text
-          style={{ ...styles.title, color: headerTransparent ? "#FFF" : font }}
+          style={{
+            ...headerStyles.title,
+            color: headerTransparent ? "#FFF" : font,
+          }}
         >
           {title}
         </Text>
@@ -53,10 +55,9 @@ export default function Header({
   );
 }
 
-const styles = StyleSheet.create({
+export const headerStyles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
     height: 80,
@@ -71,10 +72,9 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   back: {
-    height: 24,
-    width: 24,
-    alignItems: "center",
-    justifyContent: "center",
+    height: "100%",
+    width: 48,
     borderRadius: 24,
+    justifyContent: "center",
   },
 });

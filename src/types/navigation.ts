@@ -1,25 +1,28 @@
 import { NavigationProp, NavigatorScreenParams, RouteProp } from "@react-navigation/native";
-import { FlashList, Topic } from "./flashcards";
+import { AddedFlashCard, FlashList, Topic } from "./flashcards";
 import { Category } from "./general";
-import { NoteStackParams } from "./notes";
+import { AddedNote, Filter } from "./notes";
 
 export type RootTabParams = {
   Home: undefined;
   FlashCards: NavigatorScreenParams<FlashCardsStackParams>;
   Notes: NavigatorScreenParams<NoteStackParams>;
   Profile: NavigatorScreenParams<ProfileStackParams>;
+  AddCard: AddedFlashCard | undefined;
+  AddNote: AddedNote | undefined;
 };
 
 // FLASHCARDS
 
 export type FlashCardsStackParams = {
   CategoryList: undefined;
-  AddCard: undefined;
   TopicList: { category: Category };
   FlashCardsGenerator: {
     category: Category;
-    topic: Topic;
+    topic?: Topic;
   };
+  OwnFlashCards: Filter;
+  OwnFlashLists: undefined;
 };
 
 export type CategoryNavigationProps = NavigationProp<
@@ -54,13 +57,36 @@ export type FlashListStackParams = {
   FlashList: FlashList;
 };
 
+// NOTES
+
+export type NoteStackParams = {
+  NoteList: Filter;
+  Note: { id: number, title: string };
+  OwnNotes: Filter;
+  
+};
+
+export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
+
 // PROFILE
 
 export type ProfileStackParams = {
     ProfileStack: undefined;
-    OwnFlashCards: undefined;
-    FlashLists: undefined;
     Settings: undefined;
   };
 
 export type ProfileNavigation = NavigationProp<ProfileStackParams, "ProfileStack">;
+
+
+// OTHER 
+
+export type DataType = "note" | "card"
+
+export type FilterComponentProps = {
+  route: keyof NoteStackParams | keyof FlashCardsStackParams;
+  dataType: DataType
+};
+
+export type SearchComponentProps = {
+
+}

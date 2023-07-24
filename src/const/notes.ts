@@ -1,13 +1,14 @@
-import { AddedNote, Note } from "../types/notes";
+import { AddedNote, Filter, ImageFile, Note } from "../types/notes";
 import { initialUserState } from "./auth";
+import { initialCategory, initialTopic } from "./flashcards";
 
 export const initialNote: Note = {
-    id: -1,
+    id:0,
     title: '',
-    desc: '',
-    image: '',
+    description: '',
+    thumbnail: '',
     images: [],
-    category: '',
+    category: initialCategory,
     created_at: '',
     like_count: 0,
     is_liked: false,
@@ -15,15 +16,26 @@ export const initialNote: Note = {
 }
 
 export const initialAddedNote: AddedNote = {
+    id: 0,
     title: '',
-    desc: '',
+    description: '',
+    thumbnail: '',
     images: [],
     created_at: '',
     user: initialUserState,
     is_public: true,
-    category: {
-        id: -1,
-        name: '',
-        icon: ''
-    }
+    category: initialCategory
+}
+
+export const initialFilter: Filter = {
+    search: '',
+    category: initialCategory,
+    topic: initialTopic,
+    type: undefined
+}
+
+export const initialImageFile: ImageFile = {
+    uri: '',
+    name: '',
+    type: ''
 }

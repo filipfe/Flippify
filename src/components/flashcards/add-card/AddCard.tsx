@@ -1,5 +1,5 @@
 import { NewCardContext } from "../../../context/OpusContext";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Modal } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 import { globalStyles, shadowPrimary } from "../../../styles/general";
@@ -7,43 +7,62 @@ import Switch from "../../Switch";
 import { ScrollView } from "react-native-gesture-handler";
 import UserCredentials from "../../UserCredentials";
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import RadioForm from "./components/RadioForm";
 import InputForm from "./components/InputForm";
 import PrimaryButton from "../../PrimaryButton";
 import Loader from "../../Loader";
-import { initialAnswers, initialNewCard } from "../../../const/flashcards";
+import { initialNewCard } from "../../../const/flashcards";
 import { AddedFlashCard } from "../../../types/flashcards";
 import useOpus from "../../../hooks/useOpus";
 import { ThemeContext } from "../../../context/ThemeContext";
+import CategoryPicker from "../../filter/CategoryPicker";
+import TopicPicker from "../../filter/TopicPicker";
+import Success from "../../Success";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  FlashCardsStackParams,
+  RootTabParams,
+} from "../../../types/navigation";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function AddCard() {
+export default function AddCard({
+  route,
+}: NativeStackScreenProps<RootTabParams, "AddCard">) {
+  const { navigate } = useNavigation<NavigationProp<FlashCardsStackParams>>();
   const { secondary, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const opus = useOpus<AddedFlashCard>(initialNewCard);
   const { item, setItem } = opus;
-  const { question, answers, type, category, topic } = item;
+  const { id, question, answers, type, category, topic } = item;
+  const [hasBeenAdded, setHasBeenAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const canAdd = !!(
     answers.filter((item) => item.text).length > (type === "input" ? 0 : 1) &&
     question.length > 12 &&
-    category.name &&
-    topic
+    category.id &&
+    topic.id
   );
+  console.log(topic, category);
 
   const handleAdd = () => {
     setIsLoading(true);
     const { category, topic, ...card } = item;
-    axios
-      .post(
-        `${API_URL}/api/flashcards/add`,
-        JSON.stringify({
-          ...card,
-          category_name: category.name,
-          topic_name: topic,
-        })
-      )
-      .finally(() => setIsLoading(false));
+    id
+      ? axios
+          .patch(`${API_URL}/api/flashcards/${id}`)
+          .then(() => setHasBeenAdded(true))
+          .finally(() => setIsLoading(false))
+      : axios
+          .post(
+            `${API_URL}/api/flashcards/add`,
+            JSON.stringify({
+              ...card,
+              topic_id: topic.id,
+            })
+          )
+          .then(() => setHasBeenAdded(true))
+          .finally(() => setIsLoading(false));
   };
 
   const changeType = (type: string) => {
@@ -51,9 +70,24 @@ export default function AddCard() {
     setItem((prev) => ({
       ...prev,
       type: cardType,
-      answers: cardType === "radio" ? initialAnswers : [],
+      answers,
     }));
   };
+
+  const onModalReject = () => {
+    setHasBeenAdded(false);
+    navigate("FlashCardsGenerator", { category, topic });
+  };
+
+  const onModalSubmit = () => {
+    setItem(initialNewCard);
+    setIsLoading(false);
+    setHasBeenAdded(false);
+  };
+
+  useEffect(() => {
+    route.params && setItem(route.params);
+  }, [route.params]);
 
   return (
     <NewCardContext.Provider value={opus}>
@@ -85,29 +119,28 @@ export default function AddCard() {
                 ]}
               />
             </View>
-            {/* <SelectDropdown
-          data={categories.map((item) => item.name)}
-          renderCustomizedButtonChild={(sel) => (
-            <View>
-              <Text>Kategoria pytania</Text>
-              {sel && <Text>{sel}</Text>}
-            </View>
-          )}
-          buttonStyle={{}}
-          dropdownStyle={{}}
-          onSelect={(item) =>
-            setNewCard((prev: AddedFlashCard) => ({
-              ...prev,
-              category: item,
-            }))
-          }
-          buttonTextAfterSelection={(text) => text}
-          rowTextForSelection={(text) => text}
-        /> */}
             <View style={styles.section}>
               <View style={{ ...styles.card, backgroundColor: background }}>
                 {type === "radio" && <RadioForm />}
                 {type === "input" && <InputForm />}
+              </View>
+            </View>
+            <View style={{ marginVertical: 16 }}>
+              <View style={styles.section}>
+                <CategoryPicker
+                  label="Kategoria notatki"
+                  active={category}
+                  onChange={(category) =>
+                    setItem((prev) => ({ ...prev, category }))
+                  }
+                />
+              </View>
+              <View style={styles.section}>
+                <TopicPicker
+                  category={category}
+                  active={topic}
+                  onChange={(topic) => setItem((prev) => ({ ...prev, topic }))}
+                />
               </View>
             </View>
             <View style={styles.section}>
@@ -126,6 +159,23 @@ export default function AddCard() {
           </View>
         </ScrollView>
       </View>
+      <Modal
+        animationType="fade"
+        visible={hasBeenAdded}
+        onRequestClose={onModalSubmit}
+      >
+        <Success
+          text={
+            id
+              ? "Fiszka została pomyślnie zmodyfikowana"
+              : "Fiszka została pomyślnie dodana"
+          }
+          rejectButtonText="Rozwiązuj"
+          submitButtonText="Dodaj następną"
+          onReject={onModalReject}
+          onSubmit={onModalSubmit}
+        />
+      </Modal>
     </NewCardContext.Provider>
   );
 }

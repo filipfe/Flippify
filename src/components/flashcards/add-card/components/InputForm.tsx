@@ -33,7 +33,7 @@ export default function InputForm() {
         }
       />
       <PrimaryInput
-        maxLength={16}
+        maxLength={32}
         label="Odpowiedź"
         onChangeText={(text) =>
           setItem((prev) => ({
@@ -53,6 +53,5 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     alignSelf: "center",
     marginBottom: 16,
-    maxWidth: "80%",
   },
 });

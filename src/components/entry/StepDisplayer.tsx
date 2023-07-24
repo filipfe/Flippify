@@ -1,23 +1,30 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+
+const { width } = Dimensions.get("screen");
 
 const StepDisplayer = ({ step }: { step: number }) => {
   const { light } = useContext(ThemeContext);
+
+  const transitionStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ translateX: withTiming((step * (width / 2)) / 2) }],
+    }),
+    [step]
+  );
+
   return (
     <View style={{ ...styles.wrapper, backgroundColor: light }}>
-      <View style={styles.outerBar}>
-        {step === 1 && (
-          <LinearGradient colors={linearGradient} style={styles.innerBar} />
-        )}
-      </View>
-      <View style={styles.outerBar}>
-        {step === 2 && (
-          <LinearGradient colors={linearGradient} style={styles.innerBar} />
-        )}
-      </View>
+      <Animated.View style={[styles.outerBar, transitionStyle]}>
+        <LinearGradient colors={linearGradient} style={styles.innerBar} />
+      </Animated.View>
     </View>
   );
 };
@@ -28,18 +35,20 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     height: 6,
     overflow: "hidden",
-    width: "40%",
+    width: width / 2,
     flexDirection: "row",
+    position: "absolute",
+    top: 24,
+    alignSelf: "center",
   },
   outerBar: {
     width: "50%",
-    position: "relative",
     height: "100%",
   },
   innerBar: {
-    borderRadius: 24,
-    width: "100%",
     height: "100%",
+    width: "100%",
+    borderRadius: 24,
   },
 });
 

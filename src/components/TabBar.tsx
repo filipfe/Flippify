@@ -4,7 +4,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import {
   NavigationProp,
-  ParamListBase,
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
@@ -19,15 +18,20 @@ import {
 import GradientText from "./GradientText";
 import { ThemeContext } from "../context/ThemeContext";
 import { RootTabParams } from "../types/navigation";
+import RippleButton from "./RippleButton";
+import { initialAddedNote } from "../const/notes";
+import { PlusIcon } from "../assets/icons/icons";
 
 export default function TabBar(props: BottomTabBarProps) {
   const { state } = props;
   const { background } = useContext(ThemeContext);
   return (
     <View style={{ ...styles.tabBar, backgroundColor: background }}>
-      {state.routes.map((route, index) => (
-        <TabBarLink {...props} route={route} index={index} key={route.key} />
-      ))}
+      <View style={styles.linkWrapper}>
+        {state.routes.map((route, index) => (
+          <TabBarLink {...props} route={route} index={index} key={route.key} />
+        ))}
+      </View>
     </View>
   );
 }
@@ -41,17 +45,23 @@ function TabBarLink({
   index,
   route,
 }: BottomTabBarProps & LinkProps) {
-  const { primary, font } = useContext(ThemeContext);
+  const { primary, font, ripple } = useContext(ThemeContext);
   const { navigate } = navigation;
 
   const { options } = descriptors[route.key];
-  const isCenterButton = index === Math.floor(state.routes.length / 2);
+  const isCenterButton = index === Math.floor(state.routes.length / 2) - 1;
   const { title } = options;
   const isFocused = state.index === index;
+  if (route.name === "AddCard" || route.name === "AddNote") return <></>;
   return (
     <>
       {isCenterButton && <CenterButton />}
       <Pressable
+        android_ripple={{
+          radius: 36,
+          color: ripple,
+          borderless: true,
+        }}
         style={styles.tabBarLink}
         onPress={() => navigate(route.name, route.params)}
       >
@@ -85,7 +95,7 @@ const LinkIcon = ({
       return (
         <HomeIcon
           stroke={isFocused ? primary : font}
-          strokeWidth="2"
+          strokeWidth="1.4"
           height={23}
           width={23}
         />
@@ -94,7 +104,7 @@ const LinkIcon = ({
       return (
         <FlashCardsIcon
           stroke={isFocused ? primary : font}
-          strokeWidth="2"
+          strokeWidth="1.4"
           height={20}
           width={20}
         />
@@ -103,7 +113,7 @@ const LinkIcon = ({
       return (
         <NotesIcon
           stroke={isFocused ? primary : font}
-          strokeWidth="2"
+          strokeWidth="1.4"
           height={21}
           width={21}
         />
@@ -112,11 +122,13 @@ const LinkIcon = ({
       return (
         <ProfileIcon
           stroke={isFocused ? primary : font}
-          strokeWidth="2"
+          strokeWidth="1.4"
           height={22}
           width={22}
         />
       );
+    default:
+      return <></>;
   }
 };
 
@@ -138,7 +150,8 @@ const CenterButton = () => {
         transparent
         visible={active}
         onRequestClose={() => setActive(false)}
-        animationType="slide"
+        statusBarTranslucent
+        animationType="fade"
       >
         <Pressable onPress={() => setActive(false)} style={styles.modalWrapper}>
           <View style={{ ...styles.modal, backgroundColor: background }}>
@@ -147,52 +160,42 @@ const CenterButton = () => {
                 color: font,
                 fontFamily: "Bold",
                 fontSize: 16,
-                borderBottomColor: light,
-                borderBottomWidth: 2,
-                paddingBottom: 12,
-                marginBottom: 6,
+                paddingVertical: 12,
               }}
             >
               Twórz
             </Text>
-            <Pressable
+            <View
               style={{
-                paddingVertical: 6,
-                flexDirection: "row",
-                alignItems: "center",
+                borderRadius: 16,
+                height: 1,
+                width: "100%",
+                maxWidth: "50%",
+                backgroundColor: light,
+                marginBottom: 12,
               }}
-              onPress={() => navigate("FlashCards", { screen: "AddCard" })}
-            >
-              <LinearGradient
-                style={styles.centerButtonLink}
-                start={{ x: 0, y: 0 }}
-                colors={linearGradient}
-              >
-                <FlashCardsIcon stroke="#FFF" strokeWidth={2} height={12} />
-              </LinearGradient>
-              <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
-                Nowa fiszka
-              </GradientText>
-            </Pressable>
-            <Pressable
-              style={{
-                paddingVertical: 6,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => navigate("Notes", { screen: "AddNote" })}
-            >
-              <LinearGradient
-                style={styles.centerButtonLink}
-                start={{ x: 0, y: 0 }}
-                colors={linearGradient}
-              >
-                <NotesIcon stroke="#FFF" strokeWidth={1.5} height={16} />
-              </LinearGradient>
-              <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
-                Nowa notatka
-              </GradientText>
-            </Pressable>
+            />
+            <RippleButton onPress={() => navigate("AddCard", undefined)}>
+              <View style={styles.centerButtonLink}>
+                <FlashCardsIcon stroke={primary} strokeWidth={2} height={24} />
+                <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
+                  Nowa fiszka
+                </GradientText>
+              </View>
+            </RippleButton>
+            <RippleButton onPress={() => navigate("AddNote", undefined)}>
+              <View style={styles.centerButtonLink}>
+                <NotesIcon
+                  stroke={primary}
+                  strokeWidth={1.6}
+                  height={24}
+                  width={24}
+                />
+                <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
+                  Nowa notatka
+                </GradientText>
+              </View>
+            </RippleButton>
           </View>
         </Pressable>
       </Modal>
@@ -202,14 +205,7 @@ const CenterButton = () => {
           start={{ x: 0, y: 0 }}
           colors={linearGradient}
         >
-          <Text
-            style={{
-              ...styles.centerButtonLabel,
-              transform: [{ rotate: active ? "45deg" : "0deg" }],
-            }}
-          >
-            +
-          </Text>
+          <PlusIcon />
         </LinearGradient>
       </Pressable>
     </View>
@@ -220,15 +216,23 @@ const styles = StyleSheet.create({
   tabBar: {
     height: 64,
     alignItems: "center",
-    justifyContent: "space-evenly",
     flexDirection: "row",
     ...shadowPrimary,
   },
+  linkWrapper: {
+    justifyContent: "space-evenly",
+    alignItems: "flex-end",
+    flexDirection: "row",
+    width: "100%",
+    height: "100%",
+  },
   tabBarLabel: {
     fontSize: 12,
-    fontFamily: "Bold",
+    fontFamily: "SemiBold",
   },
   tabBarLink: {
+    height: "100%",
+    justifyContent: "center",
     alignItems: "center",
   },
   centerButton: {
@@ -242,8 +246,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     backgroundColor: "#FFF",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingBottom: 16,
+    alignItems: "center",
     elevation: 32,
     shadowOffset: {
       height: -4,
@@ -251,22 +255,17 @@ const styles = StyleSheet.create({
     },
   },
   modalWrapper: {
-    alignItems: "center",
+    paddingHorizontal: 24,
     justifyContent: "flex-end",
     height: "100%",
-  },
-  centerButtonLabel: {
-    fontFamily: "SemiBold",
-    fontSize: 24,
-    lineHeight: 24,
-    color: "white",
+    backgroundColor: "rgba(0,0,0,0.2)",
   },
   centerButtonLink: {
+    paddingVertical: 8,
+    flexDirection: "row",
     alignItems: "center",
+    alignSelf: "stretch",
     justifyContent: "center",
-    height: 36,
-    width: 36,
-    borderRadius: 36,
   },
   sceneContainer: {
     backgroundColor: "#FFFFFF",

@@ -1,44 +1,44 @@
-import { Dimensions, Image, Pressable, StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { Dimensions, View, StyleSheet } from "react-native";
 import { ResizeIcon } from "../../assets/icons/icons";
-import { ImageFile } from "../../types/notes";
+import { ImageHandlerProps } from "../../types/notes";
 import { useContext, useState } from "react";
 import ResizeModal from "./ResizeModal";
 import { ThemeContext } from "../../context/ThemeContext";
+import ImageCarousel from "./ImageCarousel";
+import RippleButton from "../RippleButton";
 
 const { width } = Dimensions.get("screen");
 
-export default function ImageHandler({ images }: { images: ImageFile[] }) {
+export default function ImageHandler({
+  initialIndex,
+  setActiveIndex,
+  images,
+}: ImageHandlerProps) {
   const { light, font } = useContext(ThemeContext);
   const [resizeModalActive, setResizeModalActive] = useState(false);
   return (
     <>
-      <FlatList
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        data={images}
-        renderItem={({ item }) => (
-          <Image
-            style={{ width: width - 48, height: 320 }}
-            source={{ uri: item.uri }}
-          />
-        )}
+      <ImageCarousel
+        images={images}
+        itemWidth={width - 48}
+        setActiveIndex={setActiveIndex}
       />
       {images.length > 0 && (
-        <Pressable
-          onPress={() => setResizeModalActive((prev) => !prev)}
-          style={{ ...styles.resize, backgroundColor: light }}
-        >
-          <ResizeIcon fill={font} />
-        </Pressable>
+        <View style={[styles.resize, { backgroundColor: light }]}>
+          <RippleButton
+            borderless
+            onPress={() => setResizeModalActive((prev) => !prev)}
+          >
+            <ResizeIcon fill={font} />
+          </RippleButton>
+        </View>
       )}
-      {resizeModalActive && (
-        <ResizeModal
-          images={images}
-          setResizeModalActive={setResizeModalActive}
-        />
-      )}
+      <ResizeModal
+        images={images}
+        initialIndex={initialIndex || 0}
+        resizeModalActive={resizeModalActive}
+        setResizeModalActive={setResizeModalActive}
+      />
     </>
   );
 }

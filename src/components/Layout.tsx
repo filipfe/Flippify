@@ -8,14 +8,18 @@ type Props = {
   paddingVertical?: number;
 };
 
-export default function Layout({ children, paddingHorizontal = 24 }: Props) {
+export default function Layout({
+  children,
+  paddingHorizontal = 24,
+  paddingVertical = 16,
+}: Props) {
   const { background } = useContext(ThemeContext);
   return (
     <View
       style={{
         backgroundColor: background,
         flex: 1,
-        paddingVertical: 16,
+        paddingVertical,
         paddingHorizontal,
       }}
     >

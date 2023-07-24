@@ -24,6 +24,11 @@ import TabBar from "./src/components/TabBar";
 import ThemeProvider from "./src/providers/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator } from "react-native";
+import { ThemeContext } from "./src/context/ThemeContext";
+import SettingsProvider from "./src/providers/SettingsProvider";
+import AddCard from "./src/components/flashcards/add-card/AddCard";
+import AddNote from "./src/components/notes/add-note/AddNote";
+import Header from "./src/components/header/Header";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,10 +47,12 @@ export default function AppProvider() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <AxiosProvider>
-          <StatusBar translucent />
-          <App />
-        </AxiosProvider>
+        <SettingsProvider>
+          <AxiosProvider>
+            <StatusBar translucent />
+            <App />
+          </AxiosProvider>
+        </SettingsProvider>
       </AuthProvider>
     </ThemeProvider>
   );
@@ -54,6 +61,7 @@ export default function AppProvider() {
 const RootTab = createBottomTabNavigator<RootTabParams>();
 
 function App() {
+  const { background } = useContext(ThemeContext);
   const { isLogged } = useContext(AuthContext);
 
   if (!isLogged) return <EntryScreen />;
@@ -61,12 +69,12 @@ function App() {
   return (
     <NavigationContainer>
       <RootTab.Navigator
-        sceneContainerStyle={styles.sceneContainer}
+        sceneContainerStyle={{ backgroundColor: background }}
         tabBar={(props) => <TabBar {...props} />}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: "#2386F1",
           tabBarInactiveTintColor: "#382E6D",
-          headerShown: false,
         }}
       >
         <RootTab.Screen
@@ -74,6 +82,7 @@ function App() {
           component={HomeScreen}
           options={{
             title: "Eksploruj",
+            headerShown: false,
           }}
         />
         <RootTab.Screen
@@ -81,6 +90,7 @@ function App() {
           component={FlashCardsScreen}
           options={{
             title: "Fiszki",
+            headerShown: false,
           }}
         />
         <RootTab.Screen
@@ -88,6 +98,7 @@ function App() {
           component={NotesScreen}
           options={{
             title: "Notatki",
+            headerShown: false,
           }}
         />
         <RootTab.Screen
@@ -95,7 +106,25 @@ function App() {
           component={ProfileScreen}
           options={{
             title: "Profil",
+            headerShown: false,
           }}
+        />
+        <RootTab.Screen
+          name="AddCard"
+          component={AddCard}
+          options={{
+            title: "Nowa fiszka",
+            header: (props) => <Header {...props} />,
+          }}
+        />
+        <RootTab.Screen
+          name="AddNote"
+          component={AddNote}
+          options={({ route }) => ({
+            title: route.params?.id ? route.params.title : "Dodaj notatkę",
+            headerTransparent: true,
+            header: (props) => <Header {...props} />,
+          })}
         />
       </RootTab.Navigator>
     </NavigationContainer>
@@ -103,9 +132,6 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-  sceneContainer: {
-    backgroundColor: "#FFFFFF",
-  },
   headerTitle: {
     fontFamily: "Bold",
   },

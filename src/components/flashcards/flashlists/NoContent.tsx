@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../../PrimaryButton";
 import { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 type Props = {
   text?: string;
   buttonText?: string;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export default function NoContent({
@@ -18,7 +18,13 @@ export default function NoContent({
   return (
     <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <Text style={{ ...styles.text, color: font }}>{text}</Text>
-      <PrimaryButton onPress={onPress} paddingVertical={14} text={buttonText} />
+      {text && buttonText && (
+        <PrimaryButton
+          onPress={onPress}
+          paddingVertical={14}
+          text={buttonText}
+        />
+      )}
     </View>
   );
 }

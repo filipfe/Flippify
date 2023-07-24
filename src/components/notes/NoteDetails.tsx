@@ -1,9 +1,8 @@
-import { RouteProp } from "@react-navigation/native";
 import axios from "axios";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { API_URL } from "@env";
-import { Note, NoteStackParams } from "../../types/notes";
-import { useState, useEffect, useContext } from "react";
+import { Note } from "../../types/notes";
+import { useState, useEffect, useContext, useRef } from "react";
 import Loader from "../Loader";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
@@ -14,28 +13,31 @@ import ImageHandler from "./ImageHandler";
 import useNoteImages from "../../hooks/useNoteImages";
 import NoteImageIndex from "./NoteImageIndex";
 import { ThemeContext } from "../../context/ThemeContext";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NoteStackParams } from "../../types/navigation";
 
-type NoteRouteProp = RouteProp<NoteStackParams, "Note">;
-
-export default function NoteDetails({ route }: { route: NoteRouteProp }) {
+export default function NoteDetails({
+  route,
+}: NativeStackScreenProps<NoteStackParams, "Note">) {
+  const scrollRef = useRef<ScrollView>(null!);
   const { font, secondary, background } = useContext(ThemeContext);
   const { id } = route.params;
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<Note>(initialNote);
   const [isLiked, setIsLiked] = useState(false);
-  const { title, created_at, user, desc, image } = details;
-  const { activeIndex, images, setImages } = useNoteImages<string>();
+  const { title, created_at, user, description } = details;
+  const { activeIndex, images, setImages, setActiveIndex } =
+    useNoteImages<string>();
 
   const handleLike = async () => {
     setIsLiked((prev) => !prev);
-    if (isLiked) {
-      return axios.delete(`${API_URL}/api/notes/${id}/likes/delete`);
-    } else {
-      return axios.post(`${API_URL}/api/notes/${id}/likes/add`, null);
-    }
+    return isLiked
+      ? axios.delete(`${API_URL}/api/notes/${id}/likes/delete`)
+      : axios.post(`${API_URL}/api/notes/${id}/likes/add`, null);
   };
 
   useEffect(() => {
+    scrollRef.current && scrollRef.current.scrollTo({ y: 0 });
     axios
       .get(`${API_URL}/api/notes/${id}`)
       .then((res) => res.data)
@@ -45,7 +47,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
         setIsLiked(data.is_liked);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [id]);
 
   if (loading)
     return (
@@ -56,7 +58,10 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: background }}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <ScrollView
+        ref={(ref) => ref && (scrollRef.current = ref)}
+        contentContainerStyle={{ flex: 1 }}
+      >
         <LinearGradient
           colors={linearGradient}
           start={{ x: 1, y: 1 }}
@@ -76,19 +81,18 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
                 style={{ ...styles.imageWrapper, backgroundColor: background }}
               >
                 <ImageHandler
-                  // images={images.map((image) => ({
-                  //   uri: image,
-                  //   name: image,
-                  //   type: "",
-                  // }))}
-                  images={[{ uri: image, name: image, type: "" }]}
+                  initialIndex={activeIndex}
+                  setActiveIndex={setActiveIndex}
+                  images={images.map((image) => ({
+                    uri: image,
+                    name: image,
+                    type: "",
+                  }))}
                 />
-                {[""].length > 1 && (
-                  <NoteImageIndex
-                    // images={images}
-                    images={[{ uri: image, name: image, type: "" }]}
-                    activeIndex={activeIndex}
-                  />
+                {images.length > 1 && (
+                  <View style={{ bottom: 16, position: "absolute" }}>
+                    <NoteImageIndex images={images} activeIndex={activeIndex} />
+                  </View>
                 )}
               </View>
             </View>
@@ -108,7 +112,7 @@ export default function NoteDetails({ route }: { route: NoteRouteProp }) {
                   {title}
                 </Text>
                 <Text style={{ ...styles.noteDesc, color: secondary }}>
-                  {desc || ""}
+                  {description || "Brak opisu dla tej notatki"}
                 </Text>
               </View>
               <View style={{ marginTop: 32 }}>

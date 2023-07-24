@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
-import { SafeAreaView } from "react-native";
 import {
   DefaultProfileIcon,
   NotificationsIcon,
 } from "../../assets/icons/icons";
 import { ThemeContext } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Greeting() {
+export default function HomeHeader() {
   const { font, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const { username, profile_picture } = user;
@@ -18,9 +18,8 @@ export default function Greeting() {
         justifyContent: "space-between",
         flexDirection: "row",
         width: "100%",
-        paddingTop: 64,
-        paddingBottom: 112,
-        paddingHorizontal: 24,
+        padding: 24,
+        paddingBottom: 36,
       }}
     >
       <View style={{ alignItems: "center", flexDirection: "row" }}>
@@ -43,9 +42,6 @@ export default function Greeting() {
             <DefaultProfileIcon width={48} height={48} />
           )}
         </View>
-        <Text style={{ fontFamily: "Bold", color: "#FFF", fontSize: 20 }}>
-          {username}
-        </Text>
       </View>
       <Pressable
         style={{

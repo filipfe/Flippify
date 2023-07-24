@@ -9,11 +9,3 @@ export const DEFAULT_STYLES = StyleSheet.create({
 
 export const linearGradient = ["#2386F1", "#46B8FA"]
 
-export const themeOptions: Option<ColorSchemeName | "system">[] = [
-    {
-      value: "system",
-      label: "System",
-    },
-    { value: "dark", label: "Ciemny" },
-    { value: "light", label: "Jasny" },
-  ];

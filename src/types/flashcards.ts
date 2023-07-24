@@ -1,7 +1,10 @@
 import { User } from "./auth";
 import { Category } from "./general";
 
-export type Topic = string
+export type Topic = {
+  id: number;
+  name: string;
+}
 
 export type Answer = {
   id?: number;
@@ -18,6 +21,7 @@ export type FlashCard = {
 }
 
 export type AddedFlashCard = FlashCard & {
+  created_at?: string;
   category: Category;
   topic: Topic;
 }
@@ -33,3 +37,5 @@ export type FlashList = {
   count: number;
   flashcards: FlashListCard[];
 }
+
+export type FlashCardType = 'input' | "radio"

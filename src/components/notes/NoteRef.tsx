@@ -1,60 +1,96 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
-import { Image, Pressable, Text, StyleSheet, View } from "react-native";
-import { Note, NoteRefNavigationProp } from "../../types/notes";
-import { LikeIcon } from "../../assets/icons/icons";
+import { Image, Text, StyleSheet, View } from "react-native";
+import { Note } from "../../types/notes";
+import { LikeIcon, PremiumIcon } from "../../assets/icons/icons";
 import { ThemeContext } from "../../context/ThemeContext";
+import { NoteRefNavigationProp } from "../../types/navigation";
+import RippleButton from "../RippleButton";
 
 const NoteRef = (props: Note) => {
   const { secondary, background, font } = useContext(ThemeContext);
   const { navigate } = useNavigation<NoteRefNavigationProp>();
-  const { title, image, like_count } = props;
+  const { title, thumbnail, like_count, category, user } = props;
   return (
-    <Pressable
-      style={styles.wrapper}
-      onPress={() => navigate("Note", { ...props })}
-    >
-      <Image
-        style={styles.image}
-        source={{
-          uri: image,
-        }}
-      />
-      <View style={{ ...styles.textWrapper, backgroundColor: background }}>
-        <Text style={{ ...styles.title, color: font }}>{title}</Text>
-        <View style={styles.likesWrapper}>
-          <Text style={{ ...styles.likesCount, color: secondary }}>
-            {like_count || 0}
-          </Text>
-          <LikeIcon strokeWidth={2} height={16} width={16} stroke={secondary} />
+    <View style={{ backgroundColor: background, flex: 1 }}>
+      <RippleButton borderless onPress={() => navigate("Note", { ...props })}>
+        <View>
+          <Image
+            style={styles.image}
+            source={{
+              uri: thumbnail,
+            }}
+          />
+          <View style={styles.infoWrapper}>
+            <View style={styles.textWrapper}>
+              <Text style={[styles.category, { color: secondary }]}>
+                {category.name}
+              </Text>
+              <View style={styles.likesWrapper}>
+                <Text style={{ ...styles.likesCount, color: secondary }}>
+                  {like_count || 0}
+                </Text>
+                <View style={{ marginTop: 2 }}>
+                  <LikeIcon
+                    strokeWidth={2}
+                    height={11}
+                    width={11}
+                    stroke={secondary}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={[styles.textWrapper, { marginTop: 6 }]}>
+              <Text style={{ ...styles.title, color: font }}>{title}</Text>
+            </View>
+            <View
+              style={[styles.userWrapper, { marginTop: 4, flexWrap: "wrap" }]}
+            >
+              <Text style={[styles.category, { color: secondary }]}>
+                Dodane przez
+              </Text>
+              <View style={[styles.userWrapper, { marginLeft: 8 }]}>
+                {user.is_premium && (
+                  <PremiumIcon
+                    height={12}
+                    width={16}
+                    style={{ marginTop: 2, marginRight: 4 }}
+                  />
+                )}
+                <Text style={[styles.category, { color: font }]}>
+                  {user.username}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </RippleButton>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: "100%",
-    elevation: 16,
-    shadowColor: "#3C85C2",
-    backgroundColor: "#FFFFFF",
-    marginBottom: 24,
-  },
   image: {
     height: 164,
   },
   textWrapper: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "space-between",
+  },
+  category: {
+    fontSize: 12,
+    fontFamily: "SemiBold",
+  },
+  infoWrapper: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   title: {
     fontFamily: "SemiBold",
-    fontSize: 18,
+    fontSize: 14,
     lineHeight: 18,
+    maxWidth: "95%",
   },
   likesWrapper: {
     flexDirection: "row",
@@ -62,9 +98,12 @@ const styles = StyleSheet.create({
   },
   likesCount: {
     fontFamily: "SemiBold",
-    fontSize: 14,
-    lineHeight: 14,
+    fontSize: 12,
     marginRight: 4,
+  },
+  userWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 

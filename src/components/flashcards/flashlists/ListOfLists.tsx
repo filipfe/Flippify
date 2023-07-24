@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import Loader from "../Loader";
+import Loader from "../../Loader";
 import axios from "axios";
 import { API_URL } from "@env";
 import {
@@ -8,16 +8,16 @@ import {
   useNavigation,
   useNavigationState,
 } from "@react-navigation/native";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../../PrimaryButton";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../../const/styles";
-import { shadowPrimary } from "../../styles/general";
-import GradientText from "../GradientText";
-import { FlashList } from "../../types/flashcards";
+import { linearGradient } from "../../../const/styles";
+import { shadowPrimary } from "../../../styles/general";
+import GradientText from "../../GradientText";
+import { FlashList } from "../../../types/flashcards";
 import NoContent from "./NoContent";
-import { ThemeContext } from "../../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FlashListStackParams } from "../../types/navigation";
+import { FlashListStackParams } from "../../../types/navigation";
 
 export default function ListOfLists({
   navigation,
@@ -32,9 +32,9 @@ export default function ListOfLists({
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/api/profile`)
+      .get(`${API_URL}/api/profile/flashlists`)
       .then((res) => res.data)
-      .then((data) => setFlashLists(data.flashlists || []))
+      .then((data) => setFlashLists(data.items))
       .finally(() => setLoading(false));
   }, [location, removed]);
 

@@ -1,12 +1,17 @@
 import { createContext } from "react";
 import { FlashCard } from "../types/flashcards";
 
+type IsCardLoading = {
+  active: boolean;
+  next: boolean;
+};
+
 export type FlashCardContextType = {
   activeCard: FlashCard;
   flipCard: () => void;
   submitAnswer: (answer: string) => void;
   changeCard: () => void;
-  isLoading: boolean;
+  isLoading: IsCardLoading;
   rotateValue: number;
   answer: string;
 };

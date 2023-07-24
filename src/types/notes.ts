@@ -1,40 +1,36 @@
-import { NavigationProp } from "@react-navigation/native";
 import { Category } from "./general";
 import { User } from "./auth";
 import { Dispatch, SetStateAction } from 'react'
+import { FlashCardType, Topic } from "./flashcards";
+import { FlashCardContextType } from "../context/FlashCardContext";
 
 export type Note = {
     id: number;
     title: string;
-    desc: string;
-    image: string // deprecated
+    description: string;
+    thumbnail: string;
     images: string[];
     created_at: string;
-    category?: string;
+    category: Category;
     like_count?: number;
     is_liked?: boolean;
     user: User
 }
   
 
-export type Filter = {
-    category: string
+export type NoteFilter = {
+    category: Category,
     search: string
 }
 
-export type NoteStackParams = {
-    NoteList: { category: Category, search: string };
-    Note: { id: number, title: string };
-    OwnNotes: undefined;
-    AddNote: undefined;
-  };
+export type Filter = {
+  topic: Topic,
+    type: FlashCardType | undefined,
+} & NoteFilter
 
-export type NoteRefNavigationProp = NavigationProp<NoteStackParams, "NoteList">;
-
-export type AddedNote = Omit<Note, "image" | "images" | "likes" | "id" | "category" | "is_liked"> & {
+export type AddedNote = Omit<Note, "images" | "likes" | "is_liked"> & {
   images: ImageFile[];
   is_public: boolean;
-  category: Omit<Category, "image">;
 };
 
 export type ImageFile = {
@@ -44,5 +40,24 @@ export type ImageFile = {
 };
 
 export type NoteAddButtonProps = {
+  size?: number,
   addNewImage: (image: ImageFile) => void
 }
+
+export type ImageHandlerProps = { 
+  initialIndex?: number; 
+  images: ImageFile[], 
+  setActiveIndex: Dispatch<SetStateAction<number>>
+};
+
+export type ImageListProps = {
+  setImageListActive: Dispatch<SetStateAction<boolean>>
+}
+
+export type ImageRefProps = {
+  chosen: string;
+  setChosen: Dispatch<SetStateAction<string>>
+}
+
+
+export type OwnNote = Omit<AddedNote, "images"> & { images: string[] }

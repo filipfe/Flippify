@@ -10,6 +10,7 @@ export type Theme = {
     box: string;
     wrong: string,
     stroke: string,
+    ripple: string
 }
 
 export type ThemeContextType = Theme & {

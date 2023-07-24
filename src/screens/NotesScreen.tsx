@@ -1,26 +1,20 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useContext } from "react";
-import AddNote from "../components/notes/add-note/AddNote";
+import React from "react";
 import Note from "../components/notes/NoteDetails";
 import NoteList from "../components/notes/NoteList";
-import { NoteStackParams } from "../types/notes";
-import HeaderMenu from "../components/notes/header/HeaderMenu";
-import HeaderTitle from "../components/HeaderTitle";
-import { ThemeContext } from "../context/ThemeContext";
-import Header from "../components/Header";
+import HeaderMenu from "../components/header/HeaderMenu";
+import Header from "../components/header/Header";
 import { initialCategory } from "../const/flashcards";
 import OwnNotesScreen from "./notes/OwnNotesScreen";
+import { NoteStackParams } from "../types/navigation";
 
 const NoteStack = createNativeStackNavigator<NoteStackParams>();
 
 export default function NotesScreen() {
-  const { font, background } = useContext(ThemeContext);
   return (
     <NoteStack.Navigator
       initialRouteName="NoteList"
       screenOptions={{
-        headerTitleStyle: { fontFamily: "SemiBold", color: font },
-        headerStyle: { backgroundColor: background },
         header: (props) => <Header {...props} />,
       }}
     >
@@ -30,9 +24,7 @@ export default function NotesScreen() {
         initialParams={{ search: "", category: initialCategory }}
         options={{
           title: "Notatki",
-          headerShadowVisible: false,
-          headerTitle: HeaderTitle,
-          headerRight: HeaderMenu,
+          headerRight: () => <HeaderMenu route="NoteList" dataType="note" />,
         }}
       />
       <NoteStack.Screen
@@ -43,15 +35,14 @@ export default function NotesScreen() {
           headerTransparent: true,
         })}
       />
-      <NoteStack.Screen
-        name="AddNote"
-        component={AddNote}
-        options={{ title: "Dodaj notatkę", headerTransparent: true }}
-      />
+
       <NoteStack.Screen
         name="OwnNotes"
         component={OwnNotesScreen}
-        options={{ title: "Moje notatki" }}
+        options={{
+          title: "Moje notatki",
+          headerRight: () => <HeaderMenu route="OwnNotes" dataType="note" />,
+        }}
       />
     </NoteStack.Navigator>
   );
