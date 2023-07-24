@@ -19,8 +19,6 @@ import Recovery from "../../screens/entry/Recovery";
 
 const { width } = Dimensions.get("screen");
 
-const { width } = Dimensions.get("screen");
-
 export default function Login() {
   const { font, primary, secondary } = useContext(ThemeContext);
   const { signInWithPassword, signInWithGoogle } = useContext(AuthContext);
