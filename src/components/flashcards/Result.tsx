@@ -33,6 +33,12 @@ export default function Result() {
     };
   }, [points]);
 
+  const animatedWidthStyle = useAnimatedStyle(() => {
+    return {
+      width: withTiming(animatedWidth.value + "%", { duration: 600 }),
+    };
+  }, [animatedWidth.value]);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>
@@ -91,13 +97,13 @@ export default function Result() {
           text={"Odwróć"}
           style={{ marginRight: 4, flex: 1 }}
           paddingHorizontal={0}
-          onPress={flipCard}
+          onPress={reflipCard}
         />
         <PrimaryButton
           style={{ marginLeft: 4, flex: 1 }}
           paddingHorizontal={0}
           text="Przejdź dalej"
-          onPress={changeCard}
+          onPress={goNext}
         />
       </View>
     </View>

@@ -19,6 +19,7 @@ export default function AddButton({
 
     if (!result.canceled) {
       const imageUri = result.assets[0].uri;
+      console.log(imageUri);
       const imageName = imageUri.split("/").pop();
       const match = /\.(\w+)$/.exec(imageName ? imageName : "");
       const type: string = match ? `image/${match[1]}` : `image`;

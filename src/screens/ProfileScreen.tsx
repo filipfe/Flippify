@@ -4,12 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
 import { ProfileStackParams } from "../types/navigation";
 import UserInfo from "../components/profile/UserInfo";
-import {
-  LogoIcon,
-  NotificationsIcon,
-  PremiumIcon,
-  SettingsIcon,
-} from "../assets/icons/icons";
+import { LogoIcon, PremiumIcon, SettingsIcon } from "../assets/icons/icons";
 import PremiumBanner from "../components/profile/PremiumBanner";
 import LogoutButton from "../components/profile/LogoutButton";
 import Stats from "../components/profile/Stats";

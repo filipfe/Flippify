@@ -155,6 +155,33 @@ export default function useAuth() {
     fetchPoints();
   }, [isLogged]);
 
+  const addPoints = (points: number) => {
+    const addedPoints = level.points + points;
+    const isPromoted = addedPoints >= level.points_required;
+    const newPointsRequired = isPromoted
+      ? level.points_required
+      : level.points_required;
+    const newPoints = isPromoted
+      ? addedPoints - level.points_required
+      : level.points + points;
+    const newLevel = isPromoted ? level.current_level + 1 : level.current_level;
+    axios
+      .post(
+        `${API_URL}/api/flashcards/correct-answer`
+        // JSON.stringify({
+        //   points: newPoints,
+        //   current_level: level.current_level,
+        // })
+      )
+      .catch(() => alert("There was an error adding your points"));
+    setLevel({
+      points_required: newPointsRequired,
+      current_level: newLevel,
+      points: newPoints,
+    });
+    return newPoints;
+  };
+
   const authInterface = useMemo<AuthContextType>(
     () => ({
       isLogged,

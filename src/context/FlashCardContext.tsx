@@ -6,6 +6,11 @@ type IsCardLoading = {
   next: boolean;
 };
 
+type IsCardLoading = {
+  active: boolean;
+  next: boolean;
+};
+
 export type FlashCardContextType = {
   activeCard: FlashCard;
   flipCard: () => void;

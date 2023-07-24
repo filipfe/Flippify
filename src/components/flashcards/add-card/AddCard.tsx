@@ -44,6 +44,7 @@ export default function AddCard({
     category.id &&
     topic.id
   );
+  console.log(topic, category);
 
   async function insertCard() {
     setIsLoading(true);

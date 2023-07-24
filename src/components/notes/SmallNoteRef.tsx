@@ -66,8 +66,8 @@ export default function SmallNoteRef(props: Note) {
             </Text>
           </View>
         </View>
-      </View>
-    </Pressable>
+      </RippleButton>
+    </View>
   );
 }
 
