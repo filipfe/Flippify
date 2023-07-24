@@ -10,7 +10,7 @@ import { AuthContext } from "../context/AuthContext";
 import RecentNotes from "../components/home/RecentNotes";
 
 export default function HomeScreen() {
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
   const { background } = useContext(ThemeContext);
 
   useEffect(() => {
