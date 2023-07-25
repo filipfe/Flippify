@@ -20,16 +20,18 @@ export default function Result() {
   const { flipCard, changeCard, answer } = useContext(FlashCardContext);
   const { user, level } = useContext(AuthContext);
   const { profile_picture } = user;
-  const { points, points_required } = level;
-  const isPromotion = answer.is_correct && points < 20;
+  const isPromotion = answer.is_correct && level.points < 20;
 
   const animatedWidthStyle = useAnimatedStyle(
     () => ({
-      width: withTiming(((points / points_required) * 100).toFixed(2) + "%", {
-        duration: 600,
-      }),
+      width: withTiming(
+        ((level.points / level.points_required) * 100).toFixed(2) + "%",
+        {
+          duration: 600,
+        }
+      ),
     }),
-    [points, points_required]
+    [level]
   );
 
   return (
@@ -66,7 +68,7 @@ export default function Result() {
             </LinearGradient>
           </Animated.View>
           <Text style={{ ...styles.points, fontSize: 12, color: secondary }}>
-            {points} / {points_required}
+            {level.points} / {level.points_required}
           </Text>
         </View>
         <Text style={{ ...styles.title, color: font }}>

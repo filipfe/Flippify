@@ -50,10 +50,9 @@ export default function useFlashCard({
 
   async function getDeck() {
     const { data } = await supabase.rpc(
-      "get_random_flashcards"
-      // topic ? { topic_id: topic.id } : { category_id: category.id }
+      "get_random_flashcards",
+      topic ? { p_topic_id: topic.id } : { p_category_id: category.id }
     );
-    console.log(data);
     return (data || []) as FlashCard[];
   }
 
