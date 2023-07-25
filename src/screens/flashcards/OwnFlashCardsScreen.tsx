@@ -15,26 +15,29 @@ import { AuthContext } from "../../context/AuthContext";
 export default function OwnFlashCards({
   route,
 }: NativeStackScreenProps<FlashCardsStackParams, "OwnFlashCards">) {
+  const [page, setPage] = useState(0);
   const { user } = useContext(AuthContext);
   const navigation = useNavigation<NavigationProp<RootTabParams>>();
   const [cards, setCards] = useState<AddedFlashCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     async function fetchFlashCards() {
       const { data } = await supabase
         .from("flashcards")
         .select(
-          "*, topic:topics(id, name), category:topics(...categories(id, name, icon))"
+          "*, topic:topics(id, name), category:topics(...categories(id, name, icon)), answers(*)"
         )
         .eq("user_id", user.id)
-        .limit(10);
-      setCards((data as unknown as AddedFlashCard[]) || []);
+        .range(page * 10, page * 10 + 9);
+      setCards((prev) => [
+        ...prev,
+        ...((data as unknown as AddedFlashCard[]) || []),
+      ]);
       setIsLoading(false);
     }
     fetchFlashCards();
-  }, [route.params]);
+  }, [route.params, page]);
 
   return isLoading ? (
     <Loader />
@@ -45,7 +48,7 @@ export default function OwnFlashCards({
         ItemSeparatorComponent={() => <View style={{ height: 8 }}></View>}
         data={cards}
         renderItem={({ item }) => <OwnFlashCardRef {...item} />}
-        onEndReached={() => console.log("reached")}
+        onEndReached={() => setPage((prev) => prev + 1)}
         ListFooterComponent={<Loader />}
         keyExtractor={(card) => card.id.toString()}
       />
