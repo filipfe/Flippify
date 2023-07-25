@@ -1,10 +1,10 @@
 import Info from "../components/entry/Info";
-import Auth from "../components/entry/Auth";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { View, ViewToken } from "react-native";
 import StepDisplayer from "../components/entry/StepDisplayer";
+import Login from "../components/entry/Login";
 
 export default function EntryScreen() {
   const listRef = useRef<FlatList>(null!);
@@ -35,9 +35,9 @@ export default function EntryScreen() {
         horizontal
         pagingEnabled
         style={{ backgroundColor: background }}
-        data={[<Info setStep={changeStep} key="info" />, <Auth key="auth" />]}
+        data={[<Info setStep={changeStep} />, <Login />]}
         renderItem={({ item }) => item}
-        keyExtractor={(item) => item.key!.toString()}
+        keyExtractor={(_, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         ref={(ref) => ref && (listRef.current = ref)}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}

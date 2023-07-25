@@ -49,17 +49,10 @@ export default function useFlashCard({
   };
 
   async function getDeck() {
-    let query = supabase
-      .from("flashcards")
-      .select(
-        "*, answers(id, text, is_correct), user:profiles(id, is_premium, username)"
-      );
-    if (topic) {
-      query = query.eq("topic_id", topic.id);
-    } else {
-      query = query.eq("category_id", category.id);
-    }
-    const { data } = await query.order("random(id)").limit(10);
+    const { data } = await supabase.rpc(
+      "get_random_flashcards",
+      topic ? { topic_id: topic.id } : { category_id: category.id }
+    );
     return (data || []) as FlashCard[];
   }
 

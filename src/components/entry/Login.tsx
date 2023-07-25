@@ -1,86 +1,32 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, Modal } from "react-native";
 import { useState, useContext } from "react";
-import Loader from "../Loader";
 import PrimaryInput from "../PrimaryInput";
 import PrimaryButton from "../PrimaryButton";
-import { AuthFormContext } from "../../providers/AuthFormProvider";
 import { AuthContext } from "../../context/AuthContext";
-import SecondaryButton from "../SecondaryButton";
 import { ThemeContext } from "../../context/ThemeContext";
-import { LoginData } from "../../const/auth";
 import RippleButton from "../RippleButton";
-import Recovery from "../../screens/entry/Recovery";
+import CodePopup from "./CodePopup";
 
 const { width } = Dimensions.get("screen");
 
 export default function Login() {
-  const { font, primary, background } = useContext(ThemeContext);
-  const { signInWithPassword, signInWithGoogle } = useContext(AuthContext);
-  const { setAuthFormIndex } = useContext(AuthFormContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [recoveryActive, setRecoveryActive] = useState(false);
-  const [userData, setUserData] = useState<LoginData>({
-    email: "",
-    password: "",
-  });
-
-  const handleSubmit = () => {
-    setIsLoading(true);
-    signInWithPassword(userData);
-  };
-
-  if (isLoading)
-    return (
-      <View style={{ width }}>
-        <Loader />
-      </View>
-    );
-
-  if (recoveryActive)
-    return <Recovery close={() => setRecoveryActive(false)} />;
+  const { font, background } = useContext(ThemeContext);
+  const { signInWithEmail, signInWithGoogle } = useContext(AuthContext);
+  const [codePopupActive, setCodePopupActive] = useState(false);
+  const [email, setEmail] = useState("");
 
   return (
     <View style={styles.wrapper}>
       <Text style={{ ...styles.title, color: font }}>Zaloguj się</Text>
       <View style={{ flex: 1 }}>
-        <PrimaryInput
-          onChangeText={(text) =>
-            setUserData((prev) => ({ ...prev, email: text }))
-          }
-          label="Email"
-        />
-        <PrimaryInput
-          onChangeText={(text) =>
-            setUserData((prev) => ({ ...prev, password: text }))
-          }
-          label="Hasło"
-          secureTextEntry={true}
-        />
-        <View style={styles.recoverWrapper}>
-          <Text style={{ ...styles.recoverText, color: font, opacity: 0.8 }}>
-            Zapomniałeś hasła?{" "}
-          </Text>
-          <TouchableOpacity onPress={() => setRecoveryActive(true)}>
-            <Text style={[styles.recoverText, { color: primary }]}>
-              Odzyskaj hasło
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={[styles.line, { backgroundColor: font }]}>
-          <Text
-            style={[
-              styles.lineText,
-              { color: font, backgroundColor: background, height: 40 },
-            ]}
+        <PrimaryInput onChangeText={(text) => setEmail(text)} label="Email" />
+        <View style={styles.lineWrapper}>
+          <View
+            style={[styles.lineTextWrapper, { backgroundColor: background }]}
           >
-            lub
-          </Text>
+            <Text style={[styles.lineText, { color: font }]}>lub</Text>
+          </View>
+          <View style={[styles.line, { backgroundColor: font }]} />
         </View>
         <RippleButton onPress={signInWithGoogle}>
           <Text
@@ -94,19 +40,23 @@ export default function Login() {
           </Text>
         </RippleButton>
       </View>
-      <View>
-        <SecondaryButton
-          text="Chcę założyć konto"
-          onPress={() => setAuthFormIndex(0)}
-        />
-        <View style={styles.submitButton}>
-          <PrimaryButton
-            text="Zaloguj się"
-            active={userData.email.length > 3 && userData.password.length > 1}
-            onPress={handleSubmit}
-          />
-        </View>
-      </View>
+      <PrimaryButton
+        text="Zaloguj się"
+        active={email.length > 3}
+        onPress={() => {
+          signInWithEmail(email);
+          setCodePopupActive(true);
+        }}
+      />
+      <Modal
+        visible={codePopupActive}
+        animationType="fade"
+        statusBarTranslucent
+        transparent
+        onRequestClose={() => setCodePopupActive(false)}
+      >
+        <CodePopup email={email} />
+      </Modal>
     </View>
   );
 }
@@ -126,16 +76,6 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 32,
   },
-  form: {
-    flex: 1,
-  },
-  recoverWrapper: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 16,
-  },
-  recoverText: { fontFamily: "SemiBold", fontSize: 12 },
-  submitButton: { marginTop: 16 },
   modalButton: {
     backgroundColor: "#0000FF",
     paddingVertical: 12,
@@ -149,14 +89,21 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 1,
     borderRadius: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 36,
+    position: "absolute",
   },
   lineText: {
-    fontFamily: "Medium",
+    fontFamily: "SemiBold",
     fontSize: 12,
+  },
+  lineTextWrapper: {
     paddingVertical: 8,
     paddingHorizontal: 16,
+    position: "relative",
+    zIndex: 10,
+  },
+  lineWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 24,
   },
 });

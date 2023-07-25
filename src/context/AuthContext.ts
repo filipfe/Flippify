@@ -1,11 +1,11 @@
 import { createContext } from "react";
 import { Auth } from "../types/auth";
-import { LoginData, SignUpData } from "../const/auth";
+import { VerifyEmailOtpParams } from "@supabase/supabase-js";
 
 export type AuthContextType = Auth & {
     addPoints: (points: number) => number,
-    signInWithPassword: (formData: LoginData) => void;
-    signUpWithEmail: (formData: SignUpData) => void
+    signInWithEmail: (email: string) => void
+    verifyOTP: (params: VerifyEmailOtpParams) => void;
     signInWithGoogle: () => void;
     logOut: () => void;
 }

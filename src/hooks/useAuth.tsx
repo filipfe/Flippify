@@ -1,11 +1,15 @@
 import { useMemo, useState, useEffect } from "react";
 import { Level, User } from "../types/auth";
 import { AuthContextType } from "../context/AuthContext";
-import { LoginData, SignUpData, initialUserState } from "../const/auth";
+import { initialUserState } from "../const/auth";
 import { SUPABASE_KEY } from "@env";
 import "react-native-url-polyfill/auto";
 import * as SecureStore from "expo-secure-store";
-import { createClient, Session } from "@supabase/supabase-js";
+import {
+  createClient,
+  Session,
+  VerifyEmailOtpParams,
+} from "@supabase/supabase-js";
 import * as SplashScreen from "expo-splash-screen";
 
 const ExpoSecureStoreAdapter = {
@@ -53,31 +57,18 @@ export default function useAuth() {
     const { data } = await supabase
       .from("profiles")
       .select("points, ...levels(current_level:level_number, points_required)")
+      .eq("user_id", user.id)
       .single();
+    console.log(data);
     return data as unknown as Level;
   }
 
-  async function signUpWithEmail(formData: SignUpData) {
-    const { email, password, username } = formData;
-    const { data } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
-        },
-      },
-    });
-    data.session && logIn(data.session);
+  async function signInWithEmail(email: string) {
+    await supabase.auth.signInWithOtp({ email });
   }
 
-  async function signInWithPassword(formData: LoginData) {
-    const { email, password } = formData;
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) alert(error.message);
+  async function verifyOTP(params: VerifyEmailOtpParams) {
+    const { data } = await supabase.auth.verifyOtp(params);
     data.session && logIn(data.session);
   }
 
@@ -160,8 +151,8 @@ export default function useAuth() {
       user,
       level,
       addPoints,
-      signInWithPassword,
-      signUpWithEmail,
+      signInWithEmail,
+      verifyOTP,
       signInWithGoogle,
       logOut,
     }),
@@ -170,9 +161,9 @@ export default function useAuth() {
       user,
       level,
       addPoints,
-      signInWithPassword,
+      signInWithEmail,
+      verifyOTP,
       signInWithGoogle,
-      signUpWithEmail,
       logOut,
     ]
   );
