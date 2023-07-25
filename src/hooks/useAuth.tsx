@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from "react";
 import { Level, User } from "../types/auth";
 import { AuthContextType } from "../context/AuthContext";
 import { initialUserState } from "../const/auth";
-import { SUPABASE_KEY } from "@env";
 import "react-native-url-polyfill/auto";
 import * as SecureStore from "expo-secure-store";
 import {
@@ -26,9 +25,9 @@ const ExpoSecureStoreAdapter = {
 };
 
 const supabaseUrl = "https://viiurwkqrzbkvrauqbjq.supabase.co";
-const supabaseAnonKey = SUPABASE_KEY;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey || "", {
   auth: {
     storage: ExpoSecureStoreAdapter as any,
     autoRefreshToken: true,

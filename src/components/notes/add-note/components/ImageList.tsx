@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet, Dimensions, Text, Pressable } from "react-native";
 import { linearGradient } from "../../../../const/styles";
 import { ThemeContext } from "../../../../context/ThemeContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { NewNoteContext } from "../../../../context/OpusContext";
 import { FlatList } from "react-native-gesture-handler";
 import ImageRef from "./ImageRef";
@@ -95,6 +95,7 @@ export default function ImageList({ setImageListActive }: ImageListProps) {
               <View style={{ alignSelf: "center" }}>
                 <SmallNoteRef
                   {...item}
+                  is_liked={false}
                   user={user}
                   thumbnail={chosen || ""}
                   images={item.images.map((item) => item.uri)}
