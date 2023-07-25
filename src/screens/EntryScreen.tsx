@@ -3,7 +3,6 @@ import { ThemeContext } from "../context/ThemeContext";
 import { useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import { View, ViewToken } from "react-native";
-import StepDisplayer from "../components/entry/StepDisplayer";
 import Login from "../components/entry/Login";
 
 export default function EntryScreen() {
@@ -30,19 +29,16 @@ export default function EntryScreen() {
   };
 
   return (
-    <View style={{ flex: 1, position: "relative" }}>
-      <FlatList
-        horizontal
-        pagingEnabled
-        style={{ backgroundColor: background }}
-        data={[<Info setStep={changeStep} />, <Login />]}
-        renderItem={({ item }) => item}
-        keyExtractor={(_, index) => index.toString()}
-        showsHorizontalScrollIndicator={false}
-        ref={(ref) => ref && (listRef.current = ref)}
-        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-      />
-      <StepDisplayer step={step} />
-    </View>
+    <FlatList
+      horizontal
+      pagingEnabled
+      style={{ backgroundColor: background }}
+      data={[<Info setStep={changeStep} />, <Login />]}
+      renderItem={({ item }) => item}
+      keyExtractor={(_, index) => index.toString()}
+      showsHorizontalScrollIndicator={false}
+      ref={(ref) => ref && (listRef.current = ref)}
+      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+    />
   );
 }

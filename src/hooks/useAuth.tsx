@@ -6,6 +6,7 @@ import { SUPABASE_KEY } from "@env";
 import "react-native-url-polyfill/auto";
 import * as SecureStore from "expo-secure-store";
 import {
+  AuthResponse,
   createClient,
   Session,
   VerifyEmailOtpParams,
@@ -57,9 +58,9 @@ export default function useAuth() {
     const { data } = await supabase
       .from("profiles")
       .select("points, ...levels(current_level:level_number, points_required)")
-      .eq("user_id", user.id)
+      .eq("id", user.id)
       .single();
-    console.log(data);
+
     return data as unknown as Level;
   }
 
@@ -67,9 +68,12 @@ export default function useAuth() {
     await supabase.auth.signInWithOtp({ email });
   }
 
-  async function verifyOTP(params: VerifyEmailOtpParams) {
-    const { data } = await supabase.auth.verifyOtp(params);
-    data.session && logIn(data.session);
+  async function verifyOTP(
+    params: VerifyEmailOtpParams
+  ): Promise<AuthResponse> {
+    const response = await supabase.auth.verifyOtp(params);
+    response.data.session && (await logIn(response.data.session));
+    return response;
   }
 
   async function signInWithGoogle() {
