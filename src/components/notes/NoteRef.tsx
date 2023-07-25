@@ -1,19 +1,22 @@
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useContext } from "react";
 import { Image, Text, StyleSheet, View } from "react-native";
 import { Note } from "../../types/notes";
 import { LikeIcon, PremiumIcon } from "../../assets/icons/icons";
 import { ThemeContext } from "../../context/ThemeContext";
-import { NoteRefNavigationProp } from "../../types/navigation";
 import RippleButton from "../RippleButton";
+import { RootTabParams } from "../../types/navigation";
 
 const NoteRef = (props: Note) => {
   const { secondary, background, font } = useContext(ThemeContext);
-  const { navigate } = useNavigation<NoteRefNavigationProp>();
+  const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
   const { title, thumbnail, like_count, category, user } = props;
   return (
     <View style={{ backgroundColor: background, flex: 1 }}>
-      <RippleButton borderless onPress={() => navigate("Note", { ...props })}>
+      <RippleButton
+        borderless
+        onPress={() => navigate("Notes", { screen: "Note", params: props })}
+      >
         <View>
           <Image
             style={styles.image}

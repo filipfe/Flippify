@@ -15,13 +15,13 @@ export default function SearchButton({
   route,
   dataType,
 }: Omit<FilterComponentProps, "topicActive">) {
-  const timer = useRef<number>(null!);
+  const timer = useRef<any>(null!);
   const inputRef = useRef<TextInput>(null!);
   const { params } = useRoute<RouteProp<any>>();
   const { font, secondary, background, ripple, light } =
     useContext(ThemeContext);
   const { push } = useNavigation<NativeStackNavigationProp<any>>();
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(params?.search || "");
   const [searchActive, setSearchActive] = useState(false);
   const closeModal = () => setSearchActive(false);
   const search = () => {

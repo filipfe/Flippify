@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../PrimaryButton";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import { AuthContext } from "../../context/AuthContext";
@@ -22,16 +22,15 @@ export default function Result() {
   const { profile_picture } = user;
   const { points, points_required } = level;
   const isPromotion = answer.is_correct && points < 20;
-  const animatedWidth = useMemo(
-    () => ((points / points_required) * 100).toFixed(2),
+
+  const animatedWidthStyle = useAnimatedStyle(
+    () => ({
+      width: withTiming(((points / points_required) * 100).toFixed(2) + "%", {
+        duration: 600,
+      }),
+    }),
     [points, points_required]
   );
-
-  const animatedWidthStyle = useAnimatedStyle(() => {
-    return {
-      width: withTiming(animatedWidth + "%", { duration: 600 }),
-    };
-  }, [points]);
 
   return (
     <View style={styles.wrapper}>

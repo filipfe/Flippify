@@ -18,6 +18,7 @@ import GridIcon from './grid.svg'
 import EditIcon from './edit.svg'
 import HintIcon from './hint.svg'
 import ArrowIcon from './arrow.svg'
+import MathIcon from './math.svg'
 
 export {
     NotificationsIcon,
@@ -39,5 +40,6 @@ export {
     GridIcon,
     EditIcon,
     HintIcon,
-    ArrowIcon
+    ArrowIcon,
+    MathIcon
 }

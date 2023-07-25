@@ -40,9 +40,10 @@ export default function useNotes({ category, search }: Filter) {
     const fetchNotes = async () => {
       const { data } = await supabase
         .from("notes")
-        .select("*")
-        .ilike("title", search);
+        .select("*, category:categories(*), user:users(*)")
+        .textSearch("title", search);
       setSearchedNotes((data as Note[]) || []);
+      setAreSearchedLoading(false);
     };
     fetchNotes();
   }, [search]);

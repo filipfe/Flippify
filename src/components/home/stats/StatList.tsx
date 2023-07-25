@@ -63,6 +63,7 @@ export default function StatList() {
       renderItem={({ item, index }) => (
         <StatRef
           {...item}
+          changeIndex={() => setActiveStatIndex(index)}
           isActive={index === activeStatIndex}
           key={item.name}
         />

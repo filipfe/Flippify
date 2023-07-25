@@ -6,7 +6,7 @@ import HomeSection from "../components/home/HomeSection";
 import { supabase } from "../hooks/useAuth";
 import RecentNotes from "../components/home/RecentNotes";
 import StatList from "../components/home/stats/StatList";
-import { FavouriteCategory, InProgress, ProposedUser } from "../types/home";
+import { FavouriteCategory, ProposedUser } from "../types/home";
 import UserSection from "../components/home/UserSection";
 import Hint from "../components/home/Hint";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -55,10 +55,12 @@ export default function HomeScreen({
       <View style={{ paddingVertical: 16 }}>
         <StatList />
         <HomeSection title={categoriesInProgress.length > 0 ? "W trakcie" : ""}>
-          {categoriesInProgress.length > 0 &&
-            categoriesInProgress.map((item) => (
-              <InProgressRef {...item} key={item.category.id} />
-            ))}
+          <View>
+            {categoriesInProgress.length > 0 &&
+              categoriesInProgress.map((item) => (
+                <InProgressRef {...item} key={item.category.id} />
+              ))}
+          </View>
           <Hint
             text="Rozwiązując fiszki zdobędziesz punkty i odblokujesz dodatkowe bonusy!"
             buttonText="Rozwiązuj fiszki"

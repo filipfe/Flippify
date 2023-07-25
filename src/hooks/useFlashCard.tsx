@@ -17,8 +17,8 @@ export default function useFlashCard({
   topic,
 }: Props): FlashCardContextType {
   const { level, addPoints } = useContext(AuthContext);
-  const [isFlipped, setIsFlipped] = useState(false);
   const rotate = useSharedValue<0 | -180>(0);
+  const [isFlipped, setIsFlipped] = useState(false);
   const [hasAlreadyAnswered, setHasAlreadyAnswered] = useState(false);
   const [answer, setAnswer] = useState<Answer>({ text: "", is_correct: false });
   const [activeDeck, setActiveDeck] = useState<FlashCard[]>([]);
@@ -49,13 +49,18 @@ export default function useFlashCard({
   };
 
   async function getDeck() {
-    const { data } = await supabase
+    let query = supabase
       .from("flashcards")
-      .select("*")
-      .eq(topic ? "topic_id" : "category_id", topic ? topic.id : category.id)
-      .limit(10);
-    console.log(data);
-    return data as FlashCard[];
+      .select(
+        "*, answers(id, text, is_correct), user:users(id, is_premium, username)"
+      );
+    if (topic) {
+      query = query.eq("topic_id", topic.id);
+    } else {
+      query = query.eq("category_id", category.id);
+    }
+    const { data } = await query.limit(10);
+    return (data || []) as FlashCard[];
   }
 
   const submitAnswer = (answer: string) => {
@@ -80,17 +85,16 @@ export default function useFlashCard({
   const fetchDeck = async (deckType: "active" | "next") => {
     setIsLoading((prev) => ({ ...prev, [deckType]: true }));
     if (!category.id) return;
-    const card = await getDeck().finally(() =>
-      setIsLoading((prev) => ({ ...prev, [deckType]: false }))
-    );
-    deckType === "active" ? setActiveDeck(card) : setNextDeck(card);
+    try {
+      const deck = await getDeck();
+      deckType === "active" ? setActiveDeck(deck) : setNextDeck(deck);
+    } finally {
+      setIsLoading((prev) => ({ ...prev, [deckType]: false }));
+    }
   };
 
   useEffect(() => {
-    const fetchInitial = async () => {
-      await fetchDeck("active");
-    };
-    fetchInitial();
+    fetchDeck("active");
   }, []);
 
   const contextValue = useMemo<FlashCardContextType>(
@@ -113,7 +117,7 @@ export default function useFlashCard({
       flipCard,
       changeCard,
       isLoading,
-      rotate.value,
+      isFlipped,
       answer,
     ]
   );

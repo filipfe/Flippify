@@ -1,9 +1,7 @@
 import Layout from "../../components/Layout";
 import { View } from "react-native";
 import { useState, useEffect, useContext } from "react";
-import { AddedNote, OwnNote } from "../../types/notes";
-import axios from "axios";
-import { API_URL } from "@env";
+import { OwnNote } from "../../types/notes";
 import Loader from "../../components/Loader";
 import { FlatList } from "react-native-gesture-handler";
 import OwnNoteRef from "../../components/notes/own-notes/OwnNoteRef";

@@ -1,27 +1,24 @@
-import { FavouriteCategory } from "../../types/home";
-import { View, Text, StyleSheet, Image } from "react-native";
-import useShadow from "../../hooks/useShadow";
+import { View, Text, StyleSheet } from "react-native";
 import { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
-import { ArrowIcon, MathIcon } from "../../assets/icons/icons";
-import RippleButton from "../RippleButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootTabParams } from "../../types/navigation";
+import { Category } from "../../../types/general";
+import { FlashCardsStackParams } from "../../../types/navigation";
+import RippleButton from "../../RippleButton";
+import { ArrowIcon, MathIcon } from "../../../assets/icons/icons";
+import { ThemeContext } from "../../../context/ThemeContext";
+import useShadow from "../../../hooks/useShadow";
 
-export default function InProgressRef({ category, topic }: FavouriteCategory) {
-  const { navigate } = useNavigation<NavigationProp<RootTabParams, "Home">>();
+export default function RecentCategoryRef(props: Category) {
+  const { name } = props;
+  const { navigate } =
+    useNavigation<NavigationProp<FlashCardsStackParams, "CategoryList">>();
   const shadow = useShadow(16);
   const { background, font, secondary } = useContext(ThemeContext);
   return (
     <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
       <RippleButton
         borderless
-        onPress={() =>
-          navigate("FlashCards", {
-            screen: "FlashCardsGenerator",
-            params: { category, topic },
-          })
-        }
+        onPress={() => navigate("TopicList", { category: props })}
       >
         <View style={styles.innerWrapper}>
           <View style={styles.leftWrapper}>
@@ -29,11 +26,9 @@ export default function InProgressRef({ category, topic }: FavouriteCategory) {
               <MathIcon height={36} width={36} />
             </View>
             <View>
-              <Text style={[styles.title, { color: font }]}>
-                {category.name}
-              </Text>
+              <Text style={[styles.title, { color: font }]}>{name}</Text>
               <Text style={[styles.topic, { color: secondary }]}>
-                {topic?.name || "Wszystkie tematy"}
+                24 tematów
               </Text>
             </View>
           </View>
@@ -47,17 +42,15 @@ export default function InProgressRef({ category, topic }: FavouriteCategory) {
 const styles = StyleSheet.create({
   wrapper: {
     borderRadius: 16,
-
-    marginBottom: 16,
   },
   title: {
     fontFamily: "SemiBold",
-    fontSize: 14,
+    fontSize: 16,
     marginBottom: 4,
   },
   topic: {
     fontFamily: "SemiBold",
-    fontSize: 12,
+    fontSize: 14,
   },
   innerWrapper: {
     flexDirection: "row",

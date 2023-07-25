@@ -43,9 +43,18 @@ export default function useAuth() {
 
   async function logIn(session: Session) {
     const user = { ...session.user, ...session.user.user_metadata } as any;
+    const level = await fetchLevel();
+    setLevel(level);
     setUser(user);
     setIsLogged(true);
-    setLevel((prev) => ({ ...prev, points: user.knowledge_points }));
+  }
+
+  async function fetchLevel(): Promise<Level> {
+    const { data } = await supabase
+      .from("profiles")
+      .select("points, ...levels(current_level:level_number, points_required)")
+      .single();
+    return data as unknown as Level;
   }
 
   async function signUpWithEmail(formData: SignUpData) {
@@ -98,6 +107,14 @@ export default function useAuth() {
       ? addedPoints - level.points_required
       : level.points + points;
     const newLevel = isPromoted ? level.current_level + 1 : level.current_level;
+    const query = isPromoted
+      ? { points: newPoints, level_id: newLevel }
+      : { points: newPoints };
+    supabase
+      .from("profiles")
+      .update(query)
+      .eq("id", user.id)
+      .then((res) => console.log(res.error));
     setLevel({
       points_required: newPointsRequired,
       current_level: newLevel,

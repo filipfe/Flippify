@@ -11,8 +11,8 @@ const InputAnswer = (props: Answer) => {
   const { secondary, font, light } = useContext(ThemeContext);
 
   const correctColor = (base: string) => {
-    if (is_correct && answer) return "#13C331";
-    if (!answer || answer !== text) return base;
+    if (is_correct && answer.text) return "#13C331";
+    if (!answer || answer.text !== text) return base;
     return "red";
   };
 

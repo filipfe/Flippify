@@ -1,10 +1,10 @@
-import { API_URL } from "@env";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Category } from "../types/general";
 import { Topic } from "../types/flashcards";
 import { initialCategory } from "../const/flashcards";
 import { OpusContext } from "../context/OpusContext";
+import { supabase } from "./useAuth";
 
 export default function useOpus<T>(initialValue: T): OpusContext<T> {
   const [item, setItem] = useState<T>(initialValue);
@@ -17,13 +17,17 @@ export default function useOpus<T>(initialValue: T): OpusContext<T> {
     setTopics([]);
     if (!activeCategory.id) return;
     setAreTopicsLoading(true);
+    async function fetchTopic() {
+      const { data } = await supabase
+        .from("topics")
+        .select("*")
+        .eq("category_id", activeCategory.id);
+      setTopics((data as Topic[]) || []);
+      setAreTopicsLoading(false);
+    }
     let isCancelled = false;
-    !isCancelled &&
-      axios
-        .get(`${API_URL}/api/topics/${activeCategory.id}`)
-        .then((res) => res.data)
-        .then((data) => setTopics(data))
-        .finally(() => setAreTopicsLoading(true));
+    !isCancelled && fetchTopic();
+
     return () => {
       isCancelled = true;
     };

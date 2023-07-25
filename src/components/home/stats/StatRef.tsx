@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Stat } from "../../../types/home";
 import { linearGradient } from "../../../const/styles";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Pressable } from "react-native";
 import GradientText from "../../GradientText";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { useContext } from "react";
@@ -13,11 +13,18 @@ import Animated, {
 
 interface Props extends Stat {
   isActive: boolean;
+  changeIndex: () => void;
 }
 
 const { width } = Dimensions.get("screen");
 
-export default function StatRef({ title, value, sufix, isActive }: Props) {
+export default function StatRef({
+  title,
+  value,
+  sufix,
+  changeIndex,
+  isActive,
+}: Props) {
   const { light, background } = useContext(ThemeContext);
   const shadow = useShadow(16);
 
@@ -34,25 +41,27 @@ export default function StatRef({ title, value, sufix, isActive }: Props) {
   );
 
   return (
-    <Animated.View style={animatedStyle}>
-      <LinearGradient
-        style={styles.wrapper}
-        colors={linearGradient}
-        start={{ x: 0, y: 0 }}
-      >
-        <View
-          style={[
-            styles.circle,
-            shadow,
-            { backgroundColor: light, borderColor: background },
-          ]}
+    <Pressable onPress={changeIndex}>
+      <Animated.View style={animatedStyle}>
+        <LinearGradient
+          style={styles.wrapper}
+          colors={linearGradient}
+          start={{ x: 0, y: 0 }}
         >
-          <GradientText style={styles.circleText}>{value}</GradientText>
-        </View>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.value}>{value + sufix}</Text>
-      </LinearGradient>
-    </Animated.View>
+          <View
+            style={[
+              styles.circle,
+              shadow,
+              { backgroundColor: light, borderColor: background },
+            ]}
+          >
+            <GradientText style={styles.circleText}>{value}</GradientText>
+          </View>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.value}>{value + sufix}</Text>
+        </LinearGradient>
+      </Animated.View>
+    </Pressable>
   );
 }
 

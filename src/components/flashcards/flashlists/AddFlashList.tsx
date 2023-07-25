@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import PrimaryInput from "../../PrimaryInput";
 import PrimaryButton from "../../PrimaryButton";
 import axios from "axios";
-import { API_URL } from "@env";
 import Loader from "../../Loader";
 import { AuthContext } from "../../../context/AuthContext";
 import { FlashList } from "../../../types/flashcards";
@@ -17,15 +16,6 @@ export default function AddFlashList() {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [newFlashList, setNewFlashList] = useState<FlashList>(initialFlashList);
-
-  const handleAdd = () => {
-    axios
-      .post(
-        `${API_URL}/api/flashlists/add`,
-        JSON.stringify({ user: user.id, name: newFlashList.name })
-      )
-      .finally(() => setLoading(false));
-  };
 
   return (
     <Layout>
@@ -57,7 +47,7 @@ export default function AddFlashList() {
           </View>
         </View>
         {loading && <Loader />}
-        <PrimaryButton onPress={handleAdd} text="Dodaj FiszkoListę" />
+        <PrimaryButton onPress={() => {}} text="Dodaj FiszkoListę" />
       </View>
     </Layout>
   );

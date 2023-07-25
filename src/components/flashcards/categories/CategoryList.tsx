@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Text, ScrollView, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Category } from "../../../types/general";
 import CategoryRef from "./CategoryRef";
 import { DEFAULT_STYLES } from "../../../const/styles";
@@ -7,11 +7,17 @@ import Loader from "../../Loader";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import { supabase } from "../../../hooks/useAuth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import ListTitle from "./ListTitle";
+import RecentCategoryRef from "./RecentCategoryRef";
 
 export default function CategoryList() {
   const { background } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const recent = categories.filter(
+    (item) => item.id && [1, 2, 3].includes(item.id)
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -20,6 +26,7 @@ export default function CategoryList() {
         .from("categories")
         .select("*")
         .order("name");
+      // const recent = await supabase.from("categories").select("id").order("", { foreignTable: "views" })
       setCategories(data as Category[]);
       setIsLoading(false);
     };
@@ -32,13 +39,40 @@ export default function CategoryList() {
     <View style={{ ...styles.wrapper, backgroundColor: background }}>
       {categories.length > 0 ? (
         <FlatList
-          contentContainerStyle={{ overflow: "visible", paddingVertical: 24 }}
+          contentContainerStyle={{ paddingBottom: 24, paddingTop: 12 }}
           showsVerticalScrollIndicator={false}
-          numColumns={3}
+          numColumns={2}
           data={categories}
-          ItemSeparatorComponent={() => <View style={{ height: 24 }}></View>}
+          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+          ListHeaderComponent={
+            <>
+              <FlatList
+                contentContainerStyle={{
+                  paddingBottom: 48,
+                  paddingHorizontal: 24,
+                }}
+                showsVerticalScrollIndicator={false}
+                data={recent}
+                ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+                ListHeaderComponent={<ListTitle>Ostatnie</ListTitle>}
+                renderItem={({ item }) => <RecentCategoryRef {...item} />}
+                keyExtractor={(category) => "recent:" + category.name}
+              />
+              <View style={{ paddingHorizontal: 24 }}>
+                <ListTitle>Kategorie</ListTitle>
+              </View>
+            </>
+          }
           renderItem={({ item, index }) => (
-            <CategoryRef {...item} index={index} key={item.id} />
+            <View
+              style={{
+                flex: 1,
+                paddingLeft: index % 2 === 0 ? 24 : 8,
+                paddingRight: index % 2 === 0 ? 8 : 24,
+              }}
+            >
+              <CategoryRef {...item} />
+            </View>
           )}
           keyExtractor={(category) => category.name}
         />
@@ -52,7 +86,9 @@ export default function CategoryList() {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {},
+  wrapper: {
+    flex: 1,
+  },
   addFlashList: {
     fontFamily: "Medium",
     marginBottom: 16,

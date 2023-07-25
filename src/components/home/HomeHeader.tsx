@@ -48,7 +48,7 @@ export default function HomeHeader() {
       )}
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigate("Profile", { screen: "Profile" })}
+        onPress={() => navigate("Profile", { screen: "ProfileScreen" })}
         style={{ alignItems: "center", flexDirection: "row" }}
       >
         <View
