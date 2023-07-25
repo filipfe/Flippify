@@ -19,6 +19,7 @@ import EditIcon from './edit.svg'
 import HintIcon from './hint.svg'
 import ArrowIcon from './arrow.svg'
 import MathIcon from './math.svg'
+import DoneIcon from './done.svg'
 
 export {
     NotificationsIcon,
@@ -41,5 +42,6 @@ export {
     EditIcon,
     HintIcon,
     ArrowIcon,
-    MathIcon
+    MathIcon,
+    DoneIcon
 }

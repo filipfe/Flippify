@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
 import { CategoryNavigationProps } from "../../../types/navigation";
-import { StyleSheet, Text, View, useColorScheme } from "react-native";
+import { StyleSheet, Text, Pressable, useColorScheme } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import RippleButton from "../../RippleButton";
 import { MathIcon } from "../../../assets/icons/icons";
 import useShadow from "../../../hooks/useShadow";
 
@@ -19,7 +18,8 @@ const CategoryRef = (props: Category) => {
     userPreferredTheme === "system" ? colorScheme : userPreferredTheme;
 
   return (
-    <View
+    <Pressable
+      onPress={() => navigate("TopicList", { category: props })}
       style={[
         styles.flex,
         theme === "light" && shadow,
@@ -27,19 +27,10 @@ const CategoryRef = (props: Category) => {
         { backgroundColor: box },
       ]}
     >
-      <RippleButton
-        borderless
-        onPress={() => navigate("TopicList", { category: props })}
-      >
-        <View>
-          <MathIcon />
-          <Text style={[styles.title, { color: font }]}>{name}</Text>
-          <Text style={[styles.topicCount, { color: secondary }]}>
-            12 tematów
-          </Text>
-        </View>
-      </RippleButton>
-    </View>
+      <MathIcon />
+      <Text style={[styles.title, { color: font }]}>{name}</Text>
+      <Text style={[styles.topicCount, { color: secondary }]}>12 tematów</Text>
+    </Pressable>
   );
 };
 

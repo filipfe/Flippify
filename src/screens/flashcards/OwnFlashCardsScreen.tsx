@@ -25,9 +25,12 @@ export default function OwnFlashCards({
     async function fetchFlashCards() {
       const { data } = await supabase
         .from("flashcards")
-        .select("*, category:categories(*)")
-        .eq("user_id", user.id);
-      setCards((data as AddedFlashCard[]) || []);
+        .select(
+          "*, topic:topics(id, name), category:topics(...categories(id, name, icon))"
+        )
+        .eq("user_id", user.id)
+        .limit(10);
+      setCards((data as unknown as AddedFlashCard[]) || []);
       setIsLoading(false);
     }
     fetchFlashCards();
@@ -42,6 +45,8 @@ export default function OwnFlashCards({
         ItemSeparatorComponent={() => <View style={{ height: 8 }}></View>}
         data={cards}
         renderItem={({ item }) => <OwnFlashCardRef {...item} />}
+        onEndReached={() => console.log("reached")}
+        ListFooterComponent={<Loader />}
         keyExtractor={(card) => card.id.toString()}
       />
     </Layout>

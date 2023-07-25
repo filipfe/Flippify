@@ -12,6 +12,8 @@ import Hint from "../components/home/Hint";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { RootTabParams } from "../types/navigation";
 import InProgressRef from "../components/home/InProgressRef";
+import { AuthContext } from "../context/AuthContext";
+import TaskList from "../components/home/tasks/TaskList";
 
 export default function HomeScreen({
   navigation,
@@ -20,13 +22,13 @@ export default function HomeScreen({
     FavouriteCategory[]
   >([]);
   const [proposedUsers, setProposedUsers] = useState<ProposedUser[]>([]);
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { background } = useContext(ThemeContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await supabase.rpc("home_recommendations", {
-        user_id: 1,
+        user_id: user.id,
       });
       data && setProposedUsers(data as ProposedUser[]);
     };
@@ -71,6 +73,9 @@ export default function HomeScreen({
         </HomeSection>
         <HomeSection title="Ostatnie notatki" padding={false}>
           <RecentNotes />
+        </HomeSection>
+        <HomeSection title="Wykonuj zadania">
+          <TaskList />
         </HomeSection>
         {proposedUsers.map(
           (user) => user.notes && <UserSection {...user} key={user.id} />

@@ -12,6 +12,7 @@ export default function Loader() {
         justifyContent: "center",
         width: "100%",
         backgroundColor: background,
+        paddingVertical: 16,
       }}
     >
       <ActivityIndicator size="large" color={"#2386F1"} />

@@ -7,12 +7,12 @@ import { ThemeContext } from "../../../context/ThemeContext";
 
 const RadioAnswer = (props: Answer & { index: number }) => {
   const { index, ...card } = props;
-  const { text } = card;
+  const { is_correct, text } = card;
   const { submitAnswer, answer } = useContext(FlashCardContext);
   const { secondary, font, light } = useContext(ThemeContext);
 
   const correctColor = (base: string) => {
-    if (answer.is_correct && answer.text) return "#13C331";
+    if (is_correct && answer.text) return "#13C331";
     if (!answer.text || answer.text !== text) return base;
     return "red";
   };

@@ -19,12 +19,12 @@ export default function useNotes({ category, search }: Filter) {
     const fetchNotes = async () => {
       const recent = await supabase
         .from("notes")
-        .select("*, category:categories(id, name, icon), user:users(*)")
+        .select("*, category:categories(id, name, icon), user:profiles(*)")
         .order("created_at")
         .limit(6);
       const popular = await supabase
         .from("notes")
-        .select("*, category:categories(id, name, icon), user:users(*)")
+        .select("*, category:categories(id, name, icon), user:profiles(*)")
         .limit(6);
       setRecentNotes((recent.data as Note[]) || []);
       setPopularNotes((popular.data as Note[]) || []);
@@ -40,7 +40,7 @@ export default function useNotes({ category, search }: Filter) {
     const fetchNotes = async () => {
       const { data } = await supabase
         .from("notes")
-        .select("*, category:categories(*), user:users(*)")
+        .select("*, category:categories(*), user:profiles(*)")
         .textSearch("title", search);
       setSearchedNotes((data as Note[]) || []);
       setAreSearchedLoading(false);

@@ -15,9 +15,9 @@ export default function RecentNotes() {
       const { data } = await supabase
         .from("notes")
         .select(
-          "*, category:categories(id, name, icon), user:users(*), views!inner(*)"
+          "*, category:categories(id, name, icon), user:profiles(*), views!inner(*)"
         )
-        .eq("views.user_id", 1)
+        .eq("views.user_id", user.id)
         .order("updated_at", { foreignTable: "views" })
         .limit(8);
       setNotes((data as Note[]) || []);

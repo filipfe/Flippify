@@ -51,7 +51,7 @@ export default function NoteDetails({
         setLoading(true);
         const { data } = await supabase
           .from("notes")
-          .select("*, user:users(*)")
+          .select("*, user:profiles(*)")
           .eq("id", id);
         if (!data) return;
         const noteDetails: Note = data[0];
@@ -85,64 +85,59 @@ export default function NoteDetails({
               paddingHorizontal: 24,
             }}
           >
+            <View style={{ marginTop: -132, marginBottom: 32 }}>
+              <View
+                style={{
+                  ...styles.imageWrapper,
+                  backgroundColor: background,
+                }}
+              >
+                <ImageHandler
+                  initialIndex={activeIndex}
+                  setActiveIndex={setActiveIndex}
+                  images={images.map((image) => ({
+                    uri: image,
+                    name: image,
+                    type: "",
+                  }))}
+                />
+                {images.length > 1 && (
+                  <View style={{ bottom: 16, position: "absolute" }}>
+                    <NoteImageIndex images={images} activeIndex={activeIndex} />
+                  </View>
+                )}
+              </View>
+            </View>
             {loading ? (
               <Loader />
             ) : (
-              <>
-                <View style={{ marginTop: -132, marginBottom: 32 }}>
-                  <View
-                    style={{
-                      ...styles.imageWrapper,
-                      backgroundColor: background,
-                    }}
-                  >
-                    <ImageHandler
-                      initialIndex={activeIndex}
-                      setActiveIndex={setActiveIndex}
-                      images={images.map((image) => ({
-                        uri: image,
-                        name: image,
-                        type: "",
-                      }))}
-                    />
-                    {images.length > 1 && (
-                      <View style={{ bottom: 16, position: "absolute" }}>
-                        <NoteImageIndex
-                          images={images}
-                          activeIndex={activeIndex}
-                        />
-                      </View>
-                    )}
-                  </View>
+              <View
+                style={{
+                  paddingBottom: 32,
+                  justifyContent: "space-between",
+                  flex: 1,
+                  height: "100%",
+                }}
+              >
+                <View>
+                  <Text style={{ ...styles.date, color: secondary }}>
+                    {new Date(created_at).toLocaleDateString("default")}
+                  </Text>
+                  <Text style={{ ...styles.noteTitle, color: font }}>
+                    {title}
+                  </Text>
+                  <Text style={{ ...styles.noteDesc, color: secondary }}>
+                    {description || "Brak opisu dla tej notatki"}
+                  </Text>
                 </View>
-                <View
-                  style={{
-                    paddingBottom: 32,
-                    justifyContent: "space-between",
-                    flex: 1,
-                    height: "100%",
-                  }}
-                >
-                  <View>
-                    <Text style={{ ...styles.date, color: secondary }}>
-                      {new Date(created_at).toLocaleDateString("default")}
-                    </Text>
-                    <Text style={{ ...styles.noteTitle, color: font }}>
-                      {title}
-                    </Text>
-                    <Text style={{ ...styles.noteDesc, color: secondary }}>
-                      {description || "Brak opisu dla tej notatki"}
-                    </Text>
-                  </View>
-                  <View style={{ marginTop: 32 }}>
-                    <UserCredentials
-                      user={user}
-                      isLiked={isLiked}
-                      handleLike={isLiked ? disLike : like}
-                    />
-                  </View>
+                <View style={{ marginTop: 32 }}>
+                  <UserCredentials
+                    user={user}
+                    isLiked={isLiked}
+                    handleLike={isLiked ? disLike : like}
+                  />
                 </View>
-              </>
+              </View>
             )}
           </View>
         </LinearGradient>

@@ -110,11 +110,7 @@ export default function useAuth() {
     const query = isPromoted
       ? { points: newPoints, level_id: newLevel }
       : { points: newPoints };
-    supabase
-      .from("profiles")
-      .update(query)
-      .eq("id", user.id)
-      .then((res) => console.log(res.error));
+    supabase.from("profiles").update(query).eq("id", user.id);
     setLevel({
       points_required: newPointsRequired,
       current_level: newLevel,
