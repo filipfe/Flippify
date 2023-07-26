@@ -23,7 +23,7 @@ export default function CategoryList() {
     const fetchCategories = async () => {
       const { data } = await supabase
         .from("categories")
-        .select("*")
+        .select("id, name")
         .order("name");
       // const recent = await supabase.from("categories").select("id").order("", { foreignTable: "views" })
       setCategories(data as Category[]);

@@ -6,6 +6,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import Loader from "../components/Loader";
 import { supabase } from "./useAuth";
+import { AuthContext } from "../context/AuthContext";
 
 export default function useNotes({ category, search }: Filter) {
   const { font } = useContext(ThemeContext);
@@ -14,20 +15,16 @@ export default function useNotes({ category, search }: Filter) {
   const [popularNotes, setPopularNotes] = useState<Note[]>([]);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
   const [searchedNotes, setSearchedNotes] = useState<Note[]>([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchNotes = async () => {
-      const recent = await supabase
-        .from("notes")
-        .select("*, category:categories(id, name, icon), user:profiles(*)")
-        .order("created_at", { ascending: false })
-        .limit(6);
-      const popular = await supabase
-        .from("notes")
-        .select("*, category:categories(id, name, icon), user:profiles(*)")
-        .limit(6);
-      setRecentNotes((recent.data as Note[]) || []);
-      setPopularNotes((popular.data as Note[]) || []);
+      const { data } = await supabase.rpc(
+        "get_notes",
+        { p_user_id: user.id }
+      );
+      setRecentNotes((data["recent_notes"] as Note[]) || []);
+      setPopularNotes((data["popular_notes"] as Note[]) || []);
       setDidInitialLoad(true);
     };
     fetchNotes();
@@ -38,10 +35,10 @@ export default function useNotes({ category, search }: Filter) {
     setAreSearchedLoading(true);
     setSearchedNotes([]);
     const fetchNotes = async () => {
-      const { data } = await supabase
-        .from("notes")
-        .select("*, category:categories(*), user:profiles(*)")
-        .textSearch("title", search);
+      const { data } = await supabase.rpc(
+        "get_notes",
+        { p_user_id: user.id, p_search: search, p_page: 1 }
+      );
       setSearchedNotes((data as Note[]) || []);
       setAreSearchedLoading(false);
     };
