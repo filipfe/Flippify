@@ -34,6 +34,7 @@ export default function RecentNotes() {
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <View style={{ width: 24 }} />}
       renderItem={({ item }) => <SmallNoteRef {...item} key={item.id} />}
+      keyExtractor={(item) => "recent:" + item.id}
     />
   );
 }
