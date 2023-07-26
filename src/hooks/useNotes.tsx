@@ -20,7 +20,7 @@ export default function useNotes({ category, search }: Filter) {
       const recent = await supabase
         .from("notes")
         .select("*, category:categories(id, name, icon), user:profiles(*)")
-        .order("created_at")
+        .order("created_at", { ascending: false })
         .limit(6);
       const popular = await supabase
         .from("notes")
