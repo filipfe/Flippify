@@ -11,17 +11,13 @@ export default function RecentNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    async function fetchNotes() {
-      const { data } = await supabase
-        .from("notes")
-        .select(
-          "*, category:categories(id, name, icon), user:profiles(*), views!inner(*)"
-        )
-        .eq("views.user_id", user.id)
-        .order("updated_at", { foreignTable: "views" })
-        .limit(8);
-      setNotes((data as Note[]) || []);
-    }
+    const fetchNotes = async () => {
+      const { data } = await supabase.rpc(
+        "get_home_content",
+        { p_user_id: user.id }
+      );
+      setNotes((data["latest_notes"] as Note[]) || []);
+    };
     fetchNotes();
   }, []);
 

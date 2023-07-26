@@ -35,10 +35,10 @@ export default function useNotes({ category, search }: Filter) {
     setAreSearchedLoading(true);
     setSearchedNotes([]);
     const fetchNotes = async () => {
-      const { data } = await supabase
-        .from("notes")
-        .select("*, category:categories(*), user:profiles(*)")
-        .textSearch("title", search);
+      const { data } = await supabase.rpc(
+        "get_notes",
+        { p_user_id: user.id, p_search: search, p_page: 1 }
+      );
       setSearchedNotes((data as Note[]) || []);
       setAreSearchedLoading(false);
     };

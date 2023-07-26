@@ -25,10 +25,11 @@ export default function HomeScreen({
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await supabase.rpc("home_recommendations", {
-        user_id: user.id,
-      });
-      data && setProposedUsers(data as ProposedUser[]);
+      const { data } = await supabase.rpc(
+        "get_home_content", 
+        { p_user_id: user.id }
+      );
+      data && setProposedUsers(data["recommendations"] as ProposedUser[]);
     };
     async function fetchCategories() {
       setCategoriesInProgress([
