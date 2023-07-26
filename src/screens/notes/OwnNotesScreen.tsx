@@ -1,6 +1,6 @@
 import Layout from "../../components/Layout";
 import { View } from "react-native";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { OwnNote } from "../../types/notes";
 import Loader from "../../components/Loader";
 import { FlatList } from "react-native-gesture-handler";
@@ -20,19 +20,47 @@ export default function OwnNotesScreen({
   const [areLoading, setAreLoading] = useState(true);
   const [notes, setNotes] = useState<OwnNote[]>([]);
   const { search, category } = route.params;
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchNotes = useCallback(
+    async (isFirst: boolean) => {
+      let query = supabase
+        .from("notes")
+        .select("*, category:categories(id, name, icon)", { count: "exact" });
+
+      if (category.id) query = query.eq("category_id", category.id);
+      if (search) query = query.textSearch("title", route.params.search);
+
+      if (isFirst) query = query.limit(10);
+      else query = query.range(page * 10, page * 10 + 9);
+
+      const { data, count } = await query
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      count && setHasMore(page * 10 + 10 < count);
+      isFirst
+        ? setNotes((data as unknown as OwnNote[]) || [])
+        : setNotes((prev) => [
+            ...prev,
+            ...((data as unknown as OwnNote[]) || []),
+          ]);
+      setAreLoading(false);
+    },
+    [search, category, page]
+  );
 
   useEffect(() => {
     setAreLoading(true);
-    const fetchNotes = async () => {
-      const { data } = await supabase
-        .from("notes")
-        .select("*, category:categories(*)")
-        .eq("user_id", 1);
-      setNotes((data as OwnNote[]) || []);
-      setAreLoading(false);
-    };
-    fetchNotes();
-  }, [search, category]);
+    setPage(0);
+    setNotes([]);
+    fetchNotes(true);
+  }, [route.params]);
+
+  useEffect(() => {
+    if (page === 0) return;
+    fetchNotes(false);
+  }, [page]);
 
   return areLoading ? (
     <Loader />
@@ -43,6 +71,8 @@ export default function OwnNotesScreen({
         renderItem={({ item }) => <OwnNoteRef {...item} key={item.id} />}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
+        onEndReached={() => hasMore && setPage((prev) => prev + 1)}
+        ListFooterComponent={hasMore ? <Loader /> : undefined}
         keyExtractor={(item) => item.id.toString()}
       />
     </Layout>

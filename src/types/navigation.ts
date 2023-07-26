@@ -72,6 +72,7 @@ export type ProfileStackParams = {
     ProfileScreen: undefined;
     EditProfile: undefined;
     Settings: undefined;
+    Notifications: undefined;
   };
 
 
@@ -83,7 +84,3 @@ export type FilterComponentProps = {
   route: keyof NoteStackParams | keyof FlashCardsStackParams;
   dataType: DataType
 };
-
-export type SearchComponentProps = {
-
-}

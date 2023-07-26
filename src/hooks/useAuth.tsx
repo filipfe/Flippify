@@ -109,7 +109,7 @@ export default function useAuth() {
     return error;
   }
 
-  const addPoints = (points: number) => {
+  const addPoints = async (points: number) => {
     const addedPoints = level.points + points;
     const isPromoted = addedPoints >= level.points_required;
     const newPointsRequired = isPromoted
@@ -122,7 +122,7 @@ export default function useAuth() {
     const query = isPromoted
       ? { points: newPoints, level_id: newLevel }
       : { points: newPoints };
-    supabase.from("profiles").update(query).eq("id", user.id);
+    await supabase.from("profiles").update(query).eq("id", user.id);
     setLevel({
       points_required: newPointsRequired,
       current_level: newLevel,

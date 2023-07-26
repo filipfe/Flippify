@@ -36,6 +36,7 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
       style={{ backgroundColor: background }}
       contentContainerStyle={{ paddingVertical: 16 }}
       ListHeaderComponent={<TopicRef category={category} />}
+      showsVerticalScrollIndicator={false}
       data={topics}
       renderItem={({ item }) => <TopicRef topic={item} category={category} />}
       keyExtractor={(topic) => topic.id.toString()}

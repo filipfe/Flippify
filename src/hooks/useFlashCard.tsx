@@ -56,21 +56,21 @@ export default function useFlashCard({
     return (data || []) as FlashCard[];
   }
 
-  const submitAnswer = (answer: string) => {
+  const submitAnswer = async (answer: string) => {
     setHasAlreadyAnswered(true);
     const isCorrect = checkIfCorrect(answer);
     setAnswer({ text: answer, is_correct: isCorrect });
-    isCorrect && !hasAlreadyAnswered
-      ? addPoints(CORRECT_ANSWER_POINTS)
-      : level.points;
     flipCard();
+    isCorrect && !hasAlreadyAnswered
+      ? await addPoints(CORRECT_ANSWER_POINTS)
+      : level.points;
   };
 
   const changeCard = async () => {
+    setAnswer({ is_correct: false, text: "" });
     activeCardIndex > 8 && setActiveDeck(nextDeck);
     setActiveCardIndex((prev) => (activeCardIndex > 8 ? 0 : prev + 1));
     rotate.value = 0;
-    setAnswer({ is_correct: false, text: "" });
     setHasAlreadyAnswered(false);
     activeCardIndex === 8 && fetchDeck("next");
   };

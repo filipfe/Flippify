@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { View } from "react-native";
 import Loader from "../../components/Loader";
 import { AddedFlashCard } from "../../types/flashcards";
@@ -20,24 +20,53 @@ export default function OwnFlashCards({
   const navigation = useNavigation<NavigationProp<RootTabParams>>();
   const [cards, setCards] = useState<AddedFlashCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const { search, category, topic, type } = route.params;
 
-  useEffect(() => {
-    async function fetchFlashCards() {
-      const { data } = await supabase
+  const fetchCards = useCallback(
+    async (isFirst: boolean) => {
+      let query = supabase
         .from("flashcards")
         .select(
-          "*, topic:topics(id, name), category:topics(...categories(id, name, icon)), answers(*)"
-        )
+          "*, topic:topics!inner(id, name), category:topics(...categories(id, name, icon)), answers(*)",
+          { count: "exact" }
+        );
+
+      if (topic.id) query = query.eq("topic_id", topic.id);
+      else if (category.id) query = query.eq("topic.category_id", category.id);
+      if (type) query = query.eq("type", type);
+      if (search) query = query.textSearch("question", route.params.search);
+
+      if (isFirst) query = query.limit(10);
+      else query = query.range(page * 10, page * 10 + 9);
+
+      const { data, count } = await query
         .eq("user_id", user.id)
-        .range(page * 10, page * 10 + 9);
-      setCards((prev) => [
-        ...prev,
-        ...((data as unknown as AddedFlashCard[]) || []),
-      ]);
+        .order("created_at", { ascending: false });
+
+      count && setHasMore(page * 10 + 10 < count);
+      isFirst
+        ? setCards((data as unknown as AddedFlashCard[]) || [])
+        : setCards((prev) => [
+            ...prev,
+            ...((data as unknown as AddedFlashCard[]) || []),
+          ]);
       setIsLoading(false);
-    }
-    fetchFlashCards();
-  }, [route.params, page]);
+    },
+    [route.params, page]
+  );
+
+  useEffect(() => {
+    setIsLoading(true);
+    setPage(0);
+    setCards([]);
+    fetchCards(true);
+  }, [route.params]);
+
+  useEffect(() => {
+    if (page === 0) return;
+    fetchCards(false);
+  }, [page]);
 
   return isLoading ? (
     <Loader />
@@ -49,7 +78,7 @@ export default function OwnFlashCards({
         data={cards}
         renderItem={({ item }) => <OwnFlashCardRef {...item} />}
         onEndReached={() => setPage((prev) => prev + 1)}
-        ListFooterComponent={<Loader />}
+        ListFooterComponent={hasMore ? <Loader /> : undefined}
         keyExtractor={(card) => card.id.toString()}
       />
     </Layout>

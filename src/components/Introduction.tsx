@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   },
   innerWrapper: {
     borderRadius: 24,
-    width: "80%",
-    height: "70%",
+    width: "90%",
+    height: "60%",
     paddingHorizontal: 24,
     paddingVertical: 36,
     justifyContent: "space-between",

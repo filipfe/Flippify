@@ -19,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BoxLinkRow from "../components/profile/BoxLinkRow";
 import EditButton from "../components/profile/EditButton";
 import Edit from "./profile/Edit";
+import NotificationsScreen from "./profile/NotificationsScreen";
 
 const ProfileStack = createNativeStackNavigator<ProfileStackParams>();
 
@@ -53,6 +54,11 @@ export default function ProfileScreen() {
           title: "Ustawienia",
         }}
       />
+      <ProfileStack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ title: "Powiadomienia" }}
+      />
     </ProfileStack.Navigator>
   );
 }
@@ -73,7 +79,7 @@ const Profile = () => {
       >
         <SafeAreaView style={styles.settingsWrapper}>
           <Pressable
-            onPress={() => navigate("Settings")}
+            onPress={() => navigate("Notifications")}
             style={[styles.settingsButton, { backgroundColor: light }]}
           >
             <NotificationsIcon stroke={font} width={20} height={20} />

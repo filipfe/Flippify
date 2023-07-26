@@ -1,3 +1,5 @@
+import { User } from "./auth";
+
 export type Button = {
   onPress?: () => void;
   text: string;
@@ -22,4 +24,16 @@ export type Option<T> = {
 
 export type Children = {
   children: JSX.Element
+}
+
+export type Notification = {
+  id: number;
+  type: 'note' | 'flashcard';
+  user: User | null;
+  created_at: Date;
+}
+
+export type NotificationTimeFrame = {
+  timeFrame: number;
+  notes: Notification[]
 }

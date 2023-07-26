@@ -48,13 +48,7 @@ export default function StatRef({
           colors={linearGradient}
           start={{ x: 0, y: 0 }}
         >
-          <View
-            style={[
-              styles.circle,
-              shadow,
-              { backgroundColor: light, borderColor: background },
-            ]}
-          >
+          <View style={[styles.circle, shadow]}>
             <GradientText style={styles.circleText}>{value}</GradientText>
           </View>
           <Text style={styles.title}>{title}</Text>
@@ -94,6 +88,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginLeft: -4,
+    backgroundColor: "#F2F8FD",
+    borderColor: "#FFFFFF",
   },
   circleText: {
     fontFamily: "Bold",

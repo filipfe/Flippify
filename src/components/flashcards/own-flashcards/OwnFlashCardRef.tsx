@@ -14,7 +14,7 @@ export default function OwnFlashCardRef(props: AddedFlashCard) {
     <View>
       <View style={[styles.row, { alignItems: "flex-end" }]}>
         <Text style={[styles.classification, { color: secondary }]}>
-          {category.name}, {topic.name}
+          {category.name}, {topic ? topic.name : "Wszystkie"}
         </Text>
         <Text style={[styles.classification, { color: secondary }]}>
           {created_at
