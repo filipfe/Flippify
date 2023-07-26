@@ -1,12 +1,10 @@
 import { Auth, User } from "../types/auth";
 
 export const initialUserState: User = {
-    id: 0,
+    id: '',
     username: '',
-    is_staff: false,
-    profile_picture: '',
     is_premium: false,
-    level_id: 0
+    avatar_url: ''
 }
 
 export const initialAuthState: Auth = {

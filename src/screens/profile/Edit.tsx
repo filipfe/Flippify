@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Edit() {
   const { font, background, ripple, light } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
-  const { profile_picture, username } = user;
+  const { avatar_url, username } = user;
 
   return (
     <LinearGradient
@@ -23,10 +23,10 @@ export default function Edit() {
       <SafeAreaView style={[styles.wrapper, { backgroundColor: background }]}>
         <View style={profileStyles.wrapper}>
           <View style={profileStyles.pictureWrapper}>
-            {profile_picture ? (
+            {avatar_url ? (
               <Image
                 style={profileStyles.picture}
-                source={{ uri: profile_picture }}
+                source={{ uri: avatar_url }}
               />
             ) : (
               <DefaultProfileIcon

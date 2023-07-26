@@ -7,7 +7,7 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import { useContext } from "react";
 import { AuthContext } from "./src/context/AuthContext";
 import EntryScreen from "./src/screens/EntryScreen";
-import { StyleSheet } from "react-native";
+import { Modal, StyleSheet, View } from "react-native";
 import AuthProvider from "./src/providers/AuthProvider";
 import {
   useFonts,
@@ -28,6 +28,7 @@ import AddCard from "./src/components/flashcards/add-card/AddCard";
 import AddNote from "./src/components/notes/add-note/AddNote";
 import Header from "./src/components/header/Header";
 import * as SplashScreen from "expo-splash-screen";
+import Introduction from "./src/components/Introduction";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,6 +50,7 @@ export default function AppProvider() {
         <SettingsProvider>
           <StatusBar translucent />
           <App />
+          <Introduction />
         </SettingsProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -1,11 +1,6 @@
 export type User = {
-    id: number,
-    username: string,
-    profile_picture: string,
-    is_staff: boolean,
-    is_premium: boolean,
-    level_id: number;
-}
+    id: string;
+} & Profile;
 
 export type Auth = {
     isLogged: boolean,
@@ -17,4 +12,10 @@ export type Level = {
     current_level: number,
     points_required: number,
     points: number
+}
+
+export type Profile = {
+    username: string,
+    avatar_url: string,
+    is_premium: boolean,
 }

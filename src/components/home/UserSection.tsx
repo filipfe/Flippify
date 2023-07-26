@@ -19,6 +19,7 @@ export default function UserSection({ notes, ...user }: ProposedUser) {
         renderItem={({ item }) => (
           <SmallNoteRef {...item} user={user} key={item.id} />
         )}
+        keyExtractor={(item) => "user-note:" + item.id}
       />
     </View>
   );

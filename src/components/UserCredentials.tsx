@@ -12,16 +12,16 @@ type Props = {
 };
 
 export default function UserCredentials({ user, isLiked, handleLike }: Props) {
-  const { profile_picture, username } = user;
+  const { avatar_url, username } = user;
   const { primary, secondary, font, light } = useContext(ThemeContext);
   return (
     <View style={styles.bottomWrapper}>
       <View style={styles.userWrapper}>
         <View style={styles.userPicture}>
-          {profile_picture ? (
+          {avatar_url ? (
             <Image
               style={{ width: 52, height: 52 }}
-              source={{ uri: profile_picture }}
+              source={{ uri: avatar_url }}
             />
           ) : (
             <DefaultProfileIcon width={52} height={52} />

@@ -8,15 +8,12 @@ import { ThemeContext } from "../../context/ThemeContext";
 export default function UserInfo() {
   const { font } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
-  const { username, profile_picture } = user;
+  const { username, avatar_url } = user;
   return (
     <View style={profileStyles.wrapper}>
       <View style={profileStyles.pictureWrapper}>
-        {profile_picture ? (
-          <Image
-            style={profileStyles.picture}
-            source={{ uri: profile_picture }}
-          />
+        {avatar_url ? (
+          <Image style={profileStyles.picture} source={{ uri: avatar_url }} />
         ) : (
           <DefaultProfileIcon
             width={112}

@@ -19,7 +19,7 @@ import Summary from "../../components/premium/Summary";
 
 export default function PremiumPurchase({ onClose }: { onClose: () => void }) {
   const { user } = useContext(AuthContext);
-  const { username, profile_picture } = user;
+  const { username, avatar_url } = user;
   return (
     <LinearGradient
       style={styles.gradient}
@@ -41,8 +41,8 @@ export default function PremiumPurchase({ onClose }: { onClose: () => void }) {
       <View style={styles.topWrapper}>
         <View style={{ position: "relative" }}>
           <View style={styles.pictureWrapper}>
-            {profile_picture ? (
-              <Image style={styles.picture} source={{ uri: profile_picture }} />
+            {avatar_url ? (
+              <Image style={styles.picture} source={{ uri: avatar_url }} />
             ) : (
               <DefaultProfileIcon
                 width={112}

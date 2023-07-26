@@ -22,7 +22,7 @@ export default function HomeHeader() {
   const colorScheme = useColorScheme();
   const { userPreferredTheme, font } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
-  const { profile_picture, is_premium } = user;
+  const { avatar_url, is_premium } = user;
 
   const theme =
     userPreferredTheme === "system" ? colorScheme : userPreferredTheme;
@@ -63,10 +63,10 @@ export default function HomeHeader() {
             borderRadius: 255,
           }}
         >
-          {profile_picture ? (
+          {avatar_url ? (
             <Image
               style={{ width: 40, height: 40 }}
-              source={{ uri: profile_picture }}
+              source={{ uri: avatar_url }}
             />
           ) : (
             <DefaultProfileIcon width={40} height={40} />

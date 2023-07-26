@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { Level, User } from "../types/auth";
+import { Level, Profile, User } from "../types/auth";
 import { AuthContextType } from "../context/AuthContext";
 import { initialUserState } from "../const/auth";
 import { SUPABASE_KEY } from "@env";
@@ -8,6 +8,7 @@ import * as SecureStore from "expo-secure-store";
 import {
   AuthResponse,
   createClient,
+  PostgrestError,
   Session,
   VerifyEmailOtpParams,
 } from "@supabase/supabase-js";
@@ -47,21 +48,25 @@ export default function useAuth() {
   });
 
   async function logIn(session: Session) {
-    const user = { ...session.user, ...session.user.user_metadata } as any;
-    const level = await fetchLevel();
-    setLevel(level);
+    const user = session.user as any;
     setUser(user);
     setIsLogged(true);
   }
 
-  async function fetchLevel(): Promise<Level> {
+  async function fetchProfile() {
     const { data } = await supabase
       .from("profiles")
-      .select("points, ...levels(current_level:level_number, points_required)")
+      .select(
+        "username, avatar_url, is_premium, points, level:levels(current_level:level_number, points_required)"
+      )
       .eq("id", user.id)
       .single();
-
-    return data as unknown as Level;
+    if (!data) return logOut();
+    const { points, level, ...profile } = data;
+    //@ts-ignore
+    const { points_required, current_level } = level;
+    setLevel({ points, points_required, current_level });
+    setUser((prev) => ({ ...prev, ...profile }));
   }
 
   async function signInWithEmail(email: string) {
@@ -90,6 +95,18 @@ export default function useAuth() {
       setUser(initialUserState);
       setIsLogged(false);
     }
+  }
+
+  async function updateUser<T extends keyof User>(
+    field: T,
+    value: User[T]
+  ): Promise<PostgrestError | null> {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ [field]: value })
+      .eq("id", user.id);
+    !error && setUser((prev) => ({ ...prev, [field]: value }));
+    return error;
   }
 
   const addPoints = (points: number) => {
@@ -125,28 +142,10 @@ export default function useAuth() {
       }
     }
     fetchSession();
-    supabase.auth.onAuthStateChange((_event, session) => {
-      session && logIn(session);
-    });
   }, []);
 
   useEffect(() => {
-    if (!isLogged) return;
-    async function fetchPoints() {
-      const { data } = await supabase
-        .from("levels")
-        .select("points_required, level_number")
-        .eq("id", user.level_id)
-        .single();
-      if (!data) return;
-      const { level_number, points_required } = data;
-      setLevel((prev) => ({
-        ...prev,
-        current_level: level_number,
-        points_required,
-      }));
-    }
-    fetchPoints();
+    isLogged && fetchProfile();
   }, [isLogged]);
 
   const authInterface = useMemo<AuthContextType>(
@@ -159,6 +158,7 @@ export default function useAuth() {
       verifyOTP,
       signInWithGoogle,
       logOut,
+      updateUser,
     }),
     [
       isLogged,
@@ -169,6 +169,7 @@ export default function useAuth() {
       verifyOTP,
       signInWithGoogle,
       logOut,
+      updateUser,
     ]
   );
 

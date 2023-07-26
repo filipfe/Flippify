@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Category } from "../../../types/general";
 import CategoryRef from "./CategoryRef";
 import { DEFAULT_STYLES } from "../../../const/styles";
@@ -7,7 +7,6 @@ import Loader from "../../Loader";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import { supabase } from "../../../hooks/useAuth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ListTitle from "./ListTitle";
 import RecentCategoryRef from "./RecentCategoryRef";
 

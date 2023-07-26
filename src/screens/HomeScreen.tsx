@@ -1,5 +1,4 @@
 import { View, ScrollView } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import HomeHeader from "../components/home/HomeHeader";
 import HomeSection from "../components/home/HomeSection";
@@ -23,7 +22,6 @@ export default function HomeScreen({
   >([]);
   const [proposedUsers, setProposedUsers] = useState<ProposedUser[]>([]);
   const { user } = useContext(AuthContext);
-  const { background } = useContext(ThemeContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -78,7 +76,10 @@ export default function HomeScreen({
           <TaskList />
         </HomeSection>
         {proposedUsers.map(
-          (user) => user.notes && <UserSection {...user} key={user.id} />
+          (user) =>
+            user.notes && (
+              <UserSection {...user} key={"user-section:" + user.id} />
+            )
         )}
       </View>
     </ScrollView>

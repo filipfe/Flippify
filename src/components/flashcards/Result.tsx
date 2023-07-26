@@ -19,7 +19,7 @@ export default function Result() {
   const { font, secondary } = useContext(ThemeContext);
   const { flipCard, changeCard, answer } = useContext(FlashCardContext);
   const { user, level } = useContext(AuthContext);
-  const { profile_picture } = user;
+  const { avatar_url } = user;
   const isPromotion = answer.is_correct && level.points < 20;
 
   const animatedWidthStyle = useAnimatedStyle(
@@ -38,8 +38,8 @@ export default function Result() {
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>
         <View style={styles.userPictureWrapper}>
-          {profile_picture ? (
-            <Image source={{ uri: profile_picture }} />
+          {avatar_url ? (
+            <Image source={{ uri: avatar_url }} />
           ) : (
             <DefaultProfileIcon width={96} height={96} />
           )}
