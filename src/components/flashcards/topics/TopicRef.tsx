@@ -16,11 +16,10 @@ const TopicRef = ({
   topic?: Topic;
   category: Category;
 }) => {
-  const { font, secondary, background } = useContext(ThemeContext);
-  const shadow = useShadow(24);
+  const { font, secondary, box } = useContext(ThemeContext);
   const navigation = useNavigation<TopicListNavigationProp>();
   return (
-    <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
+    <View style={[styles.wrapper, { backgroundColor: box }]}>
       <RippleButton
         borderless
         onPress={() =>
@@ -53,11 +52,7 @@ const TopicRef = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 8,
-
-    marginHorizontal: 24,
-
-    borderRadius: 24,
+    borderRadius: 16,
   },
   innerWrapper: {
     paddingHorizontal: 24,

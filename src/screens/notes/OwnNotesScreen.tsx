@@ -65,9 +65,10 @@ export default function OwnNotesScreen({
   return areLoading ? (
     <Loader />
   ) : notes.length > 0 ? (
-    <Layout>
+    <Layout paddingHorizontal={0} paddingVertical={0}>
       <FlatList
         data={notes}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 16 }}
         renderItem={({ item }) => <OwnNoteRef {...item} key={item.id} />}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={{ height: 24 }} />}

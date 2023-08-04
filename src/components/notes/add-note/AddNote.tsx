@@ -26,6 +26,7 @@ import { NewNoteContext } from "../../../context/OpusContext";
 import { initialCategory } from "../../../const/flashcards";
 import ImageList from "./components/ImageList";
 import GridButton from "./components/GridButton";
+import { supabase } from "../../../hooks/useAuth";
 
 export default function AddNote({
   route,
@@ -45,16 +46,16 @@ export default function AddNote({
     if (!activeCategory.id) return;
     setIsLoading(true);
     const form = new FormData();
-    form.append("title", item.title);
-    form.append("description", item.description);
-    form.append("is_public", String(item.is_public));
-    form.append("category_id", activeCategory.id.toString());
     // @ts-ignore
     form.append("thumbnail", images[0]);
     item.images.forEach((image) => {
       // @ts-ignore
       form.append("images", image);
     });
+
+    const d = item;
+
+    const { error } = await supabase.from("notes").insert(item);
 
     // item.id
     //   ? axios

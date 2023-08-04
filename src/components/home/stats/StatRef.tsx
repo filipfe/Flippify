@@ -3,8 +3,6 @@ import { Stat } from "../../../types/home";
 import { linearGradient } from "../../../const/styles";
 import { StyleSheet, Text, View, Dimensions, Pressable } from "react-native";
 import GradientText from "../../GradientText";
-import { ThemeContext } from "../../../context/ThemeContext";
-import { useContext } from "react";
 import useShadow from "../../../hooks/useShadow";
 import Animated, {
   useAnimatedStyle,
@@ -25,7 +23,6 @@ export default function StatRef({
   changeIndex,
   isActive,
 }: Props) {
-  const { light, background } = useContext(ThemeContext);
   const shadow = useShadow(16);
 
   const animatedStyle = useAnimatedStyle(

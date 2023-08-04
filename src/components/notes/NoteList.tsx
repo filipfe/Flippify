@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { initialFilter } from "../../const/notes";
 import { FlatList } from "react-native-gesture-handler";
 import NoteRef from "./NoteRef";
+import NoteSection from "./NoteSection";
 
 const NoteList = ({
   route,
@@ -22,8 +23,8 @@ const NoteList = ({
     didInitialLoad,
     areSearchedLoading,
     searchedNotes,
-    PopularNotes,
-    RecentNotes,
+    popularNotes,
+    recentNotes,
   } = useNotes(route.params);
 
   return didInitialLoad ? (
@@ -74,9 +75,9 @@ const NoteList = ({
         }
         ListFooterComponent={
           <View style={{ marginTop: route.params.search ? 48 : 0 }}>
-            <PopularNotes />
+            <NoteSection title="Popularne notatki" noteList={popularNotes} />
             <View style={{ marginVertical: 48 }}>
-              <RecentNotes />
+              <NoteSection title="Ostatnie notatki" noteList={recentNotes} />
             </View>
             <View style={{ paddingHorizontal: 24 }}>
               <BoxLink
@@ -94,7 +95,5 @@ const NoteList = ({
     <Loader />
   );
 };
-
-const { height } = Dimensions.get("screen");
 
 export default NoteList;

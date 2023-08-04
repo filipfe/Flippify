@@ -71,9 +71,9 @@ export default function OwnFlashCards({
   return isLoading ? (
     <Loader />
   ) : cards.length > 0 ? (
-    <Layout paddingHorizontal={0}>
+    <Layout paddingHorizontal={0} paddingVertical={0}>
       <FlatList
-        contentContainerStyle={{ paddingHorizontal: 24 }}
+        contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 16 }}
         ItemSeparatorComponent={() => <View style={{ height: 8 }}></View>}
         data={cards}
         renderItem={({ item }) => <OwnFlashCardRef {...item} />}

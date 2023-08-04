@@ -75,7 +75,7 @@ export default function SmallNoteRef(props: Note) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: 220,
+    width: 196,
     borderRadius: 16,
   },
   image: {

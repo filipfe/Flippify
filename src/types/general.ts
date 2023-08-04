@@ -1,4 +1,5 @@
 import { User } from "./auth";
+import { Note } from "./notes";
 
 export type Button = {
   onPress?: () => void;
@@ -28,12 +29,10 @@ export type Children = {
 
 export type Notification = {
   id: number;
-  type: 'note' | 'flashcard';
-  user: User | null;
+  source: 'notes' | 'flashcards' | null;
+  type: "like" | "promotion";
+  was_seen: boolean;
+  initiator: User;
   created_at: Date;
-}
-
-export type NotificationTimeFrame = {
-  timeFrame: number;
-  notes: Notification[]
+  note: Pick<Note, 'id' | 'title'> | null,
 }

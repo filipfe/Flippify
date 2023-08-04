@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import Loader from "../../Loader";
 import { Topic } from "../../../types/flashcards";
@@ -34,8 +34,13 @@ export default function TopicList({ route }: { route: TopicListRouteProp }) {
   ) : topics.length > 0 ? (
     <FlatList
       style={{ backgroundColor: background }}
-      contentContainerStyle={{ paddingVertical: 16 }}
-      ListHeaderComponent={<TopicRef category={category} />}
+      contentContainerStyle={{ paddingVertical: 16, paddingHorizontal: 24 }}
+      ListHeaderComponent={
+        <View style={{ marginBottom: 24 }}>
+          <TopicRef category={category} />
+        </View>
+      }
+      ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
       showsVerticalScrollIndicator={false}
       data={topics}
       renderItem={({ item }) => <TopicRef topic={item} category={category} />}
