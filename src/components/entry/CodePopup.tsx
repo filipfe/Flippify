@@ -3,7 +3,7 @@ import { LoginData } from "../../const/auth";
 import { View, StyleSheet, Text } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { ThemeContext } from "../../context/ThemeContext";
-import Loader from "../Loader";
+import Loader from "../ui/Loader";
 import NumberInput from "./NumberInput";
 import { FlatList } from "react-native-gesture-handler";
 

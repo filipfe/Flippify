@@ -1,31 +1,32 @@
 import { NewCardContext } from "../../../context/OpusContext";
-import { StyleSheet, Text, View, Modal } from "react-native";
+import { StyleSheet, Text, View, Modal, ScrollView } from "react-native";
 import { globalStyles, shadowPrimary } from "../../../styles/general";
-import Switch from "../../Switch";
-import { ScrollView } from "react-native-gesture-handler";
-import UserCredentials from "../../UserCredentials";
+import Switch from "../../ui/Switch";
+import UserCredentials from "../../ui/layout/UserCredentials";
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useLayoutEffect, useRef } from "react";
 import RadioForm from "./components/RadioForm";
 import InputForm from "./components/InputForm";
-import PrimaryButton from "../../PrimaryButton";
-import Loader from "../../Loader";
+import PrimaryButton from "../../ui/PrimaryButton";
+import Loader from "../../ui/Loader";
 import { initialNewCard } from "../../../const/flashcards";
 import { AddedFlashCard } from "../../../types/flashcards";
 import useOpus from "../../../hooks/useOpus";
 import { ThemeContext } from "../../../context/ThemeContext";
 import CategoryPicker from "../../filter/CategoryPicker";
 import TopicPicker from "../../filter/TopicPicker";
-import Success from "../../Success";
+import Success from "../../ui/popups/Success";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { CardStackParams, RootTabParams } from "../../../types/navigation";
+import { RootStackParams, RootTabParams } from "../../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../../../hooks/useAuth";
 
 export default function AddCard({
   route,
 }: NativeStackScreenProps<RootTabParams, "AddCard">) {
-  const { navigate } = useNavigation<NavigationProp<CardStackParams>>();
+  const scrollRef = useRef<ScrollView>(null!);
+  const { navigate } =
+    useNavigation<NavigationProp<RootStackParams, "RootTab">>();
   const { secondary, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const opus = useOpus<Omit<AddedFlashCard, "user">>(
@@ -87,7 +88,7 @@ export default function AddCard({
 
   const onModalReject = () => {
     setHasBeenAdded(false);
-    navigate("FlashCardsGenerator", { category, topic });
+    navigate("CardsGenerator", { category, topic });
   };
 
   const onModalSubmit = () => {
@@ -96,14 +97,16 @@ export default function AddCard({
     setHasBeenAdded(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!scrollRef.current) return;
     route.params && setItem(route.params);
-  }, [route.params]);
+    scrollRef.current.scrollTo({ y: 0, animated: false });
+  }, [route.params, scrollRef.current]);
 
   return (
     <NewCardContext.Provider value={opus}>
       <View style={{ flex: 1, backgroundColor: background }}>
-        <ScrollView>
+        <ScrollView ref={(ref) => ref && (scrollRef.current = ref)}>
           <View
             style={{
               paddingHorizontal: 24,

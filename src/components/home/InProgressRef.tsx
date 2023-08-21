@@ -4,7 +4,7 @@ import useShadow from "../../hooks/useShadow";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { ArrowIcon, MathIcon } from "../../assets/icons/icons";
-import RippleButton from "../RippleButton";
+import RippleButton from "../ui/RippleButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootTabParams } from "../../types/navigation";
 

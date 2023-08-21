@@ -1,4 +1,4 @@
-import Layout from "../../components/Layout";
+import Layout from "../../components/ui/layout/Layout";
 import { SectionList, Text, View } from "react-native";
 import { Notification } from "../../types/general";
 import { useState, useEffect, useContext, useMemo } from "react";
@@ -6,7 +6,7 @@ import { supabase } from "../../hooks/useAuth";
 import { AuthContext } from "../../context/AuthContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import NotificationRef from "../../components/notifications/NotificationRef";
-import Loader from "../../components/Loader";
+import Loader from "../../components/ui/Loader";
 
 export default function NotificationsScreen() {
   const { user } = useContext(AuthContext);

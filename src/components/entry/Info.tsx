@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import { LogoIcon } from "../../assets/icons/icons";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 
 const { width } = Dimensions.get("screen");
 

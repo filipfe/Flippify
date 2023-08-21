@@ -3,7 +3,7 @@ import { globalStyles } from "../../styles/general";
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Category } from "../../types/general";
-import Loader from "../Loader";
+import Loader from "../ui/Loader";
 import SelectDropdown from "react-native-select-dropdown";
 import useShadow from "../../hooks/useShadow";
 import { DropdownIcon } from "../../assets/icons/icons";

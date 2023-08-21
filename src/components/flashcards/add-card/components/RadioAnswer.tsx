@@ -1,6 +1,6 @@
 import { NewCardContext } from "../../../../context/OpusContext";
 import { Answer } from "../../../../types/flashcards";
-import PrimaryInput from "../../../PrimaryInput";
+import PrimaryInput from "../../../ui/PrimaryInput";
 import { View, Pressable, StyleSheet } from "react-native";
 import { useContext } from "react";
 import { BinIcon } from "../../../../assets/icons/icons";

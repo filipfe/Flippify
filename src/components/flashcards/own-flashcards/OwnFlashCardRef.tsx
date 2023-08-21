@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { AddedFlashCard } from "../../../types/flashcards";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import SecondaryButton from "../../SecondaryButton";
+import SecondaryButton from "../../ui/SecondaryButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootTabParams } from "../../../types/navigation";
 

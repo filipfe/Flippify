@@ -4,7 +4,7 @@ import useShadow from "../../../hooks/useShadow";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { useContext } from "react";
 import { ArrowIcon, DoneIcon } from "../../../assets/icons/icons";
-import GradientText from "../../GradientText";
+import GradientText from "../../ui/GradientText";
 
 export default function TaskRef({
   description,

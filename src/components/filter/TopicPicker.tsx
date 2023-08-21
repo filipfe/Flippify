@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import { globalStyles } from "../../styles/general";
 import { useContext, useState, useEffect } from "react";
-import Loader from "../Loader";
+import Loader from "../ui/Loader";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Category } from "../../types/general";
 import { Topic } from "../../types/flashcards";

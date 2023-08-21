@@ -1,14 +1,14 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../const/styles";
+import { linearGradient } from "../../const/styles";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { shadowPrimary } from "../styles/general";
-import { FlashCardsIcon, HomeIcon, ProfileIcon } from "../assets/general";
-import { ThemeContext } from "../context/ThemeContext";
-import { RootTabParams } from "../types/navigation";
-import { PlusIcon } from "../assets/icons/icons";
+import { shadowPrimary } from "../../styles/general";
+import { FlashCardsIcon, HomeIcon, ProfileIcon } from "../../assets/general";
+import { ThemeContext } from "../../context/ThemeContext";
+import { RootTabParams } from "../../types/navigation";
+import { ListIcon, PlusIcon } from "../../assets/icons/icons";
 
 export default function TabBar(props: BottomTabBarProps) {
   const { state } = props;
@@ -97,6 +97,15 @@ const LinkIcon = ({
           width={20}
         />
       );
+    case "Lists":
+      return (
+        <ListIcon
+          stroke={isFocused ? primary : font}
+          strokeWidth="1.4"
+          height={19}
+          width={20}
+        />
+      );
     case "Profile":
       return (
         <ProfileIcon
@@ -143,6 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: "100%",
+    paddingHorizontal: 24,
   },
   tabBarLabel: {
     fontSize: 12,
@@ -152,6 +162,7 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+    flex: 1,
   },
   centerButton: {
     alignItems: "center",

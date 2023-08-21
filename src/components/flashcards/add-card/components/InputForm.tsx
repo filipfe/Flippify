@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useContext } from "react";
-import PrimaryInput from "../../../PrimaryInput";
+import PrimaryInput from "../../../ui/PrimaryInput";
 import { NewCardContext } from "../../../../context/OpusContext";
 import { ThemeContext } from "../../../../context/ThemeContext";
 

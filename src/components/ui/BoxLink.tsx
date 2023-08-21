@@ -1,8 +1,8 @@
 import { StyleSheet, View } from "react-native";
-import { ProfileBoxLinkProps } from "../types/profile";
+import { ProfileBoxLinkProps } from "../../types/profile";
 import { Text } from "react-native";
-import useShadow from "../hooks/useShadow";
-import { ThemeContext } from "../context/ThemeContext";
+import useShadow from "../../hooks/useShadow";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import RippleButton from "./RippleButton";
 

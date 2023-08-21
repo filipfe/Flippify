@@ -5,10 +5,11 @@ import { Category, Filter } from "./general";
 export type RootStackParams = {
   RootTab: NavigatorScreenParams<RootTabParams>;
   CardsGenerator: {
-    list?: Pick<FlashList, 'id' | 'name'>
+    list?: Omit<FlashList, 'cards'>
     category?: Category;
     topic?: Topic;
   };
+  ListDetailsScreen: Omit<FlashList, 'cards'>
 }
 
 export type RootTabParams = {
@@ -54,6 +55,7 @@ export type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardFor
 
 export type ListStackParams = {
   ListScreen: undefined;
+  
 }
 
 

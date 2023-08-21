@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import useShadow from "../../hooks/useShadow";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 import { HintIcon } from "../../assets/icons/icons";
 
 type Props = {

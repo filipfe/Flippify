@@ -1,18 +1,18 @@
-import { SectionList } from "react-native";
-import { Text, StyleSheet } from "react-native";
-import Layout from "../../components/Layout";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useContext } from "react";
+import Layout from "../../components/ui/layout/Layout";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../hooks/useAuth";
 import { FlashList } from "../../types/flashcards";
 import FlashListRef from "../../components/lists/FlashListRef";
-import Loader from "../../components/Loader";
-import { RefreshControl } from "react-native-gesture-handler";
+import Loader from "../../components/ui/Loader";
+import {
+  FlatList,
+  RefreshControl,
+  ScrollView,
+} from "react-native-gesture-handler";
+import HomeSection from "../../components/home/HomeSection";
 
 export default function ListScreen() {
-  const { font, background } = useContext(ThemeContext);
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -21,8 +21,7 @@ export default function ListScreen() {
   async function fetchLists() {
     const { data } = await supabase
       .from("flashlists")
-      .select("id, name, user:profiles(id, username, avatar_url)");
-    console.log(data);
+      .select("id, name, description, user:profiles(id, username, avatar_url)");
     setLists((data as unknown as FlashList[]) || []);
   }
 
@@ -45,33 +44,51 @@ export default function ListScreen() {
   return isLoading ? (
     <Loader />
   ) : (
-    <Layout paddingHorizontal={0}>
-      <SectionList
-        contentContainerStyle={{ paddingHorizontal: 24 }}
-        sections={[
-          { title: "Polecane dla Ciebie", data: lists },
-          { title: "Popularne teraz", data: lists },
-        ]}
-        renderItem={({ item }) => <FlashListRef {...item} />}
-        renderSectionHeader={({ section }) => (
-          <Text style={[styles.sectionTitle, { color: font }]}>
-            {section.title}
-          </Text>
-        )}
+    <Layout paddingHorizontal={0} paddingVertical={0}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingVertical: 16 }}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
-        keyExtractor={({ id }, index) => `${id}${index}`}
-      />
+      >
+        <HomeSection padding={false} title="Wybrane dla Ciebie">
+          <FlatList
+            data={lists}
+            renderItem={({ item }) => <FlashListRef {...item} size="small" />}
+            horizontal
+            pagingEnabled
+            keyExtractor={({ id }, index) => `${id}${index}`}
+          />
+        </HomeSection>
+        <HomeSection padding={false} title="Popularne teraz">
+          <FlatList
+            data={lists}
+            renderItem={({ item }) => <FlashListRef {...item} />}
+            horizontal
+            pagingEnabled
+            keyExtractor={({ id }, index) => `${id}${index}`}
+          />
+        </HomeSection>
+        <HomeSection padding={false} title="Twoje listy">
+          <FlatList
+            data={lists}
+            renderItem={({ item }) => <FlashListRef {...item} size="small" />}
+            horizontal
+            pagingEnabled
+            keyExtractor={({ id }, index) => `${id}${index}`}
+          />
+        </HomeSection>
+        <HomeSection padding={false} title="Ostatnio dodane">
+          <FlatList
+            data={lists}
+            renderItem={({ item }) => <FlashListRef {...item} />}
+            horizontal
+            pagingEnabled
+            keyExtractor={({ id }, index) => `${id}${index}`}
+          />
+        </HomeSection>
+      </ScrollView>
     </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionTitle: {
-    fontFamily: "SemiBold",
-    fontSize: 22,
-    lineHeight: 24,
-    marginBottom: 24,
-  },
-});

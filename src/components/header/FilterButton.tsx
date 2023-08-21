@@ -5,7 +5,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { ThemeContext } from "../../context/ThemeContext";
 import CategoryPicker from "../filter/CategoryPicker";
 import { initialCategory, initialTopic } from "../../const/flashcards";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 import { FilterComponentProps } from "../../types/navigation";
 import TopicPicker from "../filter/TopicPicker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

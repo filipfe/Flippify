@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function NotFound() {
   const { font, secondary, background } = useContext(ThemeContext);

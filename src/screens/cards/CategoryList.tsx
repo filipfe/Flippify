@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { Category } from "../../types/general";
 import CategoryRef from "../../components/flashcards/categories/CategoryRef";
 import { DEFAULT_STYLES } from "../../const/styles";
-import Loader from "../../components/Loader";
+import Loader from "../../components/ui/Loader";
 import { ThemeContext } from "../../context/ThemeContext";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { supabase } from "../../hooks/useAuth";

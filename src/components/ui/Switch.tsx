@@ -1,10 +1,10 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../const/styles";
+import { linearGradient } from "../../const/styles";
 import GradientText from "./GradientText";
 import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
-import { Option as OptionType } from "../types/general";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Option as OptionType } from "../../types/general";
 
 type SwitchProps<T> = {
   options: OptionType<T>[];

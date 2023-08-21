@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import BoxLink from "../BoxLink";
+import BoxLink from "../ui/BoxLink";
 import { FlashCardsIcon } from "../../assets/general";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";

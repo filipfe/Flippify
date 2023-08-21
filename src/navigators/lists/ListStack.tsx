@@ -13,13 +13,15 @@ export default function ListStack() {
       screenOptions={{
         headerShadowVisible: false,
         header: (props) => <Header {...props} />,
-        headerRight: (_) => <HeaderMenu route="ListScreen" />,
       }}
     >
       <ListStackNav.Screen
         name="ListScreen"
         component={ListScreen}
-        options={{ title: "Fiszkolisty" }}
+        options={{
+          title: "Fiszkolisty",
+          headerRight: (_) => <HeaderMenu route="ListScreen" />,
+        }}
       />
     </ListStackNav.Navigator>
   );

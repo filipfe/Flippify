@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { AuthContext } from "../../context/AuthContext";
 import useShadow from "../../hooks/useShadow";
-import GradientText from "../GradientText";
+import GradientText from "../ui/GradientText";
 
 export default function HomeLevel() {
   const auth = useContext(AuthContext);

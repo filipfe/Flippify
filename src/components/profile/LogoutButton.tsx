@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
-import Loader from "../Loader";
+import Loader from "../ui/Loader";
 import { LogoutIcon } from "../../assets/icons/icons";
 import { ThemeContext } from "../../context/ThemeContext";
 

@@ -1,5 +1,5 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import SecondaryButton from "./SecondaryButton";
 import PrimaryButton from "./PrimaryButton";

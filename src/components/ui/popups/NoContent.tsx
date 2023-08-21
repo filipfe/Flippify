@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "../PrimaryButton";
 import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 type Props = {
   text?: string;

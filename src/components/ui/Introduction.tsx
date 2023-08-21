@@ -1,7 +1,7 @@
 import { View, Modal, StyleSheet } from "react-native";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import { useState, useEffect, useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import PrimaryInput from "./PrimaryInput";
 import PrimaryButton from "./PrimaryButton";
 import { Text } from "react-native";

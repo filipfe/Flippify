@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RootTabParams } from "../types/navigation";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
-import TabBar from "../components/TabBar";
+import TabBar from "../components/ui/TabBar";
 import HomeScreen from "../screens/HomeScreen";
 import AddCard from "../components/flashcards/add-card/AddCard";
 import Header from "../components/header/Header";
@@ -45,7 +45,11 @@ export default function RootTab() {
       <RootTabNav.Screen
         name="Lists"
         component={ListStack}
-        options={{ title: "Fiszkolisty", headerShown: false }}
+        options={{
+          title: "Listy",
+          headerShown: false,
+          headerTitle: "Fiszkolisty",
+        }}
       />
       <RootTabNav.Screen
         name="Profile"

@@ -7,11 +7,11 @@ import {
   Pressable,
 } from "react-native";
 import { useState, useContext } from "react";
-import PrimaryInput from "../PrimaryInput";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryInput from "../ui/PrimaryInput";
+import PrimaryButton from "../ui/PrimaryButton";
 import { AuthContext } from "../../context/AuthContext";
 import { ThemeContext } from "../../context/ThemeContext";
-import RippleButton from "../RippleButton";
+import RippleButton from "../ui/RippleButton";
 import CodePopup from "./CodePopup";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GoogleIcon, LogoIcon } from "../../assets/icons/icons";

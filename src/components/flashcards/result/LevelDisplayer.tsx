@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import GradientText from "../../GradientText";
+import GradientText from "../../ui/GradientText";
 
 type Props = Level & {
   isPromotion: boolean;

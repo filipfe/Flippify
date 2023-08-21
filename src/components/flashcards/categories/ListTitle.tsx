@@ -3,10 +3,11 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { useContext } from "react";
 
 type Props = {
+  paddingHorizontal?: number;
   children: string;
 };
 
-export default function ListTitle({ children }: Props) {
+export default function ListTitle({ children, paddingHorizontal }: Props) {
   const { font } = useContext(ThemeContext);
   return (
     <Text
@@ -16,6 +17,7 @@ export default function ListTitle({ children }: Props) {
         fontFamily: "SemiBold",
         fontSize: 22,
         color: font,
+        paddingHorizontal: paddingHorizontal || 0,
       }}
     >
       {children}

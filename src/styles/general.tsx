@@ -34,9 +34,9 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   primary: "#2386F1",
   secondary: "#8DA5B9",
-  background: "#120F23",
+  background: "#0f0c1c",
   light: "#211C3F",
-  box: "#211C3F",
+  box: "#17132b",
   font: "#D9D6E9",
   wrong: "#DC555D",
   stroke: "#E3E8E4",

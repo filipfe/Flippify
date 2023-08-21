@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { shadowPrimary } from "../../styles/general";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 

@@ -11,7 +11,7 @@ import InProgressRef from "../components/home/InProgressRef";
 import TaskList from "../components/home/tasks/TaskList";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useIsFocused } from "@react-navigation/native";
-import Loader from "../components/Loader";
+import Loader from "../components/ui/Loader";
 import { supabase } from "../hooks/useAuth";
 import { AuthContext } from "../context/AuthContext";
 

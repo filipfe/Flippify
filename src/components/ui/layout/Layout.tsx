@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 import { useContext } from "react";
 
 type Props = {

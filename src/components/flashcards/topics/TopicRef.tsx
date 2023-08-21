@@ -2,10 +2,10 @@ import { Topic } from "../../../types/flashcards";
 import { Category } from "../../../types/general";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import RangeSlider from "../../RangeSlider";
+import RangeSlider from "../../ui/RangeSlider";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import RippleButton from "../../RippleButton";
+import RippleButton from "../../ui/RippleButton";
 import { RootStackParams } from "../../../types/navigation";
 
 const TopicRef = ({

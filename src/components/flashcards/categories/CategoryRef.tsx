@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   wrapper: {
-    borderRadius: 16,
+    borderRadius: 8,
     paddingHorizontal: 24,
     paddingVertical: 16,
   },

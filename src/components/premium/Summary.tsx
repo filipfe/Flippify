@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
 import { Option } from "../../types/general";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 
 export default function Summary() {
   return (

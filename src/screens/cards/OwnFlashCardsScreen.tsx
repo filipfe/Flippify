@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { View } from "react-native";
-import Loader from "../../components/Loader";
+import Loader from "../../components/ui/Loader";
 import { AddedFlashCard } from "../../types/flashcards";
-import NoContent from "../../components/NoContent";
+import NoContent from "../../components/ui/popups/NoContent";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CardStackParams, RootTabParams } from "../../types/navigation";
 import { FlatList } from "react-native-gesture-handler";
-import Layout from "../../components/Layout";
+import Layout from "../../components/ui/layout/Layout";
 import OwnFlashCardRef from "../../components/flashcards/own-flashcards/OwnFlashCardRef";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../../hooks/useAuth";

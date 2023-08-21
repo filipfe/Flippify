@@ -4,9 +4,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../const/styles";
+import { linearGradient } from "../../const/styles";
 
 type Props = {
   currentValue: number;

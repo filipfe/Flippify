@@ -6,7 +6,7 @@ import { profileStyles } from "../../components/profile/UserInfo";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import PrimaryInput from "../../components/PrimaryInput";
+import PrimaryInput from "../../components/ui/PrimaryInput";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Edit() {

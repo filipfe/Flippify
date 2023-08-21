@@ -33,7 +33,9 @@ export type FlashListCard = FlashCard & {
 export type FlashList = {
   id: number;
   name: string;
+  description: string;
   created_at: string;
+  user: User;
   cards: FlashListCard[];
 }
 

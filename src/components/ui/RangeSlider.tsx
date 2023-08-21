@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
-import { linearGradient } from "../const/styles";
+import { linearGradient } from "../../const/styles";
 
 export default function RangeSlider({ value = 40 }: { value?: number }) {
   return (

@@ -1,9 +1,9 @@
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
-import { shadowPrimary } from "../styles/general";
-import { User } from "../types/auth";
-import { DefaultProfileIcon, LikeIcon } from "../assets/icons/icons";
+import { shadowPrimary } from "../../../styles/general";
+import { User } from "../../../types/auth";
+import { DefaultProfileIcon, LikeIcon } from "../../../assets/icons/icons";
 import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 type Props = {
   user: User;

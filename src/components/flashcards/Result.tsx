@@ -1,11 +1,11 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../ui/PrimaryButton";
 import { useContext, useState, useEffect } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import { AuthContext } from "../../context/AuthContext";
 import { DefaultProfileIcon } from "../../assets/icons/icons";
-import SecondaryButton from "../SecondaryButton";
+import SecondaryButton from "../ui/SecondaryButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -130,13 +130,14 @@ export default function Result() {
       <View style={styles.buttonsWrapper}>
         <SecondaryButton
           text={"Odwróć"}
-          style={{ marginRight: 4, flex: 1 }}
+          style={{ marginRight: 6, flex: 1 }}
           paddingHorizontal={0}
           onPress={flipCard}
         />
         <PrimaryButton
-          style={{ marginLeft: 4, flex: 1 }}
+          style={{ marginLeft: 6, flex: 1 }}
           paddingHorizontal={0}
+          fontSize={12}
           text="Przejdź dalej"
           onPress={changeCard}
         />

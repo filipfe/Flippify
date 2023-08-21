@@ -8,6 +8,7 @@ export type Button = {
   style?: any,
   width?: string | number,
   fontSize?: number,
+  borderRadius?: number,
   paddingVertical?: number,
     paddingHorizontal?: number,
 };    

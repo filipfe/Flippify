@@ -1,17 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../const/styles";
-import { Button } from "../types/general";
+import { linearGradient } from "../../const/styles";
+import { Button } from "../../types/general";
 
 export default function PrimaryButton({
   onPress,
   text,
   active = true,
   style,
-  fontSize = 12,
+  fontSize = 14,
   width = "auto",
   paddingHorizontal = 28,
   paddingVertical = 14,
+  borderRadius = 16,
 }: Button) {
   return (
     <TouchableOpacity
@@ -31,6 +32,7 @@ export default function PrimaryButton({
           paddingHorizontal,
           paddingVertical,
           width: "100%",
+          borderRadius,
         }}
         colors={linearGradient}
       >
@@ -53,7 +55,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   gradient: {
-    borderRadius: 48,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -99,6 +99,7 @@ export default function useFlashCard(
       if (!category && !listId) return;
       try {
         const deck = await getDeck();
+        console.log(deck);
         deckType === "active" ? setActiveDeck(deck) : setNextDeck(deck);
       } finally {
         setIsLoading((prev) => ({ ...prev, [deckType]: false }));
@@ -126,6 +127,7 @@ export default function useFlashCard(
   ]);
 
   useEffect(() => {
+    console.log(listId);
     fetchDeck("active");
   }, [listId]);
 

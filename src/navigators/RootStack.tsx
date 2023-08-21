@@ -8,7 +8,9 @@ import { useContext } from "react";
 import Header from "../components/header/Header";
 import CardsGeneratorScreen from "../screens/CardsGeneratorScreen";
 import { ThemeContext } from "../context/ThemeContext";
-import { View } from "react-native";
+import { View, Pressable } from "react-native";
+import ListDetailsScreen from "../screens/lists/ListDetailsScreen";
+import SaveButton from "../components/lists/SaveButton";
 
 const RootStackNav = createNativeStackNavigator<RootStackParams>();
 
@@ -39,6 +41,14 @@ export default function RootStack() {
                 ? route.params.list.name
                 : route.params.topic?.name || route.params.category?.name,
             })}
+          />
+          <RootStackNav.Screen
+            name="ListDetailsScreen"
+            component={ListDetailsScreen}
+            options={{
+              title: "",
+              headerRight: (props) => <SaveButton {...props} />,
+            }}
           />
         </RootStackNav.Navigator>
       </NavigationContainer>

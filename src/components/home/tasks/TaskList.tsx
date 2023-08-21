@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { supabase } from "../../../hooks/useAuth";
 import { AuthContext } from "../../../context/AuthContext";
-import Loader from "../../Loader";
+import Loader from "../../ui/Loader";
 import TaskRef from "./TaskRef";
 import { Task } from "../../../types/task";
 import { useIsFocused } from "@react-navigation/native";

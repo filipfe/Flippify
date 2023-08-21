@@ -1,9 +1,9 @@
 import { View } from "react-native";
 import { useState, useEffect, useContext } from "react";
-import Loader from "../../components/Loader";
+import Loader from "../../components/ui/Loader";
 import { Topic } from "../../types/flashcards";
 import TopicRef from "../../components/flashcards/topics/TopicRef";
-import NotFound from "../../components/NotFound";
+import NotFound from "../../components/ui/popups/NotFound";
 import { ThemeContext } from "../../context/ThemeContext";
 import { FlatList } from "react-native-gesture-handler";
 import { supabase } from "../../hooks/useAuth";

@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Layout from "../../components/Layout";
+import Layout from "../../components/ui/layout/Layout";
 import SettingsSection from "../../components/settings/SettingsSection";
 import ThemeSwitch from "../../components/settings/ThemeSwitch";
 import AnimationSwitch from "../../components/settings/AnimationSwitch";

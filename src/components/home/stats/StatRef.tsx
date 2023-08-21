@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Stat } from "../../../types/home";
 import { linearGradient } from "../../../const/styles";
 import { StyleSheet, Text, View, Dimensions, Pressable } from "react-native";
-import GradientText from "../../GradientText";
+import GradientText from "../../ui/GradientText";
 import useShadow from "../../../hooks/useShadow";
 import Animated, {
   useAnimatedStyle,

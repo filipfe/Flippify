@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
 import { CardStackParams } from "../../../types/navigation";
-import RippleButton from "../../RippleButton";
+import RippleButton from "../../ui/RippleButton";
 import { ArrowIcon, MathIcon } from "../../../assets/icons/icons";
 import { ThemeContext } from "../../../context/ThemeContext";
 import useShadow from "../../../hooks/useShadow";

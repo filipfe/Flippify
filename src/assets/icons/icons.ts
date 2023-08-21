@@ -21,6 +21,7 @@ import ArrowIcon from './arrow.svg'
 import MathIcon from './math.svg'
 import DoneIcon from './done.svg'
 import GoogleIcon from './google.svg'
+import ListIcon from './list.svg'
 
 export {
     NotificationsIcon,
@@ -45,5 +46,6 @@ export {
     ArrowIcon,
     MathIcon,
     DoneIcon,
-    GoogleIcon
+    GoogleIcon,
+    ListIcon
 }
