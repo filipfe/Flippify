@@ -23,7 +23,7 @@ export default function RecentCategoryRef(props: Category) {
         <View style={styles.innerWrapper}>
           <View style={styles.leftWrapper}>
             <View style={{ marginRight: 24 }}>
-              <MathIcon height={36} width={36} />
+              <MathIcon strokeWidth={2.1} height={36} width={36} />
             </View>
             <View>
               <Text style={[styles.title, { color: font }]}>{name}</Text>

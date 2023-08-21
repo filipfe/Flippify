@@ -22,6 +22,7 @@ import MathIcon from './math.svg'
 import DoneIcon from './done.svg'
 import GoogleIcon from './google.svg'
 import ListIcon from './list.svg'
+import GradientLikeIcon from './gradient-like.svg'
 
 export {
     NotificationsIcon,
@@ -47,5 +48,6 @@ export {
     MathIcon,
     DoneIcon,
     GoogleIcon,
-    ListIcon
+    ListIcon,
+    GradientLikeIcon
 }

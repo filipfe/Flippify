@@ -6,27 +6,23 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { ArrowIcon, MathIcon } from "../../assets/icons/icons";
 import RippleButton from "../ui/RippleButton";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootTabParams } from "../../types/navigation";
+import { RootStackParams } from "../../types/navigation";
 
 export default function InProgressRef({ category, topic }: FavouriteCategory) {
-  const { navigate } = useNavigation<NavigationProp<RootTabParams, "Home">>();
+  const { navigate } =
+    useNavigation<NavigationProp<RootStackParams, "RootTab">>();
   const shadow = useShadow(16);
   const { background, font, secondary } = useContext(ThemeContext);
   return (
     <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
       <RippleButton
         borderless
-        onPress={() =>
-          navigate("FlashCards", {
-            screen: "FlashCardsGenerator",
-            params: { category, topic },
-          })
-        }
+        onPress={() => navigate("CardsGenerator", { category, topic })}
       >
         <View style={styles.innerWrapper}>
           <View style={styles.leftWrapper}>
             <View style={{ marginRight: 24 }}>
-              <MathIcon height={36} width={36} />
+              <MathIcon strokeWidth={2.1} height={36} width={36} />
             </View>
             <View>
               <Text style={[styles.title, { color: font }]}>

@@ -27,7 +27,7 @@ const CategoryRef = (props: Category) => {
         { backgroundColor: box },
       ]}
     >
-      <MathIcon />
+      <MathIcon strokeWidth={2.1} />
       <Text style={[styles.title, { color: font }]}>{name}</Text>
       <Text style={[styles.topicCount, { color: secondary }]}>12 tematów</Text>
     </Pressable>

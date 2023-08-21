@@ -37,6 +37,7 @@ export type FlashList = {
   created_at: string;
   user: User;
   cards: FlashListCard[];
+  category?: Category
 }
 
 export type FlashCardType = 'input' | "radio"
