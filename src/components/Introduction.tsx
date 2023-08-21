@@ -11,7 +11,8 @@ export default function Introduction() {
   const [isLoading, setIsLoading] = useState(false);
   const [usernamePopup, setUsernamePopup] = useState(false);
   const [username, setUsername] = useState("");
-  const { user, isLogged, updateUser } = useContext(AuthContext);
+  const { user, isLogged, isProfileLoading, updateUser } =
+    useContext(AuthContext);
   const { background, font, secondary } = useContext(ThemeContext);
 
   async function updateUsername() {
@@ -19,11 +20,13 @@ export default function Introduction() {
     if (username.length < 3 || username.length > 15)
       return alert("Wrong length");
     const error = await updateUser("username", username);
+    error && alert(error.message);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    if (user.username || !isLogged) setUsernamePopup(false);
+    if (user.username || !isLogged || isProfileLoading)
+      usernamePopup && setUsernamePopup(false);
     else setUsernamePopup(true);
   }, [user.username, isLogged]);
 

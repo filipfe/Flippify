@@ -34,8 +34,7 @@ export type FlashList = {
   id: number;
   name: string;
   created_at: string;
-  count: number;
-  flashcards: FlashListCard[];
+  cards: FlashListCard[];
 }
 
 export type FlashCardType = 'input' | "radio"

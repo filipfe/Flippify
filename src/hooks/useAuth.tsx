@@ -41,6 +41,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 export default function useAuth() {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState<User>(initialUserState);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [level, setLevel] = useState<Level>({
     current_level: 0,
     points: 0,
@@ -145,11 +146,18 @@ export default function useAuth() {
   }, []);
 
   useEffect(() => {
-    isLogged && fetchProfile();
+    if (!isLogged) return;
+    async function initialFetch() {
+      setIsProfileLoading(true);
+      await fetchProfile();
+      setIsProfileLoading(false);
+    }
+    initialFetch();
   }, [isLogged]);
 
   const authInterface = useMemo<AuthContextType>(
     () => ({
+      isProfileLoading,
       isLogged,
       user,
       level,
@@ -161,6 +169,7 @@ export default function useAuth() {
       updateUser,
     }),
     [
+      isProfileLoading,
       isLogged,
       user,
       level,

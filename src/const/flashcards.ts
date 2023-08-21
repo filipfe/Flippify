@@ -1,5 +1,5 @@
 import { AddedFlashCard, Answer, FlashCard, FlashList, Topic } from "../types/flashcards";
-import { Category, Option } from "../types/general";
+import { Category, Filter, Option } from "../types/general";
 
 export const CORRECT_ANSWER_POINTS = 20;
 
@@ -10,6 +10,7 @@ export const initialFlashList: FlashList = {
   count: 0,
   flashcards: [],
 }
+
 
 export const initialAnswers: Answer[] = [
   { text: "", is_correct: true },
@@ -25,6 +26,12 @@ export const initialCategory: Category = {
 export const initialTopic: Topic = {
   id: 0,
   name: ''
+}
+
+export const initialFilter: Filter = {
+  category: initialCategory,
+  topic: initialTopic,
+  search: ''
 }
 
 export const initialNewCard: AddedFlashCard = {

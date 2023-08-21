@@ -16,23 +16,14 @@ export default function NotificationRef({
   source,
   was_seen,
   initiator,
-  note,
 }: Notification) {
-  const { navigate } =
-    useNavigation<NavigationProp<RootTabParams, "Profile">>();
   const { light, font, secondary } = useContext(ThemeContext);
 
   async function handleView() {
-    const { error } = await supabase
+    await supabase
       .from("notifications")
       .update({ was_seen: true })
       .eq("id", id);
-    console.log(error);
-    if (source === "notes" && note)
-      navigate("Notes", {
-        screen: "Note",
-        params: { id: note.id, title: note.title },
-      });
   }
 
   return (
@@ -52,33 +43,9 @@ export default function NotificationRef({
           )}
         </View>
       ) : (
-        <View style={[styles.noteIcon, { backgroundColor: light }]}>
-          {source === "notes" ? (
-            <EditIcon fill={font} />
-          ) : (
-            <FlashCardsIcon fill={font} />
-          )}
+        <View style={[styles.icon, { backgroundColor: light }]}>
+          <FlashCardsIcon fill={font} />
         </View>
-      )}
-      {type === "like" ? (
-        <Text style={[styles.description, { color: secondary }]}>
-          Użytkownik{" "}
-          <Text style={{ color: font, fontFamily: "Bold" }}>
-            {initiator.username}
-          </Text>{" "}
-          polubił twoją notatkę pt.{" "}
-          <Text style={{ color: font, fontFamily: "Bold" }}>
-            “{note?.title}”
-          </Text>
-        </Text>
-      ) : (
-        <Text style={[styles.description, { color: secondary }]}>
-          Twoja notatka{" "}
-          <Text style={{ color: font, fontFamily: "Bold" }}>
-            “{note?.title}”
-          </Text>{" "}
-          została wyróżniona jako popularna. Gratulacje!{" "}
-        </Text>
       )}
       {!was_seen && (
         <LinearGradient
@@ -105,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
   },
-  noteIcon: {
+  icon: {
     height: 52,
     width: 52,
     borderRadius: 52,

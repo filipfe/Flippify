@@ -1,36 +1,50 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { Category } from "../../../types/general";
-import CategoryRef from "./CategoryRef";
-import { DEFAULT_STYLES } from "../../../const/styles";
-import Loader from "../../Loader";
-import { ThemeContext } from "../../../context/ThemeContext";
-import { FlatList } from "react-native-gesture-handler";
-import { supabase } from "../../../hooks/useAuth";
-import ListTitle from "./ListTitle";
-import RecentCategoryRef from "./RecentCategoryRef";
+import { Category } from "../../types/general";
+import CategoryRef from "../../components/flashcards/categories/CategoryRef";
+import { DEFAULT_STYLES } from "../../const/styles";
+import Loader from "../../components/Loader";
+import { ThemeContext } from "../../context/ThemeContext";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { supabase } from "../../hooks/useAuth";
+import ListTitle from "../../components/flashcards/categories/ListTitle";
+import RecentCategoryRef from "../../components/flashcards/categories/RecentCategoryRef";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function CategoryList() {
   const { background } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFocused = useIsFocused();
   const recent = categories.filter(
     (item) => item.id && [1, 2, 3].includes(item.id)
   );
 
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchCategories = async () => {
-      const { data } = await supabase
-        .from("categories")
-        .select("id, name")
-        .order("name");
-      // const recent = await supabase.from("categories").select("id").order("", { foreignTable: "views" })
-      setCategories(data as Category[]);
-      setIsLoading(false);
-    };
-    fetchCategories();
+  async function fetchCategories() {
+    const { data } = await supabase
+      .from("categories")
+      .select("id, name")
+      .order("name");
+    // const recent = await supabase.from("categories").select("id").order("", { foreignTable: "views" })
+    setCategories(data as Category[]);
+  }
+
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await fetchCategories();
+    setIsRefreshing(false);
   }, []);
+
+  useEffect(() => {
+    if (!isFocused) return;
+    setIsLoading(true);
+    async function fetchInitial() {
+      await fetchCategories();
+      setIsLoading(false);
+    }
+    fetchInitial();
+  }, [isFocused]);
 
   return isLoading ? (
     <Loader />
@@ -42,6 +56,9 @@ export default function CategoryList() {
           showsVerticalScrollIndicator={false}
           numColumns={2}
           data={categories}
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }
           ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
           ListHeaderComponent={
             <>

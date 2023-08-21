@@ -4,10 +4,9 @@ import { Stat } from "../../../types/home";
 import StatRef from "./StatRef";
 import { View } from "react-native";
 
-export default function StatList() {
+export default function StatList({ stats }: { stats: Stat[] }) {
   const listRef = useRef<FlatList>(null!);
   const timer = useRef<any>(null!);
-  const [stats, setStats] = useState<Stat[]>([]);
   const [activeStatIndex, setActiveStatIndex] = useState(0);
 
   useEffect(() => {
@@ -27,29 +26,6 @@ export default function StatList() {
       clearInterval(timer.current);
     };
   }, [activeStatIndex, stats]);
-
-  useEffect(() => {
-    setStats([
-      {
-        name: "efficiency",
-        title: "Efektywność",
-        value: 20,
-        sufix: "%",
-      },
-      {
-        name: "speed",
-        title: "Szybkość",
-        value: 4,
-        sufix: " fiszki / min",
-      },
-      {
-        name: "quality",
-        title: "Efektywność",
-        value: 20,
-        sufix: "%",
-      },
-    ]);
-  }, []);
 
   return (
     <FlatList

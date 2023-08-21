@@ -1,5 +1,5 @@
 import { User } from "./auth";
-import { Note } from "./notes";
+import { Topic } from "./flashcards";
 
 export type Button = {
   onPress?: () => void;
@@ -29,10 +29,15 @@ export type Children = {
 
 export type Notification = {
   id: number;
-  source: 'notes' | 'flashcards' | null;
+  source: 'flashcards' | null;
   type: "like" | "promotion";
   was_seen: boolean;
   initiator: User;
   created_at: Date;
-  note: Pick<Note, 'id' | 'title'> | null,
+}
+
+export type Filter = {
+  search: string;
+  category: Category;
+  topic: Topic
 }

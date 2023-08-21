@@ -14,7 +14,7 @@ const RadioAnswer = (props: Answer & { index: number }) => {
   const correctColor = (base: string) => {
     if (is_correct && answer.text) return "#13C331";
     if (!answer.text || answer.text !== text) return base;
-    return "red";
+    return "#FA4646";
   };
 
   return (
@@ -43,7 +43,7 @@ const RadioAnswer = (props: Answer & { index: number }) => {
   );
 };
 
-const indexToLetter = (index: number) => {
+export const indexToLetter = (index: number) => {
   switch (index) {
     case 0:
       return "A";

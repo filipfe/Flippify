@@ -1,19 +1,13 @@
 import { Pressable, Modal, View, StyleSheet, TextInput } from "react-native";
 import { BackIcon, SearchIcon } from "../../assets/icons/icons";
 import { useState, useContext, useRef, useEffect } from "react";
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { ThemeContext } from "../../context/ThemeContext";
-import { FilterComponentProps, NoteStackParams } from "../../types/navigation";
+import { FilterComponentProps } from "../../types/navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function SearchButton({
   route,
-  dataType,
 }: Omit<FilterComponentProps, "topicActive">) {
   const timer = useRef<any>(null!);
   const inputRef = useRef<TextInput>(null!);
@@ -68,9 +62,7 @@ export default function SearchButton({
                 onSubmitEditing={search}
                 onChangeText={(text) => setInput(text)}
                 value={input}
-                placeholder={
-                  dataType === "note" ? "Wyszukaj notatkę" : "Wyszukaj fiszkę"
-                }
+                placeholder={"Wyszukaj fiszkę"}
                 ref={(ref) => ref && (inputRef.current = ref)}
                 placeholderTextColor={secondary}
                 style={{

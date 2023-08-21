@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../PrimaryButton";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import { AuthContext } from "../../context/AuthContext";
@@ -14,13 +14,29 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import LevelDisplayer from "./result/LevelDisplayer";
+import { useCountUp } from "use-count-up";
+import { indexToLetter } from "./answers/RadioAnswer";
 
 export default function Result() {
-  const { font, secondary } = useContext(ThemeContext);
-  const { flipCard, changeCard, answer } = useContext(FlashCardContext);
+  const { font, secondary, light } = useContext(ThemeContext);
+  const { flipCard, changeCard, activeCard, answer } =
+    useContext(FlashCardContext);
   const { user, level } = useContext(AuthContext);
   const { avatar_url } = user;
+  const [oldPoints, setOldPoints] = useState(level.points);
+  const { value: points, reset } = useCountUp({
+    isCounting: true,
+    start: oldPoints,
+    end: level.points,
+    decimalPlaces: 0,
+    easing: "easeOutCubic",
+    duration: 0.6,
+    onComplete: () => setOldPoints(level.points),
+  });
   const isPromotion = answer.is_correct && level.points < 20;
+  const answerLetter = indexToLetter(
+    activeCard.answers.findIndex((item) => item.text === answer.text)
+  );
 
   const animatedWidthStyle = useAnimatedStyle(
     () => ({
@@ -34,6 +50,8 @@ export default function Result() {
     [level]
   );
 
+  useEffect(reset, [level.points]);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>
@@ -44,48 +62,70 @@ export default function Result() {
             <DefaultProfileIcon width={96} height={96} />
           )}
         </View>
-        <View style={{ marginTop: 24, marginBottom: 12 }}>
+        <View style={{ marginTop: 24 }}>
           <LevelDisplayer {...level} isPromotion={isPromotion} />
         </View>
-        <View style={styles.progressWrapper}>
+        <View style={styles.pointsWrapper}>
+          <View>
+            {answer.is_correct && (
+              <Text
+                numberOfLines={1}
+                style={{
+                  ...styles.points,
+                  color: secondary,
+                }}
+              >
+                +20
+              </Text>
+            )}
+          </View>
+          <Text style={{ ...styles.points, fontSize: 12, color: secondary }}>
+            {points} / {level.points_required}
+          </Text>
+        </View>
+        <View style={[styles.progressWrapper, { backgroundColor: light }]}>
           <Animated.View style={animatedWidthStyle}>
             <LinearGradient
               style={styles.progress}
               start={{ x: 0, y: 0 }}
               colors={linearGradient}
-            >
-              {answer.is_correct && (
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    ...styles.points,
-                    color: secondary,
-                  }}
-                >
-                  +20
-                </Text>
-              )}
-            </LinearGradient>
+            />
           </Animated.View>
-          <Text style={{ ...styles.points, fontSize: 12, color: secondary }}>
-            {level.points} / {level.points_required}
-          </Text>
         </View>
-        <Text style={{ ...styles.title, color: font }}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "ExtraBold",
+            marginTop: 16,
+            color: font,
+          }}
+        >
           {answer.is_correct
             ? "To poprawna odpowiedź!"
             : "Niepoprawna odpowiedź!"}
         </Text>
-        <View style={styles.answerWrapper}>
+      </View>
+      <View style={styles.answerWrapper}>
+        {answer.text && (
           <Text
             style={{
-              ...styles.answer,
-              color: answer.is_correct ? "#13C331" : "red",
+              fontFamily: "SemiBold",
+              textAlign: "center",
+              color: answer.is_correct ? "#13C331" : "#FA4646",
+              marginBottom: 8,
             }}
           >
-            {answer.text}
+            Odpowiedź {answerLetter}
           </Text>
-        </View>
+        )}
+        <Text
+          style={{
+            ...styles.answer,
+            color: answer.is_correct ? "#13C331" : "#FA4646",
+          }}
+        >
+          {answer.text}
+        </Text>
       </View>
       <View style={styles.buttonsWrapper}>
         <SecondaryButton
@@ -140,6 +180,8 @@ const styles = StyleSheet.create({
   },
   answerWrapper: {
     alignItems: "center",
+    paddingBottom: 64,
+    paddingTop: 16,
   },
   answer: {
     fontFamily: "ExtraBold",
@@ -147,11 +189,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   progressWrapper: {
-    width: "90%",
+    width: "95%",
     height: 5,
     borderRadius: 255,
-    backgroundColor: "#D4E9FA",
-    marginVertical: 24,
+    marginBottom: 24,
+    marginTop: 8,
     position: "relative",
   },
   progress: {
@@ -162,10 +204,11 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   points: {
-    position: "absolute",
-    top: -28,
-    right: 0,
-    transform: [{ translateX: 8 }],
-    fontFamily: "Bold",
+    fontFamily: "SemiBold",
+  },
+  pointsWrapper: {
+    width: "95%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

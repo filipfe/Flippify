@@ -2,7 +2,7 @@ import Info from "../components/entry/Info";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
-import { View, ViewToken } from "react-native";
+import { ViewToken } from "react-native";
 import Login from "../components/entry/Login";
 
 export default function EntryScreen() {

@@ -5,13 +5,16 @@ import { AuthContext } from "../../../context/AuthContext";
 import Loader from "../../Loader";
 import TaskRef from "./TaskRef";
 import { Task } from "../../../types/task";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function TaskList() {
   const { user } = useContext(AuthContext);
   const [areLoading, setAreLoading] = useState(true);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) return;
     async function fetchTasks() {
       setAreLoading(true);
       const { data } = await supabase
@@ -25,7 +28,7 @@ export default function TaskList() {
       setAreLoading(false);
     }
     fetchTasks();
-  }, [user.id]);
+  }, [user.id, isFocused]);
 
   return areLoading ? (
     <Loader />

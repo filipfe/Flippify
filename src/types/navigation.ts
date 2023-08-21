@@ -1,43 +1,42 @@
 import { NavigationProp, NavigatorScreenParams, RouteProp } from "@react-navigation/native";
 import { AddedFlashCard, FlashList, Topic } from "./flashcards";
-import { Category } from "./general";
-import { AddedNote, Filter } from "./notes";
+import { Category, Filter } from "./general";
+
+export type RootStackParams = {
+  RootTab: NavigatorScreenParams<RootTabParams>;
+  CardsGenerator: {
+    list?: Pick<FlashList, 'id' | 'name'>
+    category?: Category;
+    topic?: Topic;
+  };
+}
 
 export type RootTabParams = {
   Home: undefined;
-  FlashCards: NavigatorScreenParams<FlashCardsStackParams>;
-  Notes: NavigatorScreenParams<NoteStackParams>;
+  Cards: NavigatorScreenParams<CardStackParams>;
+  Lists: NavigatorScreenParams<ListStackParams>;
   Profile: NavigatorScreenParams<ProfileStackParams>;
   AddCard: AddedFlashCard | undefined;
-  AddNote: AddedNote | undefined;
 };
 
-// FLASHCARDS
+// CARDS
 
-export type FlashCardsStackParams = {
+export type CardStackParams = {
   CategoryList: undefined;
   TopicList: { category: Category };
-  FlashCardsGenerator: {
-    category: Category;
-    topic?: Topic;
-  };
   OwnFlashCards: Filter;
   OwnFlashLists: undefined;
 };
 
 export type CategoryNavigationProps = NavigationProp<
-  FlashCardsStackParams,
+  CardStackParams,
   "CategoryList"
 >;
 
 export type GeneratorRouteProps = RouteProp<
-  FlashCardsStackParams,
-  "FlashCardsGenerator"
+  RootStackParams,
+  "CardsGenerator"
 >;
-
-
-export type TopicListNavigationProp = NavigationProp<FlashCardsStackParams, "TopicList">;
-export type TopicListRouteProp = RouteProp<FlashCardsStackParams, "TopicList">;
 
 export type AddCardStackParams = {
   CardForm: undefined;
@@ -51,26 +50,17 @@ export type QuestionsFormNavigationProp = NavigationProp<
 
 export type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardForm">;
 
-export type FlashListStackParams = {
-  ListOfLists: undefined;
-  AddFlashList: undefined;
-  FlashList: FlashList;
-};
+// LISTS 
 
-// NOTES
+export type ListStackParams = {
+  ListScreen: undefined;
+}
 
-export type NoteStackParams = {
-  NoteList: Filter;
-  Note: { id: number, title: string };
-  OwnNotes: Filter;
-  
-};
 
 // PROFILE
 
 export type ProfileStackParams = {
     ProfileScreen: undefined;
-    EditProfile: undefined;
     Settings: undefined;
     Notifications: undefined;
   };
@@ -78,9 +68,6 @@ export type ProfileStackParams = {
 
 // OTHER 
 
-export type DataType = "note" | "card"
-
 export type FilterComponentProps = {
-  route: keyof NoteStackParams | keyof FlashCardsStackParams;
-  dataType: DataType
+  route: keyof CardStackParams | keyof ListStackParams;
 };

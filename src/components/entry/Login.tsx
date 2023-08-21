@@ -14,7 +14,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import RippleButton from "../RippleButton";
 import CodePopup from "./CodePopup";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GoogleIcon } from "../../assets/icons/icons";
+import { GoogleIcon, LogoIcon } from "../../assets/icons/icons";
 
 const { width } = Dimensions.get("screen");
 
@@ -26,7 +26,19 @@ export default function Login() {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <Text style={{ ...styles.title, color: font }}>Zaloguj się</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 24,
+        }}
+      >
+        <LogoIcon height={48} width={48} />
+        <Text style={[styles.title, { color: font, marginLeft: 16 }]}>
+          Zaloguj się
+        </Text>
+      </View>
       <View style={{ flex: 1 }}>
         <PrimaryInput onChangeText={(text) => setEmail(text)} label="Email" />
         <View style={styles.lineWrapper}>
@@ -87,8 +99,8 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: "SemiBold",
     textAlign: "center",
-    fontSize: 24,
-    marginBottom: 24,
+    fontSize: 26,
+    lineHeight: 30,
   },
   modalButton: {
     backgroundColor: "#0000FF",

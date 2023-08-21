@@ -1,25 +1,13 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../const/styles";
-import {
-  NavigationProp,
-  useNavigation,
-  useNavigationState,
-} from "@react-navigation/native";
-import { useState, useEffect, useContext } from "react";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
 import { shadowPrimary } from "../styles/general";
-import {
-  FlashCardsIcon,
-  HomeIcon,
-  NotesIcon,
-  ProfileIcon,
-} from "../assets/general";
-import GradientText from "./GradientText";
+import { FlashCardsIcon, HomeIcon, ProfileIcon } from "../assets/general";
 import { ThemeContext } from "../context/ThemeContext";
 import { RootTabParams } from "../types/navigation";
-import RippleButton from "./RippleButton";
-import { initialAddedNote } from "../const/notes";
 import { PlusIcon } from "../assets/icons/icons";
 
 export default function TabBar(props: BottomTabBarProps) {
@@ -49,10 +37,10 @@ function TabBarLink({
   const { navigate } = navigation;
 
   const { options } = descriptors[route.key];
-  const isCenterButton = index === Math.floor(state.routes.length / 2) - 1;
+  const isCenterButton = index === Math.floor(state.routes.length / 2);
   const { title } = options;
   const isFocused = state.index === index;
-  if (route.name === "AddCard" || route.name === "AddNote") return <></>;
+  if (route.name === "AddCard") return <></>;
   return (
     <>
       {isCenterButton && <CenterButton />}
@@ -100,22 +88,13 @@ const LinkIcon = ({
           width={23}
         />
       );
-    case "FlashCards":
+    case "Cards":
       return (
         <FlashCardsIcon
           stroke={isFocused ? primary : font}
           strokeWidth="1.4"
           height={20}
           width={20}
-        />
-      );
-    case "Notes":
-      return (
-        <NotesIcon
-          stroke={isFocused ? primary : font}
-          strokeWidth="1.4"
-          height={21}
-          width={21}
         />
       );
     case "Profile":
@@ -133,73 +112,12 @@ const LinkIcon = ({
 };
 
 const CenterButton = () => {
-  const { font, light, primary, background } = useContext(ThemeContext);
-  const [active, setActive] = useState(false);
   const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
-  const location = useNavigationState((state) => state);
-
-  useEffect(() => {
-    setActive(false);
-  }, [location]);
-
   return (
     <View
       style={{ alignItems: "center", marginTop: -16, alignSelf: "flex-start" }}
     >
-      <Modal
-        transparent
-        visible={active}
-        onRequestClose={() => setActive(false)}
-        statusBarTranslucent
-        animationType="fade"
-      >
-        <Pressable onPress={() => setActive(false)} style={styles.modalWrapper}>
-          <View style={{ ...styles.modal, backgroundColor: background }}>
-            <Text
-              style={{
-                color: font,
-                fontFamily: "Bold",
-                fontSize: 16,
-                paddingVertical: 12,
-              }}
-            >
-              Twórz
-            </Text>
-            <View
-              style={{
-                borderRadius: 16,
-                height: 1,
-                width: "100%",
-                maxWidth: "50%",
-                backgroundColor: light,
-                marginBottom: 12,
-              }}
-            />
-            <RippleButton onPress={() => navigate("AddCard", undefined)}>
-              <View style={styles.centerButtonLink}>
-                <FlashCardsIcon stroke={primary} strokeWidth={2} height={24} />
-                <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
-                  Nowa fiszka
-                </GradientText>
-              </View>
-            </RippleButton>
-            <RippleButton onPress={() => navigate("AddNote", undefined)}>
-              <View style={styles.centerButtonLink}>
-                <NotesIcon
-                  stroke={primary}
-                  strokeWidth={1.6}
-                  height={24}
-                  width={24}
-                />
-                <GradientText style={{ fontFamily: "Bold", marginLeft: 12 }}>
-                  Nowa notatka
-                </GradientText>
-              </View>
-            </RippleButton>
-          </View>
-        </Pressable>
-      </Modal>
-      <Pressable onPress={() => setActive((prev) => !prev)}>
+      <Pressable onPress={() => navigate("AddCard")}>
         <LinearGradient
           style={styles.centerButton}
           start={{ x: 0, y: 0 }}

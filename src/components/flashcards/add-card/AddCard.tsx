@@ -18,17 +18,14 @@ import CategoryPicker from "../../filter/CategoryPicker";
 import TopicPicker from "../../filter/TopicPicker";
 import Success from "../../Success";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import {
-  FlashCardsStackParams,
-  RootTabParams,
-} from "../../../types/navigation";
+import { CardStackParams, RootTabParams } from "../../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../../../hooks/useAuth";
 
 export default function AddCard({
   route,
 }: NativeStackScreenProps<RootTabParams, "AddCard">) {
-  const { navigate } = useNavigation<NavigationProp<FlashCardsStackParams>>();
+  const { navigate } = useNavigation<NavigationProp<CardStackParams>>();
   const { secondary, background } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const opus = useOpus<Omit<AddedFlashCard, "user">>(

@@ -3,6 +3,7 @@ import { Auth, User } from "../types/auth";
 import { AuthResponse, PostgrestError, VerifyEmailOtpParams } from "@supabase/supabase-js";
 
 export type AuthContextType = Auth & {
+    isProfileLoading: boolean;
     addPoints: (points: number) => Promise<number>,
     updateUser: <T extends keyof User>(field: T, value: User[T]) => Promise<PostgrestError | null>;
     signInWithEmail: (email: string) => void

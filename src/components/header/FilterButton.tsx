@@ -6,39 +6,29 @@ import { ThemeContext } from "../../context/ThemeContext";
 import CategoryPicker from "../filter/CategoryPicker";
 import { initialCategory, initialTopic } from "../../const/flashcards";
 import PrimaryButton from "../PrimaryButton";
-import { DataType, FilterComponentProps } from "../../types/navigation";
+import { FilterComponentProps } from "../../types/navigation";
 import TopicPicker from "../filter/TopicPicker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import CardTypePicker from "../filter/CardTypePicker";
-import { Filter, NoteFilter } from "../../types/notes";
+import { Filter } from "../../types/general";
 
 export default function FilterButton({
-  dataType,
   route,
 }: Omit<FilterComponentProps, "inputPlaceholder">) {
-  const [filterParams, setFilterParams] = useState<
-    DataType extends "note"
-      ? Omit<NoteFilter, "search">
-      : Omit<Filter, "search">
-  >({
+  const [filterParams, setFilterParams] = useState<Filter>({
     category: initialCategory,
     topic: initialTopic,
-    type: undefined,
+    search: "",
   });
   const [filterActive, setFilterActive] = useState(false);
   const { font, background, ripple } = useContext(ThemeContext);
   const { push } = useNavigation<NativeStackNavigationProp<any>>();
-  const { params } = useRoute<RouteProp<any>>();
   const closeModal = () => setFilterActive(false);
 
   const search = () => {
     push(route, {
-      ...params,
       category: filterParams.category,
-      ...(dataType === "card" && {
-        topic: filterParams.topic,
-        type: filterParams.type,
-      }),
+      topic: filterParams.topic,
+      search: filterParams.search,
     });
     closeModal();
   };
@@ -72,27 +62,15 @@ export default function FilterButton({
                 }
               />
             </View>
-            {dataType === "card" && (
-              <>
-                <View style={{ marginTop: 32 }}>
-                  <TopicPicker
-                    category={filterParams.category}
-                    active={filterParams.topic}
-                    onChange={(topic) =>
-                      setFilterParams((prev) => ({ ...prev, topic }))
-                    }
-                  />
-                </View>
-                <View style={{ marginTop: 32 }}>
-                  <CardTypePicker
-                    initialValue={filterParams.type}
-                    onChange={(type) =>
-                      setFilterParams((prev) => ({ ...prev, type }))
-                    }
-                  />
-                </View>
-              </>
-            )}
+            <View style={{ marginTop: 32 }}>
+              <TopicPicker
+                category={filterParams.category}
+                active={filterParams.topic}
+                onChange={(topic) =>
+                  setFilterParams((prev) => ({ ...prev, topic }))
+                }
+              />
+            </View>
           </View>
           <PrimaryButton onPress={search} width={"100%"} text={"Zatwierdź"} />
         </View>

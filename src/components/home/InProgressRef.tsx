@@ -1,5 +1,5 @@
 import { FavouriteCategory } from "../../types/home";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import useShadow from "../../hooks/useShadow";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";

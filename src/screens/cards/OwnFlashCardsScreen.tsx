@@ -2,9 +2,9 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import { View } from "react-native";
 import Loader from "../../components/Loader";
 import { AddedFlashCard } from "../../types/flashcards";
-import NoContent from "../../components/flashcards/flashlists/NoContent";
+import NoContent from "../../components/NoContent";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { FlashCardsStackParams, RootTabParams } from "../../types/navigation";
+import { CardStackParams, RootTabParams } from "../../types/navigation";
 import { FlatList } from "react-native-gesture-handler";
 import Layout from "../../components/Layout";
 import OwnFlashCardRef from "../../components/flashcards/own-flashcards/OwnFlashCardRef";
@@ -12,16 +12,16 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../../hooks/useAuth";
 import { AuthContext } from "../../context/AuthContext";
 
-export default function OwnFlashCards({
+export default function OwnFlashCardsScreen({
   route,
-}: NativeStackScreenProps<FlashCardsStackParams, "OwnFlashCards">) {
+}: NativeStackScreenProps<CardStackParams, "OwnFlashCards">) {
   const [page, setPage] = useState(0);
   const { user } = useContext(AuthContext);
   const navigation = useNavigation<NavigationProp<RootTabParams>>();
   const [cards, setCards] = useState<AddedFlashCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
-  const { search, category, topic, type } = route.params;
+  const { search, category, topic } = route.params;
 
   const fetchCards = useCallback(
     async (isFirst: boolean) => {
@@ -34,7 +34,7 @@ export default function OwnFlashCards({
 
       if (topic.id) query = query.eq("topic_id", topic.id);
       else if (category.id) query = query.eq("topic.category_id", category.id);
-      if (type) query = query.eq("type", type);
+      // if (type) query = query.eq("type", type);
       if (search) query = query.textSearch("question", route.params.search);
 
       if (isFirst) query = query.limit(10);

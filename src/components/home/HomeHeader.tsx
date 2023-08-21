@@ -34,7 +34,7 @@ export default function HomeHeader() {
         flexDirection: "row",
         width: "100%",
         paddingHorizontal: 24,
-        paddingVertical: 16,
+        paddingVertical: 8,
       }}
     >
       {theme === "light" ? (
@@ -42,9 +42,9 @@ export default function HomeHeader() {
           Eksploruj
         </Text>
       ) : is_premium ? (
-        <PremiumIcon width={48} />
+        <PremiumIcon width={44} />
       ) : (
-        <LogoIcon width={48} />
+        <LogoIcon width={44} />
       )}
       <TouchableOpacity
         activeOpacity={0.8}
@@ -55,8 +55,8 @@ export default function HomeHeader() {
           style={{
             borderWidth: 2,
             borderColor: "#FFFFFF",
-            width: 40,
-            height: 40,
+            width: 36,
+            height: 36,
             overflow: "hidden",
             alignItems: "center",
             justifyContent: "center",
@@ -65,11 +65,11 @@ export default function HomeHeader() {
         >
           {avatar_url ? (
             <Image
-              style={{ width: 40, height: 40 }}
+              style={{ width: 36, height: 36 }}
               source={{ uri: avatar_url }}
             />
           ) : (
-            <DefaultProfileIcon width={40} height={40} />
+            <DefaultProfileIcon width={36} height={36} />
           )}
         </View>
       </TouchableOpacity>

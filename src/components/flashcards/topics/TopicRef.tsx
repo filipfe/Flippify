@@ -1,13 +1,12 @@
 import { Topic } from "../../../types/flashcards";
 import { Category } from "../../../types/general";
-import { useNavigation } from "@react-navigation/native";
-import { TopicListNavigationProp } from "../../../types/navigation";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RangeSlider from "../../RangeSlider";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
-import useShadow from "../../../hooks/useShadow";
 import RippleButton from "../../RippleButton";
+import { RootStackParams } from "../../../types/navigation";
 
 const TopicRef = ({
   topic,
@@ -17,13 +16,14 @@ const TopicRef = ({
   category: Category;
 }) => {
   const { font, secondary, box } = useContext(ThemeContext);
-  const navigation = useNavigation<TopicListNavigationProp>();
+  const navigation =
+    useNavigation<NavigationProp<RootStackParams, "CardsGenerator">>();
   return (
     <View style={[styles.wrapper, { backgroundColor: box }]}>
       <RippleButton
         borderless
         onPress={() =>
-          navigation.navigate("FlashCardsGenerator", {
+          navigation.navigate("CardsGenerator", {
             topic: topic || undefined,
             category,
           })

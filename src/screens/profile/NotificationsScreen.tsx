@@ -18,9 +18,7 @@ export default function NotificationsScreen() {
     async function fetchNotifications() {
       const { data } = await supabase
         .from("notifications")
-        .select(
-          "*, initiator:initiator_id(id, username, avatar_url), note:notes(id, title)"
-        )
+        .select("*, initiator:initiator_id(id, username, avatar_url)")
         .eq("receiver_id", user.id);
       setNotifications((data as Notification[]) || []);
       setAreLoading(false);

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useContext } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
-import { FlashCardsStackParams } from "../../../types/navigation";
+import { CardStackParams } from "../../../types/navigation";
 import RippleButton from "../../RippleButton";
 import { ArrowIcon, MathIcon } from "../../../assets/icons/icons";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -11,7 +11,7 @@ import useShadow from "../../../hooks/useShadow";
 export default function RecentCategoryRef(props: Category) {
   const { name } = props;
   const { navigate } =
-    useNavigation<NavigationProp<FlashCardsStackParams, "CategoryList">>();
+    useNavigation<NavigationProp<CardStackParams, "CategoryList">>();
   const shadow = useShadow(16);
   const { background, font, secondary } = useContext(ThemeContext);
   return (

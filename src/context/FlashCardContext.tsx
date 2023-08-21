@@ -7,6 +7,8 @@ type IsCardLoading = {
 };
 
 export type FlashCardContextType = {
+  completedCount: number;
+  totalCount: number;
   activeCard: FlashCard;
   flipCard: () => void;
   submitAnswer: (answer: string) => void;

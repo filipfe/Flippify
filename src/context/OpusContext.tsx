@@ -1,6 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { AddedFlashCard, Topic } from "../types/flashcards";
-import { AddedNote } from "../types/notes";
 import { Category } from "../types/general";
 
 export type OpusContext<T> = {
@@ -13,5 +12,3 @@ export type OpusContext<T> = {
 };
 
 export const NewCardContext = createContext<OpusContext<AddedFlashCard>>(null!);
-
-export const NewNoteContext = createContext<OpusContext<AddedNote>>(null!);
