@@ -34,9 +34,12 @@ export type FlashList = {
   id: number;
   name: string;
   description: string;
+  is_public: boolean;
   created_at: string;
   user: User;
   cards: FlashListCard[];
+  cards_count: number;
+  likes_count: number;
   category?: Category
 }
 

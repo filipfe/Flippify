@@ -13,9 +13,9 @@ export default function RecentCategoryRef(props: Category) {
   const { navigate } =
     useNavigation<NavigationProp<CardStackParams, "CategoryList">>();
   const shadow = useShadow(16);
-  const { background, font, secondary } = useContext(ThemeContext);
+  const { box, font, secondary } = useContext(ThemeContext);
   return (
-    <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
+    <View style={[styles.wrapper, { backgroundColor: box }]}>
       <RippleButton
         borderless
         onPress={() => navigate("TopicList", { category: props })}

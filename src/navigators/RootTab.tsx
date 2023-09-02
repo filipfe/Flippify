@@ -4,8 +4,6 @@ import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 import TabBar from "../components/ui/TabBar";
 import HomeScreen from "../screens/HomeScreen";
-import AddCard from "../components/flashcards/add-card/AddCard";
-import Header from "../components/header/Header";
 import CardStack from "./cards/CardStack";
 import ProfileStack from "./profile/ProfileStack";
 import HomeHeader from "../components/home/HomeHeader";
@@ -58,14 +56,6 @@ export default function RootTab() {
           title: "Profil",
           headerShown: false,
         }}
-      />
-      <RootTabNav.Screen
-        name="AddCard"
-        component={AddCard}
-        options={({ route }) => ({
-          title: route.params?.id ? "Modyfikuj fiszkę" : "Nowa fiszka",
-          header: (props) => <Header {...props} />,
-        })}
       />
     </RootTabNav.Navigator>
   );

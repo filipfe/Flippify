@@ -5,13 +5,13 @@ import {
   Dimensions,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useContext } from "react";
 import PrimaryInput from "../ui/PrimaryInput";
 import PrimaryButton from "../ui/PrimaryButton";
 import { AuthContext } from "../../context/AuthContext";
 import { ThemeContext } from "../../context/ThemeContext";
-import RippleButton from "../ui/RippleButton";
 import CodePopup from "./CodePopup";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GoogleIcon, LogoIcon } from "../../assets/icons/icons";
@@ -21,8 +21,17 @@ const { width } = Dimensions.get("screen");
 export default function Login() {
   const { font, background, secondary, light } = useContext(ThemeContext);
   const { signInWithEmail, signInWithGoogle } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [codePopupActive, setCodePopupActive] = useState(false);
   const [email, setEmail] = useState("");
+
+  async function handleSubmit() {
+    setIsLoading(true);
+    const error = await signInWithEmail(email);
+    console.log(error?.message);
+    !error && setCodePopupActive(true);
+    setIsLoading(false);
+  }
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -67,14 +76,17 @@ export default function Login() {
           </Text>
         </Pressable>
       </View>
-      <PrimaryButton
-        text="Zaloguj się"
-        active={email.length > 3}
-        onPress={() => {
-          signInWithEmail(email);
-          setCodePopupActive(true);
-        }}
-      />
+      <PrimaryButton active={email.length > 3} onPress={handleSubmit}>
+        {isLoading ? (
+          <ActivityIndicator color="#FFF" />
+        ) : (
+          <Text
+            style={{ fontFamily: "SemiBold", lineHeight: 18, color: "#FFF" }}
+          >
+            Zaloguj się
+          </Text>
+        )}
+      </PrimaryButton>
       <Modal
         visible={codePopupActive}
         animationType="fade"

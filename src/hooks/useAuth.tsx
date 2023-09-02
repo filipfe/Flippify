@@ -38,7 +38,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export default function useAuth() {
+export default function useAuth(): AuthContextType {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState<User>(initialUserState);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
@@ -71,7 +71,8 @@ export default function useAuth() {
   }
 
   async function signInWithEmail(email: string) {
-    await supabase.auth.signInWithOtp({ email });
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    return error;
   }
 
   async function verifyOTP(

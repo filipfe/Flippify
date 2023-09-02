@@ -5,9 +5,10 @@ import { useContext, useState } from "react";
 import { Pressable, Text } from "react-native";
 import GradientText from "../ui/GradientText";
 
-export default function SaveButton(props: HeaderButtonProps) {
+export default function SaveButton({ listId }: { listId: number }) {
   const [isSaved, setIsSaved] = useState(false);
   const { primary, font } = useContext(ThemeContext);
+
   return isSaved ? (
     <Pressable
       onPress={() => setIsSaved(false)}

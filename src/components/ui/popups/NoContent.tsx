@@ -11,7 +11,7 @@ type Props = {
 
 export default function NoContent({
   text = "Nie znaleziono",
-  buttonText = "Cofnij",
+  buttonText,
   onPress,
 }: Props) {
   const { font, background } = useContext(ThemeContext);
@@ -21,7 +21,8 @@ export default function NoContent({
       {text && buttonText && (
         <PrimaryButton
           onPress={onPress}
-          paddingVertical={14}
+          paddingVertical={12}
+          fontSize={12}
           text={buttonText}
         />
       )}

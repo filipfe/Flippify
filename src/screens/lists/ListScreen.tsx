@@ -5,16 +5,23 @@ import { supabase } from "../../hooks/useAuth";
 import { FlashList } from "../../types/flashcards";
 import FlashListRef from "../../components/lists/FlashListRef";
 import Loader from "../../components/ui/Loader";
-import { Text } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import {
   FlatList,
   RefreshControl,
   ScrollView,
 } from "react-native-gesture-handler";
 import { ThemeContext } from "../../context/ThemeContext";
+import { ArrowIcon } from "../../assets/icons/icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ListStackParams } from "../../types/navigation";
+import { initialFilter } from "../../const/flashcards";
+import ListSection from "../../components/lists/ListSection";
 
-export default function ListScreen() {
-  const { font } = useContext(ThemeContext);
+export default function ListScreen({
+  navigation,
+}: NativeStackScreenProps<ListStackParams, "ListScreen">) {
+  const { font, ripple } = useContext(ThemeContext);
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -24,9 +31,21 @@ export default function ListScreen() {
     const { data } = await supabase
       .from("flashlists")
       .select(
-        "id, name, description, user:profiles(id, username, avatar_url, is_premium), category:categories(id, name, icon)"
+        "id, name, description, is_public, user:profiles(id, username, avatar_url, is_premium), category:categories(id, name, icon), cards_count:flashlist_elements(...flashcards(count)), likes_count:saves(count)"
       );
-    setLists((data as unknown as FlashList[]) || []);
+
+    const lists = (data as unknown as FlashList[]).map((item) => {
+      const { cards_count, likes_count, ...list } = item;
+      const cardsCount = cards_count as unknown as { count: number }[];
+      const likesCount = likes_count as unknown as { count: number }[];
+      return {
+        ...list,
+        cards_count: cardsCount[0].count,
+        likes_count: likesCount[0].count,
+      };
+    });
+
+    setLists(lists || []);
   }
 
   useEffect(() => {
@@ -56,85 +75,48 @@ export default function ListScreen() {
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
       >
-        <Text
+        <View
           style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center",
             marginTop: 12,
-            fontFamily: "SemiBold",
-            fontSize: 22,
-            color: font,
-            paddingHorizontal: 24,
+            paddingLeft: 24,
+            position: "relative",
           }}
         >
-          Wybrane dla Ciebie
-        </Text>
+          <Text
+            style={{
+              fontFamily: "SemiBold",
+              fontSize: 22,
+              color: font,
+            }}
+          >
+            Moje Fiszkolisty
+          </Text>
+          <Pressable
+            onPress={() => navigation.navigate("OwnListsScreen", initialFilter)}
+            style={{
+              paddingHorizontal: 24,
+              justifyContent: "center",
+              alignSelf: "stretch",
+            }}
+            android_ripple={{ color: ripple, radius: 24, borderless: true }}
+          >
+            <ArrowIcon fill={font} />
+          </Pressable>
+        </View>
         <FlatList
           data={lists}
-          contentContainerStyle={{ paddingVertical: 24 }}
+          contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 12 }}
           renderItem={({ item }) => <FlashListRef {...item} size="small" />}
           horizontal
-          pagingEnabled
+          showsHorizontalScrollIndicator={false}
           keyExtractor={({ id }, index) => `${id}${index}`}
         />
-
-        <Text
-          style={{
-            marginTop: 24,
-            fontFamily: "SemiBold",
-            fontSize: 22,
-            color: font,
-            paddingHorizontal: 24,
-          }}
-        >
-          Popularne teraz
-        </Text>
-        <FlatList
-          data={lists}
-          contentContainerStyle={{ paddingVertical: 24 }}
-          renderItem={({ item }) => <FlashListRef {...item} />}
-          horizontal
-          pagingEnabled
-          keyExtractor={({ id }, index) => `${id}${index}`}
-        />
-
-        <Text
-          style={{
-            marginTop: 24,
-            fontFamily: "SemiBold",
-            fontSize: 22,
-            color: font,
-            paddingHorizontal: 24,
-          }}
-        >
-          Moje Fiszkolisty
-        </Text>
-        <FlatList
-          data={lists}
-          contentContainerStyle={{ paddingVertical: 24 }}
-          renderItem={({ item }) => <FlashListRef {...item} size="small" />}
-          horizontal
-          pagingEnabled
-          keyExtractor={({ id }, index) => `${id}${index}`}
-        />
-
-        <Text
-          style={{
-            marginTop: 24,
-            fontFamily: "SemiBold",
-            fontSize: 22,
-            color: font,
-            paddingHorizontal: 24,
-          }}
-        >
-          Ostatnio dodane
-        </Text>
-        <FlatList
-          data={lists}
-          contentContainerStyle={{ paddingVertical: 24 }}
-          renderItem={({ item }) => <FlashListRef {...item} />}
-          horizontal
-          pagingEnabled
-          keyExtractor={({ id }, index) => `${id}${index}`}
-        />
+        <ListSection lists={lists} title="Wybrane dla Ciebie" />
+        <ListSection lists={lists} title="Popularne teraz" />
+        <ListSection lists={lists} title="Ostatnio dodane" />
       </ScrollView>
     </Layout>
   );

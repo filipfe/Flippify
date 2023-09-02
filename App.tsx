@@ -12,7 +12,6 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator } from "react-native";
 import SettingsProvider from "./src/providers/SettingsProvider";
 import * as SplashScreen from "expo-splash-screen";
-import Introduction from "./src/components/ui/Introduction";
 import RootStack from "./src/navigators/RootStack";
 
 SplashScreen.preventAutoHideAsync();
@@ -35,7 +34,6 @@ export default function App() {
         <SettingsProvider>
           <StatusBar translucent />
           <RootStack />
-          <Introduction />
         </SettingsProvider>
       </AuthProvider>
     </ThemeProvider>

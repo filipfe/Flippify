@@ -8,9 +8,13 @@ import { useContext } from "react";
 import Header from "../components/header/Header";
 import CardsGeneratorScreen from "../screens/CardsGeneratorScreen";
 import { ThemeContext } from "../context/ThemeContext";
-import { View, Pressable } from "react-native";
+import { View } from "react-native";
 import ListDetailsScreen from "../screens/lists/ListDetailsScreen";
 import SaveButton from "../components/lists/SaveButton";
+import Introduction from "../components/ui/Introduction";
+import SearchScreen from "../screens/SearchScreen";
+import SearchInput from "../components/filter/SearchInput";
+import AddCard from "../components/flashcards/add-card/AddCard";
 
 const RootStackNav = createNativeStackNavigator<RootStackParams>();
 
@@ -45,13 +49,36 @@ export default function RootStack() {
           <RootStackNav.Screen
             name="ListDetailsScreen"
             component={ListDetailsScreen}
+            options={(props) => ({
+              title: "",
+              headerRight: (_) => <SaveButton listId={props.route.params.id} />,
+            })}
+          />
+          <RootStackNav.Screen
+            name="SearchScreen"
+            component={SearchScreen}
             options={{
               title: "",
-              headerRight: (props) => <SaveButton {...props} />,
+              headerBackVisible: false,
+              headerRight: SearchInput,
+              header: (props) => (
+                <View style={{ paddingVertical: 8 }}>
+                  <Header {...props} />
+                </View>
+              ),
             }}
+          />
+          <RootStackNav.Screen
+            name="AddCard"
+            component={AddCard}
+            options={({ route }) => ({
+              title: route.params?.id ? "Modyfikuj fiszkę" : "Nowa fiszka",
+              header: (props) => <Header {...props} />,
+            })}
           />
         </RootStackNav.Navigator>
       </NavigationContainer>
+      <Introduction />
     </View>
   ) : (
     <EntryScreen />
