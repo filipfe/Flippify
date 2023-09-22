@@ -9,7 +9,9 @@ export type RootStackParams = {
     category?: Category;
     topic?: Topic;
   };
-  ListDetailsScreen: Omit<FlashList, 'cards'>
+  ListDetailsScreen: Omit<FlashList, 'cards'>;
+  SearchScreen: { input: string }
+  AddCard: AddedFlashCard | undefined;
 }
 
 export type RootTabParams = {
@@ -17,7 +19,6 @@ export type RootTabParams = {
   Cards: NavigatorScreenParams<CardStackParams>;
   Lists: NavigatorScreenParams<ListStackParams>;
   Profile: NavigatorScreenParams<ProfileStackParams>;
-  AddCard: AddedFlashCard | undefined;
 };
 
 // CARDS
@@ -55,7 +56,7 @@ export type CardFormNavigationProp = NavigationProp<AddCardStackParams, "CardFor
 
 export type ListStackParams = {
   ListScreen: undefined;
-  
+  OwnListsScreen: Omit<Filter, 'topic'>;
 }
 
 

@@ -14,22 +14,28 @@ import { RootStackParams } from "../../types/navigation";
 import useShadow from "../../hooks/useShadow";
 import {
   GradientLikeIcon,
-  LikeIcon,
   LogoIcon,
   MathIcon,
   PremiumIcon,
 } from "../../assets/icons/icons";
 import GradientText from "../ui/GradientText";
+import { FlashCardsIcon } from "../../assets/general";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 const { width } = Dimensions.get("screen");
 
 type Props = {
   size?: "small" | "big";
+  isActive?: boolean;
+  hideUser?: boolean;
 };
 
 export default function FlashListRef(props: FlashList & Props) {
   const colorScheme = useColorScheme();
-  const { size = "big" } = props;
   const { navigate } =
     useNavigation<NavigationProp<RootStackParams, "RootTab">>();
   const { font, box, secondary, userPreferredTheme } = useContext(ThemeContext);
@@ -38,69 +44,136 @@ export default function FlashListRef(props: FlashList & Props) {
     userPreferredTheme === "system"
       ? colorScheme === "light"
       : userPreferredTheme === "light";
-  const { name, description, category, user } = props;
-  return (
-    <Pressable
-      style={[
-        styles.wrapper,
+  const {
+    name,
+    description,
+    category,
+    cards_count,
+    likes_count,
+    user,
+    is_public,
+    isActive,
+    hideUser,
+    size = "big",
+  } = props;
+
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      opacity:
+        size === "big"
+          ? withTiming(isActive ? 1 : 0.6, {
+              duration: 200,
+              easing: Easing.in((v) => v),
+            })
+          : 1,
+      transform: [
         {
-          backgroundColor: box,
+          translateY:
+            size === "big"
+              ? withTiming(isActive ? -8 : 0, {
+                  duration: 200,
+                  easing: Easing.in((v) => v),
+                })
+              : 0,
+        },
+      ],
+    }),
+    [isActive]
+  );
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          marginHorizontal: 8,
           ...(size === "big" && { width: width - 48 }),
         },
-        isLight && shadow,
       ]}
-      onPress={() => navigate("ListDetailsScreen", props)}
     >
-      <View style={styles.row}>
-        <MathIcon strokeWidth={2.4} height={14} width={14} />
-        <GradientText style={styles.category}>{category?.name}</GradientText>
-      </View>
-      <View style={[styles.row, styles.between]}>
-        <Text
-          style={[
-            styles.title,
-            { color: font, fontSize: size === "small" ? 14 : 16 },
-          ]}
-        >
-          {name}
-        </Text>
-        {size === "big" && (
-          <Text style={[styles.count, { color: secondary }]}>53 fiszki</Text>
-        )}
-      </View>
-      {size === "big" && (
-        <Text style={[styles.desc, { color: secondary }]}>{description}</Text>
-      )}
-      <View
+      <Pressable
         style={[
-          styles.row,
-          styles.between,
-          { marginTop: 12, paddingBottom: 6 },
+          styles.wrapper,
+          {
+            backgroundColor: box,
+          },
+          isLight && shadow,
         ]}
+        onPress={() => navigate("ListDetailsScreen", props)}
       >
         <View style={styles.row}>
-          {user.is_premium || true ? (
-            <PremiumIcon height={16} width={16} />
-          ) : (
-            <LogoIcon height={16} width={16} />
-          )}
-          <Text style={[styles.username, { color: font }]}>
-            {user.username}
+          <MathIcon strokeWidth={2.4} height={14} width={14} />
+          <GradientText style={styles.category}>{category?.name}</GradientText>
+        </View>
+        <View style={[styles.row, styles.between]}>
+          <Text
+            style={[
+              styles.title,
+              { color: font, fontSize: size === "small" ? 14 : 16 },
+            ]}
+          >
+            {name}
           </Text>
+          <View style={[styles.row]}>
+            <FlashCardsIcon
+              strokeWidth={size === "big" ? 1.6 : 1.7}
+              stroke={secondary}
+              height={size === "big" ? 15 : 13}
+              width={size === "big" ? 15 : 13}
+            />
+            <Text
+              style={[
+                styles.count,
+                {
+                  color: secondary,
+                  fontSize: size === "big" ? 14 : 12,
+                  lineHeight: size === "big" ? 18 : 16,
+                },
+              ]}
+            >
+              {cards_count}
+            </Text>
+          </View>
         </View>
-        <View style={[styles.row, { marginLeft: 16 }]}>
-          <GradientLikeIcon height={12} width={12} />
-          <GradientText style={styles.likeCount}>244</GradientText>
-        </View>
-      </View>
-    </Pressable>
+        {size === "big" && (
+          <Text style={[styles.desc, { color: secondary }]}>{description}</Text>
+        )}
+        {is_public && (
+          <View
+            style={[
+              styles.row,
+              styles.between,
+              { marginTop: 12, paddingBottom: 6 },
+            ]}
+          >
+            {!hideUser && (
+              <View style={[styles.row, , { marginRight: 16 }]}>
+                {user.is_premium || true ? (
+                  <PremiumIcon height={16} width={16} />
+                ) : (
+                  <LogoIcon height={16} width={16} />
+                )}
+                <Text style={[styles.username, { color: font }]}>
+                  {user.username}
+                </Text>
+              </View>
+            )}
+            <View style={styles.row}>
+              <GradientLikeIcon height={12} width={12} />
+              <GradientText style={styles.likeCount}>
+                {likes_count}
+              </GradientText>
+            </View>
+          </View>
+        )}
+      </Pressable>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
     borderRadius: 12,
-    marginHorizontal: 24,
     paddingHorizontal: 24,
     paddingVertical: 16,
   },
@@ -122,8 +195,8 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   count: {
-    fontSize: 12,
-    fontFamily: "Medium",
+    fontFamily: "SemiBold",
+    marginLeft: 6,
   },
   desc: {
     fontSize: 12,

@@ -13,6 +13,7 @@ export default function PrimaryButton({
   paddingHorizontal = 28,
   paddingVertical = 14,
   borderRadius = 16,
+  children,
 }: Button) {
   return (
     <TouchableOpacity
@@ -36,14 +37,18 @@ export default function PrimaryButton({
         }}
         colors={linearGradient}
       >
-        <Text
-          style={{
-            ...styles.text,
-            fontSize,
-          }}
-        >
-          {text}
-        </Text>
+        {children ? (
+          children
+        ) : (
+          <Text
+            style={{
+              ...styles.text,
+              fontSize,
+            }}
+          >
+            {text}
+          </Text>
+        )}
       </LinearGradient>
     </TouchableOpacity>
   );

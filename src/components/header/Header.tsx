@@ -1,10 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  Pressable,
-} from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
@@ -17,13 +11,16 @@ export default function Header({
   route,
   navigation,
   options,
-}: BottomTabHeaderProps | NativeStackHeaderProps) {
+}: NativeStackHeaderProps | BottomTabHeaderProps) {
   const { background, font } = useContext(ThemeContext);
   const { title, headerRight, headerTransparent } = options;
+  //@ts-ignore
+  const headerBackVisible = options.headerBackVisible || true;
   const { goBack, canGoBack } = navigation;
   const state = useNavigationState((state) => state.routeNames);
   const isInitial = state[0] === route.name;
   const canGoBackBool = canGoBack();
+  const backVisible = !isInitial && canGoBackBool && headerBackVisible;
   return (
     <SafeAreaView
       style={{
@@ -31,25 +28,27 @@ export default function Header({
         backgroundColor: headerTransparent ? "transparent" : background,
       }}
     >
-      <View style={headerStyles.titleWrapper}>
-        {!isInitial && canGoBackBool && (
-          <Pressable style={headerStyles.back} onPress={goBack}>
-            <BackIcon
-              height={16}
-              width={16}
-              fill={headerTransparent ? "#FFF" : font}
-            />
-          </Pressable>
-        )}
-        <Text
-          style={{
-            ...headerStyles.title,
-            color: headerTransparent ? "#FFF" : font,
-          }}
-        >
-          {title}
-        </Text>
-      </View>
+      {(title || backVisible) && (
+        <View style={headerStyles.titleWrapper}>
+          {backVisible && (
+            <Pressable style={headerStyles.back} onPress={goBack}>
+              <BackIcon
+                height={16}
+                width={16}
+                fill={headerTransparent ? "#FFF" : font}
+              />
+            </Pressable>
+          )}
+          <Text
+            style={{
+              ...headerStyles.title,
+              color: headerTransparent ? "#FFF" : font,
+            }}
+          >
+            {title}
+          </Text>
+        </View>
+      )}
       {headerRight && headerRight({ canGoBack: canGoBackBool })}
     </SafeAreaView>
   );

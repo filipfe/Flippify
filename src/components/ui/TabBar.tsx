@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { shadowPrimary } from "../../styles/general";
 import { FlashCardsIcon, HomeIcon, ProfileIcon } from "../../assets/general";
 import { ThemeContext } from "../../context/ThemeContext";
-import { RootTabParams } from "../../types/navigation";
+import { RootStackParams, RootTabParams } from "../../types/navigation";
 import { ListIcon, PlusIcon } from "../../assets/icons/icons";
 
 export default function TabBar(props: BottomTabBarProps) {
@@ -121,7 +121,7 @@ const LinkIcon = ({
 };
 
 const CenterButton = () => {
-  const { navigate } = useNavigation<NavigationProp<RootTabParams>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParams>>();
   return (
     <View
       style={{ alignItems: "center", marginTop: -16, alignSelf: "flex-start" }}

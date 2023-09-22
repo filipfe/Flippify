@@ -1,17 +1,28 @@
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import { shadowPrimary } from "../../../styles/general";
 import { User } from "../../../types/auth";
-import { DefaultProfileIcon, LikeIcon } from "../../../assets/icons/icons";
+import {
+  DefaultProfileIcon,
+  GradientLikeIcon,
+  LikeIcon,
+} from "../../../assets/icons/icons";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
+import GradientText from "../GradientText";
 
 type Props = {
   user: User;
   isLiked?: boolean;
   handleLike?: () => void;
+  likesCount?: number;
 };
 
-export default function UserCredentials({ user, isLiked, handleLike }: Props) {
+export default function UserCredentials({
+  user,
+  isLiked,
+  likesCount,
+  handleLike,
+}: Props) {
   const { avatar_url, username } = user;
   const { primary, secondary, font, light } = useContext(ThemeContext);
   return (
@@ -45,6 +56,12 @@ export default function UserCredentials({ user, isLiked, handleLike }: Props) {
             fill={isLiked ? primary : "none"}
           />
         </Pressable>
+      )}
+      {typeof likesCount === "number" && (
+        <View style={styles.likesWrapper}>
+          <GradientLikeIcon height={16} width={16} />
+          <GradientText style={styles.likesCount}>{likesCount}</GradientText>
+        </View>
       )}
     </View>
   );
@@ -86,5 +103,15 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: "Bold",
     lineHeight: 24,
+  },
+  likesWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  likesCount: {
+    fontFamily: "SemiBold",
+    marginLeft: 8,
+    fontSize: 16,
+    lineHeight: 20,
   },
 });

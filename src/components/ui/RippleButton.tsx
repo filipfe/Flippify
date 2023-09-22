@@ -9,7 +9,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { useContext } from "react";
 
 type Props = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[] | boolean;
   style?: StyleProp<ViewStyle>;
   onPress: () => void;
   borderless?: boolean;

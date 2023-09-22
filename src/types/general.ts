@@ -3,7 +3,7 @@ import { Topic } from "./flashcards";
 
 export type Button = {
   onPress?: () => void;
-  text: string;
+  text?: string;
   active?: boolean;
   style?: any,
   width?: string | number,
@@ -11,6 +11,7 @@ export type Button = {
   borderRadius?: number,
   paddingVertical?: number,
     paddingHorizontal?: number,
+  children?: string | JSX.Element | JSX.Element[]
 };    
   
 export type Category = {

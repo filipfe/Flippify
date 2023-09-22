@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
   },
   points: {
     fontFamily: "SemiBold",
+    fontSize: 12,
   },
   pointsWrapper: {
     width: "95%",
