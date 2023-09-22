@@ -109,7 +109,9 @@ export default function ListScreen({
         <FlatList
           data={lists}
           contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 12 }}
-          renderItem={({ item }) => <FlashListRef {...item} size="small" />}
+          renderItem={({ item }) => (
+            <FlashListRef {...item} hideUser size="small" />
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={({ id }, index) => `${id}${index}`}
