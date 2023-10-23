@@ -12,14 +12,14 @@ export default function TaskRef({
   current_value,
   reward_points,
 }: Task) {
-  const { background, secondary, font, light } = useContext(ThemeContext);
+  const { box, secondary, font, lighter } = useContext(ThemeContext);
   const shadow = useShadow(16);
   const isCompleted = current_value === required_value;
 
   return (
-    <View style={[styles.wrapper, shadow, { backgroundColor: background }]}>
+    <View style={[styles.wrapper, { backgroundColor: box }]}>
       <View style={styles.leftWrapper}>
-        <View style={[styles.circle, { backgroundColor: light }]}>
+        <View style={[styles.circle, { backgroundColor: lighter }]}>
           <GradientText style={styles.points}>+{reward_points}</GradientText>
         </View>
         <View>

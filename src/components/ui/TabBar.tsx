@@ -9,6 +9,7 @@ import { FlashCardsIcon, HomeIcon, ProfileIcon } from "../../assets/general";
 import { ThemeContext } from "../../context/ThemeContext";
 import { RootStackParams, RootTabParams } from "../../types/navigation";
 import { ListIcon, PlusIcon } from "../../assets/icons/icons";
+import { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 export default function TabBar(props: BottomTabBarProps) {
   const { state } = props;
@@ -78,6 +79,7 @@ const LinkIcon = ({
   isFocused: boolean;
 }) => {
   const { primary, font } = useContext(ThemeContext);
+
   switch (route) {
     case "Home":
       return (
@@ -141,7 +143,6 @@ const CenterButton = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 64,
     alignItems: "center",
     flexDirection: "row",
     ...shadowPrimary,
@@ -155,13 +156,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   tabBarLabel: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: "SemiBold",
   },
   tabBarLink: {
-    height: "100%",
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 16,
     flex: 1,
   },
   centerButton: {

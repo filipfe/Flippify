@@ -1,13 +1,13 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useContext } from "react";
-import PrimaryInput from "../../../ui/PrimaryInput";
-import { NewCardContext } from "../../../../context/OpusContext";
-import { ThemeContext } from "../../../../context/ThemeContext";
+import PrimaryInput from "../../ui/PrimaryInput";
+import { NewCardContext } from "../../../context/OpusContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function InputForm() {
-  const { font } = useContext(ThemeContext);
+  const { font, lighter } = useContext(ThemeContext);
   const { item, setItem } = useContext(NewCardContext);
-  const { question, answers } = item;
+  const { question } = item;
   const splittedQuestion = question
     .split("[input]")
     .join("______")
@@ -26,6 +26,7 @@ export default function InputForm() {
       )}
       <PrimaryInput
         maxLength={56}
+        style={{ backgroundColor: lighter }}
         value={question}
         label="Pytanie"
         onChangeText={(text) =>
@@ -35,6 +36,7 @@ export default function InputForm() {
       <PrimaryInput
         maxLength={32}
         label="Odpowiedź"
+        style={{ backgroundColor: lighter }}
         onChangeText={(text) =>
           setItem((prev) => ({
             ...prev,

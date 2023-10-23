@@ -13,7 +13,7 @@ export default function SecondaryButton({
   width = "auto",
   paddingHorizontal = 28,
   paddingVertical = 14,
-  borderRadius = 16,
+  borderRadius = 12,
 }: Button) {
   const { light, font } = useContext(ThemeContext);
   return (

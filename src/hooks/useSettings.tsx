@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Settings } from "../types/settings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SettingsContextType } from "../context/SettingsContext";
-import { initialSettings } from "../const/settings";
+import { STORAGE_BASED_SETTINGS, initialSettings } from "../const/settings";
 
 export default function useSettings(): SettingsContextType {
   const [settings, setSettings] = useState<Settings>(initialSettings);
@@ -18,10 +18,12 @@ export default function useSettings(): SettingsContextType {
     key: K,
     value: Settings[K]
   ) => {
-    await AsyncStorage.setItem(
-      "settings",
-      JSON.stringify({ ...settings, [key]: value })
-    );
+    STORAGE_BASED_SETTINGS.includes(key) &&
+      (await AsyncStorage.setItem(
+        "settings",
+        JSON.stringify({ ...settings, [key]: value })
+      ));
+    // : await supabase.from("settings").insert({});
     setSettings((prev) => ({
       ...prev,
       [key]: value,

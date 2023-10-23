@@ -1,8 +1,7 @@
 import { Topic } from "../../../types/flashcards";
 import { Category } from "../../../types/general";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import RangeSlider from "../../ui/RangeSlider";
+import { StyleSheet, Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 import RippleButton from "../../ui/RippleButton";
@@ -24,26 +23,20 @@ const TopicRef = ({
         borderless
         onPress={() =>
           navigation.navigate("CardsGenerator", {
-            topic: topic || undefined,
+            topic,
             category,
           })
         }
       >
         <View style={styles.innerWrapper}>
-          <View style={styles.topWrapper}>
-            <Text style={{ ...styles.title, color: font }}>
-              {topic?.name || "Wszystkie tematy"}
-            </Text>
-            <Text style={{ ...styles.title, color: font }}>58%</Text>
-          </View>
-          <View style={{ marginTop: 16, marginBottom: 24 }}>
-            <RangeSlider value={20} />
-          </View>
-          <View style={styles.topWrapper}>
+          <Text style={{ ...styles.title, color: font }}>
+            {topic?.name || "Wszystkie tematy"}
+          </Text>
+          {topic?.name && (
             <Text style={{ ...styles.points, color: secondary }}>
-              144 / 255 punkty
+              {topic?.cards?.[0].count} fiszki
             </Text>
-          </View>
+          )}
         </View>
       </RippleButton>
     </View>
@@ -52,34 +45,20 @@ const TopicRef = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    borderRadius: 16,
+    borderRadius: 12,
   },
   innerWrapper: {
     paddingHorizontal: 24,
     paddingVertical: 16,
+    gap: 12,
   },
   title: {
     fontFamily: "SemiBold",
-    fontSize: 18,
-  },
-  topWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   points: {
-    fontFamily: "SemiBold",
-    lineHeight: 16,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderRadius: 24,
-  },
-  buttonText: {
-    fontFamily: "ExtraBold",
-    color: "#FFFFFF",
+    fontFamily: "Medium",
     fontSize: 12,
+    lineHeight: 16,
   },
 });
 

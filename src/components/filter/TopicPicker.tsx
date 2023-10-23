@@ -20,8 +20,7 @@ type Props = {
 export default function TopicPicker({ active, category, onChange }: Props) {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [areLoading, setAreLoading] = useState(false);
-  const { font, background, secondary, light, primary } =
-    useContext(ThemeContext);
+  const { font, box, secondary, light, primary } = useContext(ThemeContext);
   const shadow = useShadow(12);
   const isDisabled = !category.id;
 
@@ -67,18 +66,17 @@ export default function TopicPicker({ active, category, onChange }: Props) {
           defaultValue={active}
           rowTextForSelection={(item) => item.name}
           buttonTextAfterSelection={(item) => item.name}
-          dropdownStyle={{ backgroundColor: background }}
+          dropdownStyle={{ backgroundColor: box }}
           buttonStyle={{
-            ...shadow,
             ...styles.picker,
-            backgroundColor: background,
+            backgroundColor: box,
           }}
-          searchInputStyle={{ backgroundColor: background }}
+          searchInputStyle={{ backgroundColor: box }}
           searchInputTxtColor={font}
           renderDropdownIcon={() => <DropdownIcon fill={font} />}
           buttonTextStyle={{ ...styles.pickerText, color: font }}
           rowStyle={{
-            backgroundColor: background,
+            backgroundColor: box,
             borderBottomColor: light,
           }}
           rowTextStyle={{ ...styles.pickerRow, color: font }}

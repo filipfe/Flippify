@@ -1,105 +1,88 @@
-import { Pressable, ScrollView, StyleSheet, View, Modal } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../const/styles";
+import { ScrollView, Modal, Text, View, StyleSheet } from "react-native";
 import { ProfileStackParams, RootTabParams } from "../types/navigation";
-import UserInfo from "../components/profile/UserInfo";
-import { NotificationsIcon, SettingsIcon } from "../assets/icons/icons";
-import PremiumBanner from "../components/profile/PremiumBanner";
-import LogoutButton from "../components/profile/LogoutButton";
-import Stats from "../components/profile/Stats";
-import { useContext, useState } from "react";
+import { useContext, useState, useCallback } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { AuthContext } from "../context/AuthContext";
 import PremiumPurchase from "./profile/PremiumPurchase";
-import { SafeAreaView } from "react-native-safe-area-context";
-import BoxLinkRow from "../components/profile/BoxLinkRow";
-import EditButton from "../components/profile/EditButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { initialFilter } from "../const/flashcards";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
+import Layout from "../components/ui/layout/Layout";
+import Loader from "../components/ui/Loader";
+import { supabase } from "../hooks/useAuth";
+import PremiumBanner from "../components/profile/PremiumBanner";
+
+async function fetchProfile() {
+  const { data } = await supabase.from("profiles").select("*").single();
+  return data;
+}
 
 export default function ProfileScreen({
   navigation,
 }: NativeStackScreenProps<ProfileStackParams, "ProfileScreen">) {
-  const [premiumModalActive, setPremiumModalActive] = useState(false);
   const { user } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState(user);
+  const [isLoading, setIsLoading] = useState(true);
+  const [premiumModalActive, setPremiumModalActive] = useState(false);
   const { is_premium } = user;
   const { background, light, font } = useContext(ThemeContext);
   const { navigate } =
     useNavigation<NavigationProp<RootTabParams, "Profile">>();
-  return (
-    <ScrollView>
-      <LinearGradient
-        colors={linearGradient}
-        start={{ x: 1, y: 1 }}
-        style={{ flex: 1 }}
-      >
-        <SafeAreaView style={styles.settingsWrapper}>
-          <Pressable
-            onPress={() => navigation.navigate("Notifications")}
-            style={[styles.settingsButton, { backgroundColor: light }]}
-          >
-            <NotificationsIcon stroke={font} width={20} height={20} />
-          </Pressable>
 
-          <Pressable
-            onPress={() => navigation.navigate("Settings")}
-            style={[styles.settingsButton, { backgroundColor: light }]}
-          >
-            <SettingsIcon fill={font} width={24} height={24} />
-          </Pressable>
-        </SafeAreaView>
-        <View style={[styles.innerWrapper, { backgroundColor: background }]}>
-          <UserInfo />
-          <EditButton />
-          <BoxLinkRow
-            navigate={() =>
-              navigate("Cards", {
-                screen: "OwnFlashCards",
-                initial: true,
-                params: initialFilter,
-              })
-            }
-          />
-          {!is_premium && (
-            <PremiumBanner onPress={() => setPremiumModalActive(true)} />
-          )}
-          <Stats />
-          <LogoutButton />
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setIsLoading(true);
+      async function fetchInitial() {
+        const data = await fetchProfile();
+        isActive && setProfileData((prev) => ({ ...prev, ...data }));
+        setIsLoading(false);
+      }
+      fetchInitial();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  return (
+    <Layout>
+      <ScrollView>
+        <View style={styles.wrapper}>
+          <Text style={[styles.username, { color: font }]}>
+            {profileData.username}
+          </Text>
+          {/* {isLoading ? (
+            <Loader />
+          ) : (
+            <View style={styles.wrapper}>
+              {!is_premium && (
+                <PremiumBanner onPress={() => setPremiumModalActive(true)} />
+              )}
+            </View>
+          )} */}
         </View>
-      </LinearGradient>
-      <Modal
-        animationType="fade"
-        visible={premiumModalActive}
-        statusBarTranslucent
-        onRequestClose={() => setPremiumModalActive(false)}
-      >
-        <PremiumPurchase onClose={() => setPremiumModalActive(false)} />
-      </Modal>
-    </ScrollView>
+        <Modal
+          animationType="fade"
+          visible={premiumModalActive}
+          statusBarTranslucent
+          onRequestClose={() => setPremiumModalActive(false)}
+        >
+          <PremiumPurchase onClose={() => setPremiumModalActive(false)} />
+        </Modal>
+      </ScrollView>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  settingsWrapper: {
-    paddingVertical: 24,
-    paddingHorizontal: 24,
-    justifyContent: "space-between",
-    flexDirection: "row",
+  username: {
+    fontFamily: "SemiBold",
+    fontSize: 16,
+    textAlign: "center",
   },
-  settingsButton: {
-    height: 48,
-    width: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  innerWrapper: {
-    borderTopRightRadius: 36,
-    borderTopLeftRadius: 36,
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    position: "relative",
-    flex: 1,
-  },
+  wrapper: { gap: 16, alignItems: "center", width: "100%" },
 });

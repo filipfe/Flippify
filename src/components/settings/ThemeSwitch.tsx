@@ -32,11 +32,11 @@ export default function ThemeSwitch() {
         buttonStyle={{ backgroundColor: background }}
         selectedRowStyle={{ backgroundColor: primary }}
         rowStyle={{ backgroundColor: light, borderBottomColor: secondary }}
-        rowTextStyle={{ color: font, fontFamily: "SemiBold", fontSize: 14 }}
+        rowTextStyle={{ color: font, fontFamily: "Medium", fontSize: 14 }}
         buttonTextStyle={{
           color: secondary,
           textAlign: "right",
-          fontFamily: "SemiBold",
+          fontFamily: "Medium",
           fontSize: 14,
           lineHeight: 16,
         }}

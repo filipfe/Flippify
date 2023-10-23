@@ -1,5 +1,5 @@
 import Layout from "../../components/ui/layout/Layout";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { supabase } from "../../hooks/useAuth";
 import { FlashList } from "../../types/flashcards";
@@ -18,45 +18,50 @@ import { ListStackParams } from "../../types/navigation";
 import { initialFilter } from "../../const/flashcards";
 import ListSection from "../../components/lists/ListSection";
 
+async function fetchLists() {
+  const { data } = await supabase
+    .from("flashlists")
+    .select(
+      "id, name, description, is_public, user:profiles(id, username, avatar_url, is_premium), category:categories(id, name, icon), cards_count:flashlist_elements(...flashcards(count)), likes_count:saves(count)"
+    );
+
+  const lists = (data as unknown as FlashList[]).map((item) => {
+    const { cards_count, likes_count, ...list } = item;
+    const cardsCount = cards_count as unknown as { count: number }[];
+    const likesCount = likes_count as unknown as { count: number }[];
+    return {
+      ...list,
+      cards_count: cardsCount[0].count,
+      likes_count: likesCount[0].count,
+    };
+  });
+
+  return lists || [];
+}
+
 export default function ListScreen({
   navigation,
 }: NativeStackScreenProps<ListStackParams, "ListScreen">) {
   const { font, ripple } = useContext(ThemeContext);
-  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lists, setLists] = useState<FlashList[]>([]);
 
-  async function fetchLists() {
-    const { data } = await supabase
-      .from("flashlists")
-      .select(
-        "id, name, description, is_public, user:profiles(id, username, avatar_url, is_premium), category:categories(id, name, icon), cards_count:flashlist_elements(...flashcards(count)), likes_count:saves(count)"
-      );
-
-    const lists = (data as unknown as FlashList[]).map((item) => {
-      const { cards_count, likes_count, ...list } = item;
-      const cardsCount = cards_count as unknown as { count: number }[];
-      const likesCount = likes_count as unknown as { count: number }[];
-      return {
-        ...list,
-        cards_count: cardsCount[0].count,
-        likes_count: likesCount[0].count,
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setIsLoading(true);
+      async function fetchInitial() {
+        const lists = await fetchLists();
+        isActive && setLists(lists);
+        setIsLoading(false);
+      }
+      fetchInitial();
+      return () => {
+        isActive = false;
       };
-    });
-
-    setLists(lists || []);
-  }
-
-  useEffect(() => {
-    if (!isFocused) return;
-    setIsLoading(true);
-    async function fetchInitial() {
-      await fetchLists();
-      setIsLoading(false);
-    }
-    fetchInitial();
-  }, [isFocused]);
+    }, [])
+  );
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -108,7 +113,7 @@ export default function ListScreen({
         </View>
         <FlatList
           data={lists}
-          contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 12 }}
+          contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 16 }}
           renderItem={({ item }) => (
             <FlashListRef {...item} hideUser size="small" />
           )}

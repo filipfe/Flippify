@@ -48,10 +48,10 @@ export default function PrimaryInput({
           value={value}
           style={{
             ...styles.input,
-            ...(style as any),
             paddingVertical: label ? 12 : 10,
             color: font,
             backgroundColor: light,
+            ...(style as any),
           }}
           onChangeText={onChangeText}
         />

@@ -9,26 +9,24 @@ import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { supabase } from "../../hooks/useAuth";
 import ListTitle from "../../components/flashcards/categories/ListTitle";
 import RecentCategoryRef from "../../components/flashcards/categories/RecentCategoryRef";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+
+async function fetchCategories() {
+  const { data } = await supabase
+    .from("categories")
+    .select("id, name")
+    .order("name");
+  return data as Category[];
+}
 
 export default function CategoryList() {
   const { background } = useContext(ThemeContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const isFocused = useIsFocused();
   const recent = categories.filter(
     (item) => item.id && [1, 2, 3].includes(item.id)
   );
-
-  async function fetchCategories() {
-    const { data } = await supabase
-      .from("categories")
-      .select("id, name")
-      .order("name");
-    // const recent = await supabase.from("categories").select("id").order("", { foreignTable: "views" })
-    setCategories(data as Category[]);
-  }
 
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -36,15 +34,21 @@ export default function CategoryList() {
     setIsRefreshing(false);
   }, []);
 
-  useEffect(() => {
-    if (!isFocused) return;
-    setIsLoading(true);
-    async function fetchInitial() {
-      await fetchCategories();
-      setIsLoading(false);
-    }
-    fetchInitial();
-  }, [isFocused]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      setIsLoading(true);
+      async function fetchInitial() {
+        const categories = await fetchCategories();
+        isActive && setCategories(categories);
+        setIsLoading(false);
+      }
+      fetchInitial();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   return isLoading ? (
     <Loader />
@@ -64,7 +68,7 @@ export default function CategoryList() {
             <>
               <FlatList
                 contentContainerStyle={{
-                  paddingBottom: 48,
+                  paddingBottom: 36,
                   paddingHorizontal: 24,
                 }}
                 showsVerticalScrollIndicator={false}

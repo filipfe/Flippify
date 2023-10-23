@@ -24,21 +24,21 @@ export const lightTheme: Theme = {
   secondary: "#8DA5B9",
   background: "#FFFFFF",
   light: "#F2F8FD",
+  lighter: "#262045",
   box: "#FFFFFF",
   font: "#382E6D",
   wrong: "#DC555D",
-  stroke: "#E3E8E4",
   ripple: "#E8E8E8",
 };
 
 export const darkTheme: Theme = {
   primary: "#2386F1",
   secondary: "#8DA5B9",
-  background: "#0f0c1c",
+  background: "#100d1c",
   light: "#17132b",
+  lighter: "#221d3d",
   box: "#17132b",
   font: "#D9D6E9",
   wrong: "#DC555D",
-  stroke: "#E3E8E4",
-  ripple: "#0B0918",
+  ripple: "#0a0917",
 };

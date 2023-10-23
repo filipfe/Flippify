@@ -14,7 +14,7 @@ import SaveButton from "../components/lists/SaveButton";
 import Introduction from "../components/ui/Introduction";
 import SearchScreen from "../screens/SearchScreen";
 import SearchInput from "../components/filter/SearchInput";
-import AddCard from "../components/flashcards/add-card/AddCard";
+import AddCard from "../screens/cards/AddCard";
 
 const RootStackNav = createNativeStackNavigator<RootStackParams>();
 
@@ -23,7 +23,7 @@ export default function RootStack() {
   const { isLogged } = useContext(AuthContext);
 
   return isLogged ? (
-    <View style={{ flex: 1, backgroundColor: background }}>
+    <View style={{ backgroundColor: background, height: "100%" }}>
       <NavigationContainer>
         <RootStackNav.Navigator
           initialRouteName="RootTab"

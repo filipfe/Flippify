@@ -4,12 +4,18 @@ import { Answer } from "../../../types/flashcards";
 import { useContext } from "react";
 import { Text, StyleSheet } from "react-native";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { SharedValue } from "react-native-reanimated";
 
-const RadioAnswer = (props: Answer & { index: number }) => {
-  const { index, ...card } = props;
+type Props = {
+  index: number;
+  rotate: SharedValue<number>;
+};
+
+const RadioAnswer = (props: Answer & Props) => {
+  const { index, rotate, ...card } = props;
   const { is_correct, text } = card;
   const { submitAnswer, answer } = useContext(FlashCardContext);
-  const { secondary, font, light } = useContext(ThemeContext);
+  const { secondary, font, lighter } = useContext(ThemeContext);
 
   const correctColor = (base: string) => {
     if (is_correct && answer.text) return "#13C331";
@@ -18,7 +24,16 @@ const RadioAnswer = (props: Answer & { index: number }) => {
   };
 
   return (
-    <Pressable style={styles.wrapper} onPress={() => submitAnswer(text)}>
+    <Pressable
+      style={({ pressed }) => [
+        { transform: [{ scale: pressed ? 0.95 : 1 }] },
+        styles.wrapper,
+      ]}
+      onPress={() => {
+        rotate.value = rotate.value ? 0 : 1;
+        submitAnswer(card);
+      }}
+    >
       <Text
         style={{
           ...styles.label,
@@ -28,7 +43,7 @@ const RadioAnswer = (props: Answer & { index: number }) => {
       >
         Odpowiedź {indexToLetter(index)}
       </Text>
-      <View style={{ ...styles.input, backgroundColor: light }}>
+      <View style={{ ...styles.input, backgroundColor: lighter }}>
         <Text
           style={{
             textAlign: "center",
@@ -74,7 +89,7 @@ export const styles = StyleSheet.create({
   input: {
     paddingVertical: 16,
     paddingHorizontal: 32,
-    borderRadius: 16,
+    borderRadius: 12,
     width: "100%",
   },
 });

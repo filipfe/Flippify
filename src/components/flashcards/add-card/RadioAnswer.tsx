@@ -1,17 +1,18 @@
-import { NewCardContext } from "../../../../context/OpusContext";
-import { Answer } from "../../../../types/flashcards";
-import PrimaryInput from "../../../ui/PrimaryInput";
+import { NewCardContext } from "../../../context/OpusContext";
+import { Answer } from "../../../types/flashcards";
+import PrimaryInput from "../../ui/PrimaryInput";
 import { View, Pressable, StyleSheet } from "react-native";
 import { useContext } from "react";
-import { BinIcon } from "../../../../assets/icons/icons";
-import { ThemeContext } from "../../../../context/ThemeContext";
+import { BinIcon } from "../../../assets/icons/icons";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function RadioAnswer({
   index,
   ...ans
 }: Answer & { index: number }) {
-  const { wrong } = useContext(ThemeContext);
+  const { wrong, lighter } = useContext(ThemeContext);
   const { setItem } = useContext(NewCardContext);
+
   const deleteAnswer = (index: number) => {
     setItem((prev) => {
       let newAnswers = prev.answers;
@@ -22,6 +23,7 @@ export default function RadioAnswer({
       };
     });
   };
+
   return (
     <View
       style={{
@@ -33,6 +35,7 @@ export default function RadioAnswer({
         maxLength={32}
         label={`Odpowiedź ${index + 1}`}
         value={ans.text}
+        style={{ backgroundColor: lighter }}
         deleteIcon={
           index > 1 ? (
             <Pressable

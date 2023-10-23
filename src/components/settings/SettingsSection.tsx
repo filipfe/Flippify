@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 12,
-    fontFamily: "ExtraBold",
+    fontFamily: "SemiBold",
     fontSize: 22,
     lineHeight: 24,
   },

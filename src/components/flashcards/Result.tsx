@@ -10,6 +10,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { linearGradient } from "../../const/styles";
 import { ThemeContext } from "../../context/ThemeContext";
 import Animated, {
+  SharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
@@ -17,10 +18,13 @@ import LevelDisplayer from "./result/LevelDisplayer";
 import { useCountUp } from "use-count-up";
 import { indexToLetter } from "./answers/RadioAnswer";
 
-export default function Result() {
+type Props = {
+  rotate: SharedValue<number>;
+};
+
+export default function Result({ rotate }: Props) {
   const { font, secondary, light } = useContext(ThemeContext);
-  const { flipCard, changeCard, activeCard, answer } =
-    useContext(FlashCardContext);
+  const { changeCard, activeCard, answer } = useContext(FlashCardContext);
   const { user, level } = useContext(AuthContext);
   const { avatar_url } = user;
   const [oldPoints, setOldPoints] = useState(level.points);
@@ -38,17 +42,17 @@ export default function Result() {
     activeCard.answers.findIndex((item) => item.text === answer.text)
   );
 
-  const animatedWidthStyle = useAnimatedStyle(
-    () => ({
-      width: withTiming(
-        ((level.points / level.points_required) * 100).toFixed(2) + "%",
-        {
-          duration: 600,
-        }
-      ),
-    }),
-    [level]
-  );
+  // const animatedWidthStyle = useAnimatedStyle(
+  //   () => ({
+  //     width: withTiming(
+  //       ((level.points / level.points_required) * 100).toFixed(2) + "%",
+  //       {
+  //         duration: 600,
+  //       }
+  //     ),
+  //   }),
+  //   [level]
+  // );
 
   useEffect(reset, [level.points]);
 
@@ -84,7 +88,7 @@ export default function Result() {
           </Text>
         </View>
         <View style={[styles.progressWrapper, { backgroundColor: light }]}>
-          <Animated.View style={animatedWidthStyle}>
+          <Animated.View>
             <LinearGradient
               style={styles.progress}
               start={{ x: 0, y: 0 }}
@@ -132,14 +136,17 @@ export default function Result() {
           text={"Odwróć"}
           style={{ marginRight: 6, flex: 1 }}
           paddingHorizontal={0}
-          onPress={flipCard}
+          onPress={() => (rotate.value = rotate.value ? 0 : 1)}
         />
         <PrimaryButton
           style={{ marginLeft: 6, flex: 1 }}
           paddingHorizontal={0}
           fontSize={12}
           text="Przejdź dalej"
-          onPress={changeCard}
+          onPress={() => {
+            rotate.value = rotate.value ? 0 : 1;
+            changeCard();
+          }}
         />
       </View>
     </View>

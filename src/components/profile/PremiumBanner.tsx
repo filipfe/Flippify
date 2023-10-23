@@ -5,7 +5,7 @@ import { PremiumIcon } from "../../assets/icons/icons";
 
 export default function PremiumBanner({ onPress }: { onPress: () => void }) {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable style={{ width: "100%" }} onPress={onPress}>
       <LinearGradient
         style={styles.wrapper}
         start={{ x: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default function PremiumBanner({ onPress }: { onPress: () => void }) {
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 36,
-    borderRadius: 24,
+    borderRadius: 16,
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 24,

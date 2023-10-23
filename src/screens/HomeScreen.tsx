@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Text } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
 import HomeHeader from "../components/home/HomeHeader";
 import HomeSection from "../components/home/HomeSection";
@@ -57,6 +57,7 @@ export default function HomeScreen({
     <Loader />
   ) : (
     <ScrollView
+      contentContainerStyle={{ height: "100%" }}
       refreshControl={
         <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }

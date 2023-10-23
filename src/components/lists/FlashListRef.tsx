@@ -29,9 +29,12 @@ import Animated, {
 const { width } = Dimensions.get("screen");
 
 type Props = {
+  animation?: boolean;
   size?: "small" | "big";
   isActive?: boolean;
   hideUser?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 };
 
 export default function FlashListRef(props: FlashList & Props) {
@@ -55,28 +58,23 @@ export default function FlashListRef(props: FlashList & Props) {
     isActive,
     hideUser,
     size = "big",
+    animation = true,
+    isFirst,
+    isLast,
   } = props;
 
   const animatedStyle = useAnimatedStyle(
     () => ({
+      transform: [
+        { translateY: withTiming(isActive ? 0 : 8, { duration: 200 }) },
+      ],
       opacity:
         size === "big"
           ? withTiming(isActive ? 1 : 0.6, {
-              duration: 200,
+              duration: 100,
               easing: Easing.in((v) => v),
             })
           : 1,
-      transform: [
-        {
-          translateY:
-            size === "big"
-              ? withTiming(isActive ? -8 : 0, {
-                  duration: 200,
-                  easing: Easing.in((v) => v),
-                })
-              : 0,
-        },
-      ],
     }),
     [isActive]
   );
@@ -84,9 +82,10 @@ export default function FlashListRef(props: FlashList & Props) {
   return (
     <Animated.View
       style={[
-        animatedStyle,
+        animation && animatedStyle,
         {
-          marginHorizontal: 8,
+          marginLeft: isFirst ? 24 : 8,
+          marginRight: isLast ? 24 : 8,
           ...(size === "big" && { width: width - 48 }),
         },
       ]}
@@ -114,7 +113,7 @@ export default function FlashListRef(props: FlashList & Props) {
           >
             {name}
           </Text>
-          <View style={[styles.row]}>
+          <View style={[styles.row, { marginLeft: 16 }]}>
             <FlashCardsIcon
               strokeWidth={size === "big" ? 1.6 : 1.7}
               stroke={secondary}

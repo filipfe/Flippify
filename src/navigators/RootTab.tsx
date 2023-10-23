@@ -22,6 +22,7 @@ export default function RootTab() {
       screenOptions={{
         tabBarActiveTintColor: "#2386F1",
         tabBarInactiveTintColor: "#382E6D",
+        freezeOnBlur: true,
       }}
     >
       <RootTabNav.Screen

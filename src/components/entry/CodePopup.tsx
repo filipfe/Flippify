@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   innerWrapper: {
-    borderRadius: 24,
+    borderRadius: 20,
     padding: 24,
     width: "80%",
     alignItems: "center",

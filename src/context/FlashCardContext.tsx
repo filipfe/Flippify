@@ -10,11 +10,9 @@ export type FlashCardContextType = {
   completedCount: number;
   totalCount: number;
   activeCard: FlashCard;
-  flipCard: () => void;
-  submitAnswer: (answer: string) => void;
+  submitAnswer: (answer: Answer) => void;
   changeCard: () => void;
   isLoading: IsCardLoading;
-  rotateValue: number;
   answer: Answer;
 };
 

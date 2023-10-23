@@ -32,7 +32,7 @@ export default function EntryScreen() {
     <FlatList
       horizontal
       pagingEnabled
-      style={{ backgroundColor: background }}
+      style={{ backgroundColor: background, height: "100%" }}
       data={[<Info setStep={changeStep} />, <Login />]}
       renderItem={({ item }) => item}
       keyExtractor={(_, index) => index.toString()}

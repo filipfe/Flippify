@@ -1,7 +1,6 @@
 import { Answer, FlashCard, Topic } from "../types/flashcards";
 import { useState, useMemo, useEffect, useContext, useCallback } from "react";
 import { Category } from "../types/general";
-import { useSharedValue } from "react-native-reanimated";
 import { FlashCardContextType } from "../context/FlashCardContext";
 import { CORRECT_ANSWER_POINTS, initialFlashCard } from "../const/flashcards";
 import { AuthContext } from "../context/AuthContext";
@@ -18,8 +17,6 @@ export default function useFlashCard(
 ): FlashCardContextType {
   const { category, topic } = params;
   const { level, addPoints } = useContext(AuthContext);
-  const rotate = useSharedValue<0 | -180>(0);
-  const [isFlipped, setIsFlipped] = useState(false);
   const [hasAlreadyAnswered, setHasAlreadyAnswered] = useState(false);
   const [answer, setAnswer] = useState<Answer>({ text: "", is_correct: false });
   const [activeDeck, setActiveDeck] = useState<FlashCard[]>([]);
@@ -32,65 +29,46 @@ export default function useFlashCard(
     next: false,
   });
 
-  const flipCard = () => {
-    rotate.value = rotate.value === 0 ? -180 : 0;
-    setIsFlipped((prev) => !prev);
-  };
-
   const checkIfCorrect = useCallback(
-    (answer: string) => {
+    (answer: Answer) => {
       const { type, answers } = activeDeck[activeCardIndex];
       switch (type) {
         case "radio":
-          const correctAnswer = answers.find((ans) => ans.is_correct)?.text;
-          return correctAnswer === answer;
+          return answer.is_correct;
         case "input":
           return (
             answers[0].text.toLowerCase().split(" ").join("") ===
-            answer.toLowerCase().split(" ").join("")
+            answer.text.toLowerCase().split(" ").join("")
           );
       }
     },
     [activeDeck, activeCardIndex]
   );
 
-  const getDeck = useCallback(
-    async function () {
-      const { data, count } = listId
-        ? await supabase
-            .from("flashlist_elements")
-            .select("...flashcards(*, answers(*))", { count: "exact" })
-            .eq("flashlist_id", listId)
-            .range(page * 10, page * 10 + 9)
-        : await supabase.rpc(
-            "get_random_flashcards",
-            topic ? { p_topic_id: topic.id } : { p_category_id: category?.id }
-          );
+  async function getDeck() {
+    const { data, count } = listId
+      ? await supabase
+          .from("flashlist_elements")
+          .select("...flashcards(*, answers(*))", { count: "exact" })
+          .eq("flashlist_id", listId)
+          .range(page * 10, page * 10 + 9)
+      : await supabase.rpc(
+          "get_random_flashcards",
+          topic ? { p_topic_id: topic.id } : { p_category_id: category?.id }
+        );
 
-      listId && setCount(count || 0);
-      return (data || []) as FlashCard[];
-    },
-    [listId, supabase, topic, category, page]
-  );
+    listId && setCount(count || 0);
+    return (data || []) as FlashCard[];
+  }
 
   const submitAnswer = useCallback(
-    async (answer: string) => {
-      if (hasAlreadyAnswered) return flipCard();
-      setHasAlreadyAnswered(true);
-      const isCorrect = checkIfCorrect(answer);
-      setAnswer({ text: answer, is_correct: isCorrect });
-      flipCard();
-      isCorrect ? await addPoints(CORRECT_ANSWER_POINTS) : level.points;
+    (answer: Answer) => {
+      if (hasAlreadyAnswered) return;
+      const is_correct = checkIfCorrect(answer);
+      setAnswer({ text: answer.text, is_correct });
+      is_correct ? addPoints(CORRECT_ANSWER_POINTS) : level.points;
     },
-    [
-      setHasAlreadyAnswered,
-      checkIfCorrect,
-      setAnswer,
-      flipCard,
-      hasAlreadyAnswered,
-      addPoints,
-      level.points,
-    ]
+    [hasAlreadyAnswered, checkIfCorrect]
   );
 
   const fetchDeck = useCallback(
@@ -99,7 +77,6 @@ export default function useFlashCard(
       if (!category && !listId) return;
       try {
         const deck = await getDeck();
-        console.log(deck);
         deckType === "active" ? setActiveDeck(deck) : setNextDeck(deck);
       } finally {
         setIsLoading((prev) => ({ ...prev, [deckType]: false }));
@@ -108,35 +85,28 @@ export default function useFlashCard(
     [setIsLoading, category, listId, getDeck, setActiveDeck, setNextDeck]
   );
 
-  const changeCard = useCallback(async () => {
+  async function changeCard() {
     setAnswer({ is_correct: false, text: "" });
     activeCardIndex > 8 && setActiveDeck(nextDeck);
     setActiveCardIndex((prev) => (activeCardIndex > 8 ? 0 : prev + 1));
-    rotate.value = 0;
-    setIsFlipped(false);
     setHasAlreadyAnswered(false);
     activeCardIndex === 8 && fetchDeck("next");
-  }, [
-    setAnswer,
-    activeCardIndex,
-    setActiveDeck,
-    nextDeck,
-    setActiveCardIndex,
-    setHasAlreadyAnswered,
-    fetchDeck,
-  ]);
+  }
 
   useEffect(() => {
-    console.log(listId);
     fetchDeck("active");
   }, [listId]);
 
+  useEffect(() => {
+    answer.text ? setHasAlreadyAnswered(true) : setHasAlreadyAnswered(false);
+  }, [answer]);
+
   const completedCount = useMemo(
     () =>
-      isFlipped || hasAlreadyAnswered
+      hasAlreadyAnswered
         ? page * 10 + activeCardIndex + 1
         : page * 10 + activeCardIndex,
-    [isFlipped, hasAlreadyAnswered, page, activeCardIndex]
+    [hasAlreadyAnswered, page, activeCardIndex]
   );
 
   const contextValue = useMemo<FlashCardContextType>(
@@ -145,10 +115,8 @@ export default function useFlashCard(
         ? activeDeck[activeCardIndex]
         : initialFlashCard,
       submitAnswer,
-      flipCard,
       changeCard,
       isLoading,
-      rotateValue: rotate.value,
       answer,
       completedCount,
       totalCount: count,
@@ -158,10 +126,8 @@ export default function useFlashCard(
       activeDeck,
       nextDeck,
       submitAnswer,
-      flipCard,
       changeCard,
       isLoading,
-      isFlipped,
       answer,
       count,
     ]

@@ -28,7 +28,6 @@ export default function Login() {
   async function handleSubmit() {
     setIsLoading(true);
     const error = await signInWithEmail(email);
-    console.log(error?.message);
     !error && setCodePopupActive(true);
     setIsLoading(false);
   }

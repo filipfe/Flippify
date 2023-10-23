@@ -66,15 +66,18 @@ export default function SearchScreen({
       <FlatList
         ItemSeparatorComponent={() => <View style={{ height: 16 }}></View>}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 16, flex: 1 }}
         data={lists}
-        renderItem={({ item }) => <FlashListRef {...item} key={item.id} />}
+        renderItem={({ item }) => (
+          <FlashListRef {...item} isActive key={item.id} />
+        )}
         ListHeaderComponent={() => (
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingHorizontal: 24,
+              paddingHorizontal: 8,
               marginBottom: 16,
             }}
           >

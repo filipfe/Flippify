@@ -18,8 +18,7 @@ type Props = {
 export default function CategoryPicker({ label, active, onChange }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [areLoading, setAreLoading] = useState(true);
-  const { secondary, background, font, light, primary } =
-    useContext(ThemeContext);
+  const { secondary, box, font, light, primary } = useContext(ThemeContext);
   const shadow = useShadow(12);
 
   useEffect(() => {
@@ -57,13 +56,12 @@ export default function CategoryPicker({ label, active, onChange }: Props) {
           buttonTextAfterSelection={(item) => item.name}
           buttonStyle={{
             ...styles.picker,
-            backgroundColor: background,
-            ...shadow,
+            backgroundColor: box,
           }}
           renderDropdownIcon={() => <DropdownIcon fill={font} />}
           buttonTextStyle={{ ...styles.pickerText, color: font }}
           rowStyle={{
-            backgroundColor: background,
+            backgroundColor: box,
             borderBottomColor: light,
           }}
           rowTextStyle={{ ...styles.pickerRow, color: font }}
@@ -78,7 +76,7 @@ export default function CategoryPicker({ label, active, onChange }: Props) {
 export const styles = StyleSheet.create({
   picker: {
     width: "100%",
-    borderRadius: 255,
+    borderRadius: 12,
     paddingHorizontal: 24,
   },
   pickerItem: {

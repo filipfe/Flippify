@@ -25,7 +25,6 @@ export default function Introduction() {
   }
 
   useEffect(() => {
-    console.log(user.username, isLogged, isProfileLoading);
     if (user.username || !isLogged || isProfileLoading)
       usernamePopup && setUsernamePopup(false);
     else setUsernamePopup(true);

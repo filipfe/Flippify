@@ -1,11 +1,13 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import { useContext } from "react";
 import { FlashCardContext } from "../../context/FlashCardContext";
 import { shadowPrimary } from "../../styles/general";
 import RadioAnswer from "./answers/RadioAnswer";
 import Animated, {
   Easing,
+  interpolate,
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import Result from "./Result";
@@ -14,9 +16,10 @@ import InputAnswer from "./answers/InputAnswer";
 import { SettingsContext } from "../../context/SettingsContext";
 
 export default function FlashCardRef() {
+  const rotate = useSharedValue(0);
   const { settings } = useContext(SettingsContext);
-  const { font, background } = useContext(ThemeContext);
-  const { activeCard, rotateValue } = useContext(FlashCardContext);
+  const { font, background, box } = useContext(ThemeContext);
+  const { activeCard } = useContext(FlashCardContext);
   const { question, type, answers } = activeCard;
 
   const frontCardTransform = useAnimatedStyle(
@@ -24,15 +27,15 @@ export default function FlashCardRef() {
       transform: [
         {
           rotateY: settings.animations
-            ? withTiming(`${rotateValue}deg`, {
-                duration: 200,
+            ? withTiming(`${interpolate(rotate.value, [0, 1], [0, 180])}deg`, {
+                duration: 250,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
               })
-            : `${rotateValue}deg`,
+            : `${rotate.value}deg`,
         },
       ],
     }),
-    [rotateValue]
+    [rotate.value]
   );
 
   const backCardTransform = useAnimatedStyle(
@@ -40,25 +43,25 @@ export default function FlashCardRef() {
       transform: [
         {
           rotateY: settings.animations
-            ? withTiming(`${rotateValue - 180}deg`, {
-                duration: 200,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-              })
-            : `${rotateValue - 180}deg`,
+            ? withTiming(
+                `${interpolate(rotate.value, [0, 1], [180, 360])}deg`,
+                {
+                  duration: 250,
+                  easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+                }
+              )
+            : `${rotate.value - 180}deg`,
         },
       ],
+      zIndex: rotate.value ? 10 : -10,
     }),
-    [rotateValue]
+    [rotate.value]
   );
 
   return (
     <View style={{ ...styles.wrapper, backgroundColor: background }}>
       <Animated.View
-        style={[
-          styles.card,
-          frontCardTransform,
-          { backgroundColor: background },
-        ]}
+        style={[styles.card, frontCardTransform, { backgroundColor: box }]}
       >
         <Text style={{ ...styles.question, color: font }}>
           {question.split("[input]").join(".....")}
@@ -66,7 +69,12 @@ export default function FlashCardRef() {
         <View style={styles.answersWrapper}>
           {type === "radio" &&
             answers.map((answer, i) => (
-              <RadioAnswer {...answer} index={i} key={answer.text} />
+              <RadioAnswer
+                {...answer}
+                rotate={rotate}
+                index={i}
+                key={answer.text + i}
+              />
             ))}
         </View>
         {type === "input" && <InputAnswer {...answers[0]} />}
@@ -77,12 +85,11 @@ export default function FlashCardRef() {
           styles.backCard,
           backCardTransform,
           {
-            backgroundColor: background,
-            zIndex: rotateValue === -180 ? 1 : -1,
+            backgroundColor: box,
           },
         ]}
       >
-        <Result />
+        <Result rotate={rotate} />
       </Animated.View>
     </View>
   );
@@ -100,8 +107,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backfaceVisibility: "hidden",
     flex: 1,
-    zIndex: 1,
-    ...shadowPrimary,
   },
   backCard: {
     position: "absolute",
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "100%",
-    zIndex: -1,
+    zIndex: 10,
   },
   question: {
     fontSize: 20,

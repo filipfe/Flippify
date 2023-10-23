@@ -9,13 +9,16 @@ import { SettingsContext } from "../../context/SettingsContext";
 export default function AnimationSwitch() {
   const { primary, font, background, secondary, light } =
     useContext(ThemeContext);
-  const { changeSetting } = useContext(SettingsContext);
+  const { settings, changeSetting } = useContext(SettingsContext);
   return (
     <View style={styles.wrapper}>
       <Text style={[styles.title, { color: font }]}>Animacje</Text>
       <SelectDropdown
         data={animationOptions}
-        defaultValue={animationOptions[0]}
+        defaultValue={
+          animationOptions.find((item) => item.value === settings.animations) ||
+          animationOptions[0]
+        }
         rowTextForSelection={(item) => item.label}
         buttonTextAfterSelection={(item) => item.label}
         onSelect={(item) => changeSetting("animations", item.value)}
@@ -25,11 +28,11 @@ export default function AnimationSwitch() {
         buttonStyle={{ backgroundColor: background }}
         selectedRowStyle={{ backgroundColor: primary }}
         rowStyle={{ backgroundColor: light, borderBottomColor: secondary }}
-        rowTextStyle={{ color: font, fontFamily: "SemiBold", fontSize: 14 }}
+        rowTextStyle={{ color: font, fontFamily: "Medium", fontSize: 14 }}
         buttonTextStyle={{
           color: secondary,
           textAlign: "right",
-          fontFamily: "SemiBold",
+          fontFamily: "Medium",
           fontSize: 14,
           lineHeight: 16,
         }}

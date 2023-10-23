@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, useColorScheme } from "react-native";
 import { useContext } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Category } from "../../../types/general";
@@ -10,12 +10,23 @@ import useShadow from "../../../hooks/useShadow";
 
 export default function RecentCategoryRef(props: Category) {
   const { name } = props;
+  const colorScheme = useColorScheme();
   const { navigate } =
     useNavigation<NavigationProp<CardStackParams, "CategoryList">>();
   const shadow = useShadow(16);
-  const { box, font, secondary } = useContext(ThemeContext);
+  const { box, font, secondary, userPreferredTheme } = useContext(ThemeContext);
+
+  const theme =
+    userPreferredTheme === "system" ? colorScheme : userPreferredTheme;
+
   return (
-    <View style={[styles.wrapper, { backgroundColor: box }]}>
+    <View
+      style={[
+        styles.wrapper,
+        { backgroundColor: box },
+        theme === "light" && shadow,
+      ]}
+    >
       <RippleButton
         borderless
         onPress={() => navigate("TopicList", { category: props })}
@@ -23,7 +34,7 @@ export default function RecentCategoryRef(props: Category) {
         <View style={styles.innerWrapper}>
           <View style={styles.leftWrapper}>
             <View style={{ marginRight: 24 }}>
-              <MathIcon strokeWidth={2.1} height={36} width={36} />
+              <MathIcon strokeWidth={2.4} height={28} width={28} />
             </View>
             <View>
               <Text style={[styles.title, { color: font }]}>{name}</Text>
@@ -41,16 +52,15 @@ export default function RecentCategoryRef(props: Category) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    borderRadius: 16,
+    borderRadius: 12,
   },
   title: {
     fontFamily: "SemiBold",
-    fontSize: 16,
     marginBottom: 4,
   },
   topic: {
-    fontFamily: "SemiBold",
-    fontSize: 14,
+    fontFamily: "Medium",
+    fontSize: 12,
   },
   innerWrapper: {
     flexDirection: "row",

@@ -4,27 +4,28 @@ import { Category } from "./general";
 export type Topic = {
   id: number;
   name: string;
-}
+  cards?: [{ count: number }];
+};
 
 export type Answer = {
   id?: number;
   text: string;
   is_correct: boolean;
-}
+};
 
 export type FlashCard = {
   id: number;
   question: string;
-  type: "radio" | "input"
+  type: "radio" | "input";
   answers: Answer[];
-  user?: User
-}
+  user?: User;
+};
 
 export type AddedFlashCard = FlashCard & {
   created_at?: string;
   category: Category;
   topic: Topic;
-}
+};
 
 export type FlashListCard = FlashCard & {
   topic: string;
@@ -40,7 +41,7 @@ export type FlashList = {
   cards: FlashListCard[];
   cards_count: number;
   likes_count: number;
-  category?: Category
-}
+  category?: Category;
+};
 
-export type FlashCardType = 'input' | "radio"
+export type FlashCardType = "input" | "radio";

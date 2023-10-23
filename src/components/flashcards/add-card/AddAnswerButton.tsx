@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { NewCardContext } from "../../../../context/OpusContext";
-import GradientText from "../../../ui/GradientText";
+import { NewCardContext } from "../../../context/OpusContext";
+import GradientText from "../../ui/GradientText";
 import { LinearGradient } from "expo-linear-gradient";
-import { linearGradient } from "../../../../const/styles";
+import { linearGradient } from "../../../const/styles";
 
 export default function AddAnswerButton() {
   const { setItem } = useContext(NewCardContext);

@@ -9,10 +9,11 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import ThemeProvider from "./src/providers/ThemeProvider";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 import SettingsProvider from "./src/providers/SettingsProvider";
 import * as SplashScreen from "expo-splash-screen";
 import RootStack from "./src/navigators/RootStack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,13 +30,15 @@ export default function App() {
     return <ActivityIndicator size="large" color={"#2386F1"} />;
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <SettingsProvider>
-          <StatusBar translucent />
-          <RootStack />
-        </SettingsProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider>
+        <AuthProvider>
+          <SettingsProvider>
+            <StatusBar translucent />
+            <RootStack />
+          </SettingsProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

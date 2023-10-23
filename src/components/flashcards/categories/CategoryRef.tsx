@@ -27,7 +27,7 @@ const CategoryRef = (props: Category) => {
         { backgroundColor: box },
       ]}
     >
-      <MathIcon strokeWidth={2.1} />
+      <MathIcon height={20} strokeWidth={2.4} />
       <Text style={[styles.title, { color: font }]}>{name}</Text>
       <Text style={[styles.topicCount, { color: secondary }]}>12 tematów</Text>
     </Pressable>
@@ -46,12 +46,11 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 8,
     marginBottom: 4,
-    fontSize: 16,
     fontFamily: "SemiBold",
   },
   topicCount: {
-    fontFamily: "SemiBold",
-    fontSize: 14,
+    fontFamily: "Medium",
+    fontSize: 12,
   },
   iconWrapper: {
     height: 64,

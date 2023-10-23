@@ -16,6 +16,7 @@ export default function CardStack() {
       screenOptions={{
         headerShadowVisible: false,
         header: (props) => <Header {...props} />,
+        freezeOnBlur: true,
       }}
     >
       <CardStackNav.Screen
@@ -27,7 +28,7 @@ export default function CardStack() {
         name="TopicList"
         component={TopicList}
         options={({ route }) => ({
-          title: "Tematy w kategorii " + route.params.category.name,
+          title: route.params.category.name,
         })}
       />
       <CardStackNav.Screen

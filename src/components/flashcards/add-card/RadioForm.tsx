@@ -1,14 +1,14 @@
 import { View, Text, Pressable } from "react-native";
 import { useContext } from "react";
-import PrimaryInput from "../../../ui/PrimaryInput";
-import { NewCardContext } from "../../../../context/OpusContext";
+import PrimaryInput from "../../ui/PrimaryInput";
+import { NewCardContext } from "../../../context/OpusContext";
 import { styles } from "./InputForm";
 import AddAnswerButton from "./AddAnswerButton";
 import RadioAnswer from "./RadioAnswer";
-import { ThemeContext } from "../../../../context/ThemeContext";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function RadioForm() {
-  const { font } = useContext(ThemeContext);
+  const { font, lighter } = useContext(ThemeContext);
   const { item, setItem } = useContext(NewCardContext);
   const { question, answers } = item;
   const splittedQuestion = question.split("?").join("");
@@ -28,6 +28,7 @@ export default function RadioForm() {
         maxLength={56}
         value={question}
         label="Pytanie"
+        style={{ backgroundColor: lighter }}
         onChangeText={(text) =>
           setItem((prev) => ({ ...prev, question: text }))
         }

@@ -13,6 +13,7 @@ export default function SettingsScreen() {
       </SettingsSection>
       <SettingsSection title="Powiadomienia">
         <View></View>
+        <View></View>
       </SettingsSection>
     </Layout>
   );

@@ -1,33 +1,33 @@
-import { NewCardContext } from "../../../context/OpusContext";
+import { NewCardContext } from "../../context/OpusContext";
 import { StyleSheet, Text, View, Modal, ScrollView } from "react-native";
-import { globalStyles, shadowPrimary } from "../../../styles/general";
-import Switch from "../../ui/Switch";
-import UserCredentials from "../../ui/layout/UserCredentials";
-import { AuthContext } from "../../../context/AuthContext";
+import { globalStyles, shadowPrimary } from "../../styles/general";
+import Switch from "../../components/ui/Switch";
+import UserCredentials from "../../components/ui/layout/UserCredentials";
+import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState, useLayoutEffect, useRef } from "react";
-import RadioForm from "./components/RadioForm";
-import InputForm from "./components/InputForm";
-import PrimaryButton from "../../ui/PrimaryButton";
-import Loader from "../../ui/Loader";
-import { initialNewCard } from "../../../const/flashcards";
-import { AddedFlashCard } from "../../../types/flashcards";
-import useOpus from "../../../hooks/useOpus";
-import { ThemeContext } from "../../../context/ThemeContext";
-import CategoryPicker from "../../filter/CategoryPicker";
-import TopicPicker from "../../filter/TopicPicker";
-import Success from "../../ui/popups/Success";
+import RadioForm from "../../components/flashcards/add-card/RadioForm";
+import InputForm from "../../components/flashcards/add-card/InputForm";
+import PrimaryButton from "../../components/ui/PrimaryButton";
+import Loader from "../../components/ui/Loader";
+import { initialNewCard } from "../../const/flashcards";
+import { AddedFlashCard } from "../../types/flashcards";
+import useOpus from "../../hooks/useOpus";
+import { ThemeContext } from "../../context/ThemeContext";
+import CategoryPicker from "../../components/filter/CategoryPicker";
+import TopicPicker from "../../components/filter/TopicPicker";
+import Success from "../../components/ui/popups/Success";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParams, RootTabParams } from "../../../types/navigation";
+import { RootStackParams, RootTabParams } from "../../types/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { supabase } from "../../../hooks/useAuth";
+import { supabase } from "../../hooks/useAuth";
 
 export default function AddCard({
   route,
-}: NativeStackScreenProps<RootTabParams, "AddCard">) {
+}: NativeStackScreenProps<RootStackParams, "AddCard">) {
   const scrollRef = useRef<ScrollView>(null!);
   const { navigate } =
     useNavigation<NavigationProp<RootStackParams, "RootTab">>();
-  const { secondary, background } = useContext(ThemeContext);
+  const { secondary, background, box } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const opus = useOpus<Omit<AddedFlashCard, "user">>(
     route.params || initialNewCard
@@ -111,7 +111,7 @@ export default function AddCard({
             style={{
               paddingHorizontal: 24,
               paddingTop: 12,
-              paddingBottom: 24,
+              paddingBottom: 36,
             }}
           >
             <View style={styles.section}>
@@ -134,7 +134,7 @@ export default function AddCard({
               />
             </View>
             <View style={styles.section}>
-              <View style={{ ...styles.card, backgroundColor: background }}>
+              <View style={[styles.card, { backgroundColor: box }]}>
                 {type === "radio" && <RadioForm />}
                 {type === "input" && <InputForm />}
               </View>
@@ -156,9 +156,6 @@ export default function AddCard({
                   onChange={(topic) => setItem((prev) => ({ ...prev, topic }))}
                 />
               </View>
-            </View>
-            <View style={styles.section}>
-              <UserCredentials user={user} />
             </View>
             {isLoading ? (
               <Loader />
@@ -204,7 +201,6 @@ const styles = StyleSheet.create({
     backfaceVisibility: "hidden",
     flex: 1,
     zIndex: 1,
-    ...shadowPrimary,
   },
   backCard: {
     position: "absolute",

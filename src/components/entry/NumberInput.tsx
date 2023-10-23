@@ -21,7 +21,7 @@ export default function NumberInput({ code, index, onType, onDelete }: Props) {
   return (
     <View
       style={{
-        borderRadius: 12,
+        borderRadius: 8,
         height: 48,
         width: 36,
         backgroundColor: light,

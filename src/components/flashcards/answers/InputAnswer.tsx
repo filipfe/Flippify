@@ -17,7 +17,10 @@ const InputAnswer = (props: Answer) => {
   };
 
   return (
-    <Pressable style={styles.wrapper} onPress={() => submitAnswer(text)}>
+    <Pressable
+      style={styles.wrapper}
+      onPress={() => submitAnswer({ text, is_correct: false })}
+    >
       <Text
         style={{
           ...styles.label,
@@ -58,7 +61,7 @@ export const styles = StyleSheet.create({
   input: {
     paddingVertical: 16,
     paddingHorizontal: 32,
-    borderRadius: 16,
+    borderRadius: 12,
     width: "100%",
   },
 });
